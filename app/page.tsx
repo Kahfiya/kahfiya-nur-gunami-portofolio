@@ -186,7 +186,7 @@ function FloatingTechCard({ tech }: { tech: typeof FLOATING_TECHS[number] }) {
 
 function FloatingTechLogos() {
   return (
-    <div className="absolute inset-0 overflow-hidden" aria-hidden="false" style={{ zIndex: 1 }}>
+    <div className="absolute inset-0 overflow-visible" aria-hidden="false" style={{ zIndex: 1 }}>
       {FLOATING_TECHS.map((tech, i) => (
         <FloatingTechCard key={i} tech={tech} />
       ))}
@@ -202,10 +202,10 @@ function HeroSection() {
   return (
     <section
       aria-label="Hero"
-      className="relative min-h-[90svh] flex flex-col items-center justify-center px-md tablet:px-2xl overflow-hidden bg-gradient-to-br from-neutral-50 via-orange-50/40 to-amber-50/30"
+      className="relative min-h-[90svh] flex flex-col items-center justify-center px-md tablet:px-2xl bg-gradient-to-br from-neutral-50 via-orange-50/40 to-amber-50/30"
     >
       {/* Decorative blobs */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
         <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-orange-100/50 blur-3xl" />
         <div className="absolute -bottom-24 -right-24 w-[400px] h-[400px] rounded-full bg-amber-100/60 blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-orange-50/40 blur-3xl" />

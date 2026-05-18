@@ -81,7 +81,7 @@ export default function WorkPage() {
       imageAlt: "ADRIA Graphic Design Studio",
       tags: ["Next.js", "Tailwind CSS", "Framer Motion", "Typescript"],
       href: "https://adria-website.vercel.app/",
-      category: ["Web", "Design"],
+      category: ["Web"],
     },
     {
       id: "proj-lumidh",
@@ -121,7 +121,16 @@ export default function WorkPage() {
       imageAlt: "Birthday Gift — Interactive Love Letter",
       tags: ["Java Script", "Framer Motion", "Tailwind CSS", "Creative"],
       href: "https://birthday-gift-one-ochre.vercel.app",
-      category: ["Web", "Design"],
+      category: ["Web",],
+    },
+    {
+      id: "proj-rumah",
+      title: "Casing Rumah IoT",
+      description: t("work.proj.rumah.desc"),
+      imageUrl: "/Images/Rumah2.jpg",
+      imageAlt: "Rumah IPAS — 3D House Model",
+      tags: ["3D", "Akulturasi", "IPAS", "School"],
+      category: ["Design"],
     },
   ];
 

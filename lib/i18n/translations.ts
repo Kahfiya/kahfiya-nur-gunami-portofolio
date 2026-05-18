@@ -67,6 +67,22 @@ export const translationsEN: Record<string, string> = {
   "about.education.title": "Education Journey",
   "about.skills.title":    "Skills",
 
+  // PPLG Competencies
+  "pplg.title":            "PPLG Competencies",
+  "pplg.subtitle":         "Core competencies studied in the Software & Game Development (PPLG) program at SMKN 2 Banjarmasin.",
+  "pplg.web.title":        "3D Artist",
+  "pplg.web.desc":         "Building websites from scratch using HTML, CSS, JavaScript, and modern frameworks like Next.js and React.",
+  "pplg.db.title":         "Sistem Operation",
+  "pplg.db.desc":          "Designing and managing relational databases using MySQL and PostgreSQL, including queries and data modeling.",
+  "pplg.uiux.title":       "UI/UX Design",
+  "pplg.uiux.desc":        "Creating user-centered interfaces and prototypes using Figma — from wireframes to high-fidelity mockups.",
+  "pplg.algo.title":       "Algorithms & Programming",
+  "pplg.algo.desc":        "Solving problems with structured logic using Python, C++, and C# — covering data structures and OOP.",
+  "pplg.net.title":        "Algorithms & Programming",
+  "pplg.net.desc":         "Understanding network fundamentals, IP addressing, protocols, and basic server configuration.",
+  "pplg.game.title":       "IoT",
+  "pplg.game.desc":        "Introduction to game design concepts, 2D/3D asset creation, and game logic using Blender and basic engines.",
+
   // Education timeline entries
   "edu.smp.title":       "SMPN 8 Banjarmasin",
   "edu.smp.subtitle":    "Junior High School",
@@ -100,6 +116,7 @@ export const translationsEN: Record<string, string> = {
   "work.proj.marbas.desc":  "E-commerce website — Indonesian heritage in a modern touch. Exclusive collection of perfumes, clothing, and technology inspired by Nusantara culture.",
   "work.proj.mantles.desc": "Fashion e-commerce — minimal forms, considered materials. A wardrobe built to endure. Fall/Winter collection with editorial aesthetic.",
   "work.proj.birthday.desc": "An interactive birthday gift — a heartfelt digital love letter with animated hearts, music, and a personal message crafted with care.",
+  "work.proj.rumah.desc":    "IPAS school assignment — a 3D architectural visualization of a house model built as part of the curriculum.",
 
   // ── Contact Page ─────────────────────────────────────────────────────────────
   "contact.subtitle":      "Get in touch",
@@ -187,6 +204,22 @@ export const translationsID: Record<string, string> = {
   "about.education.title": "Perjalanan Pendidikan",
   "about.skills.title":    "Keahlian",
 
+  // PPLG Competencies
+  "pplg.title":            "Kompetensi PPLG",
+  "pplg.subtitle":         "Kompetensi inti yang dipelajari dalam program Pengembangan Perangkat Lunak & Gim (PPLG) di SMKN 2 Banjarmasin.",
+  "pplg.web.title":        "3D Artist",
+  "pplg.web.desc":         "Membangun website dari nol menggunakan HTML, CSS, JavaScript, dan framework modern seperti Next.js dan React.",
+  "pplg.db.title":         "Sistem Operasi",
+  "pplg.db.desc":          "Memahami konsep data, tabel, dan relasi sederhana.",
+  "pplg.uiux.title":       "Desain UI/UX",
+  "pplg.uiux.desc":        "Membuat antarmuka dan prototipe yang berpusat pada pengguna menggunakan Figma — dari wireframe hingga mockup high-fidelity.",
+  "pplg.algo.title":       "Algoritma & Pemrograman",
+  "pplg.algo.desc":        "Belajar dasar-dasar coding: membuat program sederhana dengan Python, memahami variabel, if-else, loop, dan fungsi untuk menyelesaikan masalah sehari-hari.",
+  "pplg.net.title":        "Algoritma & Pemrograman",
+  "pplg.net.desc":         "Memahami dasar-dasar jaringan, pengalamatan IP, protokol, dan konfigurasi server dasar.",
+  "pplg.game.title":       "Internet of Things",
+  "pplg.game.desc":        "Pengenalan konsep desain game, pembuatan aset 2D/3D, dan logika game menggunakan Blender dan engine dasar.",
+
   // Education timeline entries
   "edu.smp.title":       "SMPN 8 Banjarmasin",
   "edu.smp.subtitle":    "Sekolah Menengah Pertama",
@@ -220,6 +253,7 @@ export const translationsID: Record<string, string> = {
   "work.proj.marbas.desc":  "Website e-commerce — warisan nusantara dalam sentuhan modern. Koleksi eksklusif parfum, pakaian, dan teknologi terinspirasi budaya Nusantara.",
   "work.proj.mantles.desc": "Fashion e-commerce — bentuk minimal, material terpilih. Lemari pakaian yang dibangun untuk bertahan. Koleksi Fall/Winter dengan estetika editorial.",
   "work.proj.birthday.desc": "Hadiah ulang tahun interaktif — surat cinta digital yang penuh perasaan dengan animasi hati, musik, dan pesan personal yang dibuat dengan sepenuh hati.",
+  "work.proj.rumah.desc":    "Tugas IPAS sekolah — visualisasi arsitektur 3D model rumah yang dibuat sebagai bagian dari kurikulum.",
 
   // ── Contact Page ─────────────────────────────────────────────────────────────
   "contact.subtitle":      "Hubungi Saya",
