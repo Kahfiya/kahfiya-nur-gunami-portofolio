@@ -97,7 +97,7 @@ export default function AboutPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-lg">
                   <p className="font-serif text-white text-lg font-bold">Kahfiya Nur Gunami</p>
-                  <p className="font-sans text-white/60 text-sm mt-0.5">Fullstack Developer & Designer</p>
+                  <p className="font-sans text-white/60 text-sm mt-0.5">Prompt Engineering & Designer</p>
                 </div>
               </div>
             </SpotlightCard>

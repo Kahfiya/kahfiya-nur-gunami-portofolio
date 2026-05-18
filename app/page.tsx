@@ -271,12 +271,6 @@ function HeroSection() {
           >
             {t("hero.cta.work")}
           </a>
-          <a
-            href="/contact"
-            className="px-6 py-3 rounded-full border border-neutral-300 text-neutral-700 font-sans text-sm font-medium hover:border-neutral-500 hover:text-neutral-900 transition-colors duration-200"
-          >
-            {t("hero.cta.contact")}
-          </a>
         </motion.div>
 
         {/* Social links */}

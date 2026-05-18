@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "Learn about Kahfiya Nur Gunami — fullstack developer and designer based in Banjarmasin, Indonesia.",
+  description: "Learn about Kahfiya Nur Gunami — prompt engineering and designer based in Banjarmasin, Indonesia.",
   openGraph: {
     title: "About | Kahfiya Nur Gunami",
-    description: "Learn about Kahfiya Nur Gunami — fullstack developer and designer based in Banjarmasin, Indonesia.",
+    description: "Learn about Kahfiya Nur Gunami — prompt engineering and designer based in Banjarmasin, Indonesia.",
   },
 };
 
