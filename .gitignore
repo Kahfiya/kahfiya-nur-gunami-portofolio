@@ -36,6 +36,7 @@ Thumbs.db
 .kiro/
 .claude/
 .agents/
+Claude.md
 
 # Debug logs
 npm-debug.log*

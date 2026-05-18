@@ -27,6 +27,7 @@ const playfair = Playfair_Display({
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://portofolio.kahfiya.dev"),
   title: {
     default: "Kahfiya Nur Gunami | Fullstack Developer & Designer",
     template: "%s | Kahfiya Nur Gunami",
