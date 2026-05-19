@@ -184,10 +184,60 @@ function FloatingTechCard({ tech }: { tech: typeof FLOATING_TECHS[number] }) {
 
 function FloatingTechLogos() {
   return (
-    <div className="absolute inset-0 overflow-visible" aria-hidden="false" style={{ zIndex: 1 }}>
+    <div className="absolute inset-0 overflow-visible hidden tablet:block" aria-hidden="true" style={{ zIndex: 1 }}>
       {FLOATING_TECHS.map((tech, i) => (
         <FloatingTechCard key={i} tech={tech} />
       ))}
+    </div>
+  );
+}
+
+// ─── Mobile Tech Marquee ──────────────────────────────────────────────────────
+
+const MARQUEE_TECHS = [
+  { name: "React",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
+  { name: "Next.js",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
+  { name: "TypeScript",   icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
+  { name: "Tailwind CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+  { name: "Figma",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" },
+  { name: "Python",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" },
+  { name: "Node.js",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
+  { name: "Git",          icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
+  { name: "Docker",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
+  { name: "Blender",      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" },
+  { name: "HTML5",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" },
+  { name: "C++",          icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg" },
+];
+
+function TechMarquee() {
+  // Duplicate for seamless loop
+  const items = [...MARQUEE_TECHS, ...MARQUEE_TECHS];
+  return (
+    <div className="tablet:hidden w-full overflow-hidden mt-6 mb-2" aria-hidden="true">
+      <div
+        className="flex gap-3 w-max"
+        style={{
+          animation: "marquee 22s linear infinite",
+        }}
+      >
+        {items.map((tech, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm shrink-0"
+            style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={tech.icon} alt={tech.name} width={18} height={18} style={{ width: 18, height: 18, objectFit: "contain" }} />
+            <span className="font-sans text-xs font-medium text-neutral-600 whitespace-nowrap">{tech.name}</span>
+          </div>
+        ))}
+      </div>
+      <style>{`
+        @keyframes marquee {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
     </div>
   );
 }
@@ -300,6 +350,10 @@ function HeroSection() {
           <div className="w-px h-4 bg-neutral-300" />
           <span className="font-sans text-[11px] tracking-[0.2em] uppercase text-neutral-400">{t("hero.location")}</span>
         </motion.div>
+
+        {/* Mobile tech marquee — only on mobile */}
+        <TechMarquee />
+
       </motion.div>
 
       {/* Scroll hint */}

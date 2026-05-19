@@ -59,7 +59,7 @@ const SKILLS: Array<{ name: string; bg: string; percent: number; iconUrl: string
 const PPLG_CARDS = [
   { key: "casing3d",  icon: "/Images/3D Casing.jpg",  bg: "#e34c26", href: "https://drive.google.com/drive/folders/1II8sI4B9RycI5tQOieX5bj03-8lBHuLx?usp=sharing" },
   { key: "sysop",   icon: "/Images/Sistem Ops.jpg", bg: "#00758f", href: "https://drive.google.com/drive/folders/1uPGYj_TycWJYNB86urnr7txj9lWvoOoE?usp=sharing" },
-  { key: "uiux", icon: "/Images/Figma.jpg",      bg: "#a259ff", href: "https://drive.google.com/drive/folders/1" },
+  { key: "uiux", icon: "/Images/Figma.jpg",      bg: "#a259ff", href: "https://www.figma.com/proto/eW4Bgtr8VlLE0uTBN22EY4/IOT-WEBSITE-AND-APP?node-id=119-63&t=wjF33PSxnepo5Iak-1" },
   { key: "algo2",  icon: "/Images/Flowchart.jpg",      bg: "#16a34a", href: "https://drive.google.com/drive/folders/1MtDp6E-fZCOw_4ZZUzW2iamGTtuf3CXq?usp=sharing" },
   { key: "brosur", icon: "/Images/Browser.jpg",    bg: "#cc0000", href: "https://drive.google.com/drive/folders/1II8sI4B9RycI5tQOieX5bj03-8lBHuLx?usp=sharing" },
 ] as const;
@@ -152,9 +152,9 @@ function PplgGrid() {
                   className="inline-flex items-center gap-2 text-sm font-medium text-accent-500 hover:text-accent-400 transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M6.5 20q-2.275 0-3.887-1.575T1 14.575q0-1.95 1.175-3.475T5.25 9.15q.375-2.15 2.063-3.65T11.25 4q2.525 0 4.238 1.762T17.2 10q1.8.2 2.8 1.425T21 14.25q0 1.875-1.313 3.063T16.5 18.5H13v-5.85l1.4 1.4L15.8 12.6 12 8.8l-3.8 3.8 1.4 1.45L11 12.65V18.5H6.5Z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
                   </svg>
-                  Lihat di Google Drive →
+                  Lihat Prototype →
                 </a>
               </div>
             </motion.div>

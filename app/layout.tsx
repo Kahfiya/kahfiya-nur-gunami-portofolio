@@ -6,6 +6,7 @@ import PreloaderWrapper from "@/components/layout/PreloaderWrapper";
 import PullToRefresh from "@/components/layout/PullToRefresh";
 import ClickSpark from "@/components/ui/ClickSpark";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
+import { MusicProvider } from "@/lib/MusicContext";
 import "./globals.css";
 
 // ─── Google Fonts ─────────────────────────────────────────────────────────────
@@ -76,6 +77,7 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased bg-neutral-50 text-neutral-900">
         <LanguageProvider>
+          <MusicProvider>
           <PreloaderWrapper>
             <ClickSpark
               sparkColor="#f97316"
@@ -92,6 +94,7 @@ export default function RootLayout({
               </PullToRefresh>
             </ClickSpark>
           </PreloaderWrapper>
+          </MusicProvider>
         </LanguageProvider>
       </body>
     </html>
