@@ -1,4 +1,4 @@
-// ─── Language Type ────────────────────────────────────────────────────────────
+﻿// ─── Language Type ────────────────────────────────────────────────────────────
 
 export type Language = "en" | "id";
 
@@ -54,8 +54,8 @@ export const translationsEN: Record<string, string> = {
   // ── Certificates (Home) ──────────────────────────────────────────────────────
   "certificates.title":    "Certificates",
   "certificates.subtitle": "Continuous learning — verified credentials from trusted platforms.",
-  "cert.web.title":        "Web Programming Fundamentals",
-  "cert.frontend.title":   "Front-End Web Development",
+  "cert.web.title":      "Dasar AI",
+  "cert.frontend.title": "Financial Literacy",
   "cert.uiux.title":       "UI/UX Design Fundamentals",
   "cert.js.title":         "JavaScript Algorithms",
 
@@ -70,18 +70,18 @@ export const translationsEN: Record<string, string> = {
   // PPLG Competencies
   "pplg.title":            "PPLG Competencies",
   "pplg.subtitle":         "Core competencies studied in the Software & Game Development (PPLG) program at SMKN 2 Banjarmasin.",
-  "pplg.web.title":        "3D Artist",
-  "pplg.web.desc":         "Building websites from scratch using HTML, CSS, JavaScript, and modern frameworks like Next.js and React.",
-  "pplg.db.title":         "Sistem Operation",
-  "pplg.db.desc":          "Designing and managing relational databases using MySQL and PostgreSQL, including queries and data modeling.",
-  "pplg.uiux.title":       "UI/UX Design",
+  "pplg.casing3d.title":        "3D Casing Panel-P10",
+  "pplg.casing3d.desc":         "Building websites from scratch using HTML, CSS, JavaScript, and modern frameworks like Next.js and React.",
+  "pplg.sysop.title":         "Sistem Operasi",
+  "pplg.sysop.desc":          "Designing and managing relational databases using MySQL and PostgreSQL, including queries and data modeling.",
+  "pplg.uiux.title":       "Desain UI/UX",
   "pplg.uiux.desc":        "Creating user-centered interfaces and prototypes using Figma — from wireframes to high-fidelity mockups.",
-  "pplg.algo.title":       "Algorithms & Programming",
-  "pplg.algo.desc":        "Solving problems with structured logic using Python, C++, and C# — covering data structures and OOP.",
-  "pplg.net.title":        "Algorithms & Programming",
-  "pplg.net.desc":         "Understanding network fundamentals, IP addressing, protocols, and basic server configuration.",
-  "pplg.game.title":       "IoT",
-  "pplg.game.desc":        "Introduction to game design concepts, 2D/3D asset creation, and game logic using Blender and basic engines.",
+  "pplg.algo1.title":       "Algoritma & Pemrograman",
+  "pplg.algo1.desc":        "Solving problems with structured logic using Python, C++, and C# — covering data structures and OOP.",
+  "pplg.algo2.title":        "Algoritma & Pemrograman",
+  "pplg.algo2.desc":         "Understanding network fundamentals, IP addressing, protocols, and basic server configuration.",
+  "pplg.brosur.title":       "Brosur Penjualan",
+  "pplg.brosur.desc":        "Introduction to game design concepts, 2D/3D asset creation, and game logic using Blender and basic engines.",
 
   // Education timeline entries
   "edu.smp.title":       "SMPN 8 Banjarmasin",
@@ -117,6 +117,7 @@ export const translationsEN: Record<string, string> = {
   "work.proj.mantles.desc": "Fashion e-commerce — minimal forms, considered materials. A wardrobe built to endure. Fall/Winter collection with editorial aesthetic.",
   "work.proj.birthday.desc": "An interactive birthday gift — a heartfelt digital love letter with animated hearts, music, and a personal message crafted with care.",
   "work.proj.rumah.desc":    "IPAS school assignment — a 3D architectural visualization of a house model built as part of the curriculum.",
+  "work.proj.panel.desc":   "P10 LED panel display project — hardware assembly and configuration of an outdoor LED matrix panel for digital signage.",
 
   // ── Contact Page ─────────────────────────────────────────────────────────────
   "contact.subtitle":      "Get in touch",
@@ -191,8 +192,8 @@ export const translationsID: Record<string, string> = {
   // ── Certificates (Home) ──────────────────────────────────────────────────────
   "certificates.title":    "Sertifikat",
   "certificates.subtitle": "Pembelajaran berkelanjutan — kredensial terverifikasi dari platform terpercaya.",
-  "cert.web.title":        "Belajar Dasar Pemrograman Web",
-  "cert.frontend.title":   "Belajar Membuat Front-End Web",
+  "cert.web.title":      "Dasar AI",
+  "cert.frontend.title": "Financial Literacy",
   "cert.uiux.title":       "UI/UX Design Fundamentals",
   "cert.js.title":         "JavaScript Algorithms",
 
@@ -205,20 +206,20 @@ export const translationsID: Record<string, string> = {
   "about.skills.title":    "Keahlian",
 
   // PPLG Competencies
-  "pplg.title":            "Kompetensi PPLG",
-  "pplg.subtitle":         "Kompetensi inti yang dipelajari dalam program Pengembangan Perangkat Lunak & Gim (PPLG) di SMKN 2 Banjarmasin.",
-  "pplg.web.title":        "3D Artist",
-  "pplg.web.desc":         "Membangun website dari nol menggunakan HTML, CSS, JavaScript, dan framework modern seperti Next.js dan React.",
-  "pplg.db.title":         "Sistem Operasi",
-  "pplg.db.desc":          "Memahami konsep data, tabel, dan relasi sederhana.",
+  "pplg.title":            "Keahlian PPLG",
+  "pplg.subtitle":         "Keahlian yang dipelajari dalam program Pengembangan Perangkat Lunak & Gim (PPLG) di SMKN 2 Banjarmasin.",
+  "pplg.casing3d.title":        "3D Casing Panel-P10",
+  "pplg.casing3d.desc":         "Desain dan pembuatan casing 3D bergaya retro untuk display LED P10 dengan fitur jam digital real-time.",
+  "pplg.sysop.title":         "Sistem Operasi",
+  "pplg.sysop.desc":          "Praktik dasar sistem operasi: navigasi file, manajemen folder, dan perintah CLI di Windows PowerShell.",
   "pplg.uiux.title":       "Desain UI/UX",
-  "pplg.uiux.desc":        "Membuat antarmuka dan prototipe yang berpusat pada pengguna menggunakan Figma — dari wireframe hingga mockup high-fidelity.",
-  "pplg.algo.title":       "Algoritma & Pemrograman",
-  "pplg.algo.desc":        "Belajar dasar-dasar coding: membuat program sederhana dengan Python, memahami variabel, if-else, loop, dan fungsi untuk menyelesaikan masalah sehari-hari.",
-  "pplg.net.title":        "Algoritma & Pemrograman",
-  "pplg.net.desc":         "Memahami dasar-dasar jaringan, pengalamatan IP, protokol, dan konfigurasi server dasar.",
-  "pplg.game.title":       "Internet of Things",
-  "pplg.game.desc":        "Pengenalan konsep desain game, pembuatan aset 2D/3D, dan logika game menggunakan Blender dan engine dasar.",
+  "pplg.uiux.desc":        "Prototipe desain antarmuka aplikasi mobile dengan fokus pada pengaturan waktu dan tema visual modern.",
+  "pplg.algo1.title":       "Algoritma & Pemrograman",
+  "pplg.algo1.desc":        "Belajar dasar-dasar coding: membuat program sederhana dengan Python, memahami variabel, if-else, loop, dan fungsi untuk menyelesaikan masalah sehari-hari.",
+  "pplg.algo2.title":        "Flowchart",
+  "pplg.algo2.desc":         "Flowchart sistem alarm clock: inisialisasi komponen, tampilkan waktu real-time, dan putar suara otomatis saat mencapai waktu yang ditentukan.",
+  "pplg.brosur.title":       "Brosur Penjualan",
+  "pplg.brosur.desc":        "Desain brosur produk digital dengan layout menarik, penekanan keunggulan, dan call-to-action jelas.",
 
   // Education timeline entries
   "edu.smp.title":       "SMPN 8 Banjarmasin",
@@ -254,6 +255,7 @@ export const translationsID: Record<string, string> = {
   "work.proj.mantles.desc": "Fashion e-commerce — bentuk minimal, material terpilih. Lemari pakaian yang dibangun untuk bertahan. Koleksi Fall/Winter dengan estetika editorial.",
   "work.proj.birthday.desc": "Hadiah ulang tahun interaktif — surat cinta digital yang penuh perasaan dengan animasi hati, musik, dan pesan personal yang dibuat dengan sepenuh hati.",
   "work.proj.rumah.desc":    "Tugas IPAS sekolah — visualisasi arsitektur 3D model rumah yang dibuat sebagai bagian dari kurikulum.",
+  "work.proj.panel.desc":   "Proyek panel LED P10 — perakitan hardware dan konfigurasi panel LED matrix outdoor untuk papan informasi digital.",
 
   // ── Contact Page ─────────────────────────────────────────────────────────────
   "contact.subtitle":      "Hubungi Saya",

@@ -42,10 +42,8 @@ const PROJECTS = [
 ];
 
 const CERTIFICATES = [
-  { titleKey: "cert.web.title", issuer: "Dicoding Indonesia", year: "2026", color: "from-blue-50 to-blue-100", accent: "text-blue-600" },
-  { titleKey: "cert.frontend.title", issuer: "Dicoding Indonesia", year: "2026", color: "from-purple-50 to-purple-100", accent: "text-purple-600" },
-  { titleKey: "cert.uiux.title", issuer: "Coursera", year: "2026", color: "from-orange-50 to-orange-100", accent: "text-accent-600" },
-  { titleKey: "cert.js.title", issuer: "freeCodeCamp", year: "2026", color: "from-green-50 to-green-100", accent: "text-green-600" },
+  { titleKey: "cert.web.title", issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif Dasar AI.jpg" },
+  { titleKey: "cert.frontend.title", issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif financial.jpg" },
 ];
 
 const NAME = "Kahfiya Nur Gunami";
@@ -516,18 +514,28 @@ function CertificateSection() {
             initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
             transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
-            className={`relative rounded-2xl bg-gradient-to-br ${cert.color} p-6 border border-[var(--color-border)] overflow-hidden group hover:shadow-md transition-shadow duration-300`}
+            className="relative rounded-2xl border border-[var(--color-border)] overflow-hidden group hover:shadow-md transition-shadow duration-300 bg-neutral-50"
           >
-            <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/40 group-hover:scale-110 transition-transform duration-500" />
-            <div className="absolute -right-2 -top-2 w-12 h-12 rounded-full bg-white/60 group-hover:scale-110 transition-transform duration-500 delay-75" />
-            <div className="mb-4">
-              <svg viewBox="0 0 24 24" className={`w-8 h-8 ${cert.accent}`} fill="none" stroke="currentColor" strokeWidth={1.5}>
+            {/* Certificate image */}
+            <div className="relative w-full aspect-[4/3] overflow-hidden">
+              <Image
+                src={cert.imageUrl}
+                alt={t(cert.titleKey)}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+            {/* Info bar */}
+            <div className="p-4 flex items-center justify-between">
+              <div>
+                <h3 className="font-serif text-base font-bold text-[var(--color-text-primary)]">{t(cert.titleKey)}</h3>
+                <p className="font-sans text-xs text-[var(--color-text-secondary)] mt-0.5">{cert.issuer} · {cert.year}</p>
+              </div>
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-accent-500 shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
               </svg>
             </div>
-            <h3 className="font-serif text-lg font-bold text-[var(--color-text-primary)] mb-1 relative z-10">{t(cert.titleKey)}</h3>
-            <p className={`font-sans text-sm font-medium ${cert.accent} relative z-10`}>{cert.issuer}</p>
-            <p className="font-sans text-xs text-[var(--color-text-secondary)] mt-1 relative z-10">{cert.year}</p>
           </motion.div>
         ))}
       </div>

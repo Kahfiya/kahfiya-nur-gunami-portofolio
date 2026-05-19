@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import SectionHeading from "@/components/sections/SectionHeading";
 import { Timeline } from "@/components/ui/timeline";
 import SpotlightCard from "@/components/ui/SpotlightCard";
@@ -53,6 +53,117 @@ const SKILLS: Array<{ name: string; bg: string; percent: number; iconUrl: string
   { name: "3D Artist",       percent: 1, bg: "#1a0533", iconUrl: `${CDN}/blender/blender-original.svg` },
   { name: "DevOps Engineer", percent: 1, bg: "#0f2027", iconUrl: `${CDN}/docker/docker-original.svg` },
 ];
+
+// ─── PPLG Grid + Detail Modal ────────────────────────────────────────────────
+
+const PPLG_CARDS = [
+  { key: "casing3d",  icon: "/Images/3D Casing.jpg",  bg: "#e34c26", href: "https://drive.google.com/drive/folders/1II8sI4B9RycI5tQOieX5bj03-8lBHuLx?usp=sharing" },
+  { key: "sysop",   icon: "/Images/Sistem Ops.jpg", bg: "#00758f", href: "https://drive.google.com/drive/folders/1uPGYj_TycWJYNB86urnr7txj9lWvoOoE?usp=sharing" },
+  { key: "uiux", icon: "/Images/Figma.jpg",      bg: "#a259ff", href: "https://drive.google.com/drive/folders/1" },
+  { key: "algo2",  icon: "/Images/Flowchart.jpg",      bg: "#16a34a", href: "https://drive.google.com/drive/folders/1MtDp6E-fZCOw_4ZZUzW2iamGTtuf3CXq?usp=sharing" },
+  { key: "brosur", icon: "/Images/Browser.jpg",    bg: "#cc0000", href: "https://drive.google.com/drive/folders/1II8sI4B9RycI5tQOieX5bj03-8lBHuLx?usp=sharing" },
+] as const;
+
+function PplgGrid() {
+  const { t } = useLanguage();
+  const [active, setActive] = React.useState<typeof PPLG_CARDS[number] | null>(null);
+
+  return (
+    <>
+      <div className="grid grid-cols-2 tablet:grid-cols-3 gap-lg">
+        {PPLG_CARDS.map(({ key, icon, bg, href }, i) => (
+          <motion.button
+            key={key}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.4, delay: i * 0.07 }}
+            onClick={() => setActive(PPLG_CARDS[i])}
+            className="text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded-[15px]"
+            aria-label={`View details: ${t(`pplg.${key}.title`)}`}
+          >
+            <TiltedCard
+              imageSrc={icon}
+              altText={t(`pplg.${key}.title`)}
+              captionText={t(`pplg.${key}.title`)}
+              containerHeight="220px"
+              imageHeight="220px"
+              imageWidth="100%"
+              scaleOnHover={1.05}
+              rotateAmplitude={10}
+              showMobileWarning={false}
+              displayOverlayContent
+              overlayContent={
+                <div
+                  className="w-full h-full rounded-[15px] flex flex-col justify-end p-md"
+                  style={{ background: `linear-gradient(to top, ${bg}ee 0%, ${bg}44 50%, transparent 100%)` }}
+                >
+                  <p className="font-sans text-white text-sm font-semibold leading-tight">{t(`pplg.${key}.title`)}</p>
+                </div>
+              }
+            />
+          </motion.button>
+        ))}
+      </div>
+
+      {/* Detail Modal */}
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActive(null)}
+          >
+            <motion.div
+              className="relative bg-[var(--color-bg-primary)] rounded-2xl overflow-hidden max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Full image — natural size */}
+              <div className="relative w-full bg-black">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={active.icon} alt={t(`pplg.${active.key}.title`)} className="w-full h-auto block" />
+                <button
+                  onClick={() => setActive(null)}
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Text + link */}
+              <div className="p-6 flex flex-col gap-3">
+                <h3 className="font-serif text-xl font-bold text-[var(--color-text-primary)]">
+                  {t(`pplg.${active.key}.title`)}
+                </h3>
+                <p className="font-sans text-sm text-[var(--color-text-secondary)] leading-relaxed">
+                  {t(`pplg.${active.key}.desc`)}
+                </p>
+                <a
+                  href={active.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-accent-500 hover:text-accent-400 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M6.5 20q-2.275 0-3.887-1.575T1 14.575q0-1.95 1.175-3.475T5.25 9.15q.375-2.15 2.063-3.65T11.25 4q2.525 0 4.238 1.762T17.2 10q1.8.2 2.8 1.425T21 14.25q0 1.875-1.313 3.063T16.5 18.5H13v-5.85l1.4 1.4L15.8 12.6 12 8.8l-3.8 3.8 1.4 1.45L11 12.65V18.5H6.5Z"/>
+                  </svg>
+                  Lihat di Google Drive →
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -160,45 +271,7 @@ export default function AboutPage() {
         <p className="font-sans text-sm text-[var(--color-text-secondary)] mb-xl -mt-sm max-w-2xl">
           {t("pplg.subtitle")}
         </p>
-        <div className="grid grid-cols-2 tablet:grid-cols-3 gap-lg">
-          {([
-            { key: "web",  icon: "/Images/3D Casing.jpg",    bg: "#e34c26" },
-            { key: "db",   icon: "/Images/Sistem Ops.jpg",    bg: "#00758f" },
-            { key: "uiux", icon: "/Images/Figma.jpg",         bg: "#a259ff" },
-            { key: "algo", icon: "/Images/Pin.jpg",           bg: "#1e3a5f" },
-            { key: "net",  icon: "/Images/Nilai.jpg",         bg: "#16a34a" },
-            { key: "game", icon: "/Images/Panel-P10.jpg",     bg: "#cc0000" },
-          ] as const).map(({ key, icon, bg }, i) => (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.4, delay: i * 0.07 }}
-            >
-              <TiltedCard
-                imageSrc={icon}
-                altText={t(`pplg.${key}.title`)}
-                captionText={t(`pplg.${key}.title`)}
-                containerHeight="220px"
-                imageHeight="220px"
-                imageWidth="100%"
-                scaleOnHover={1.05}
-                rotateAmplitude={10}
-                showMobileWarning={false}
-                displayOverlayContent
-                overlayContent={
-                  <div
-                    className="w-full h-full rounded-[15px] flex flex-col justify-end p-md"
-                    style={{ background: `linear-gradient(to top, ${bg}ee 0%, ${bg}44 50%, transparent 100%)` }}
-                  >
-                    <p className="font-sans text-white text-sm font-semibold leading-tight">{t(`pplg.${key}.title`)}</p>
-                  </div>
-                }
-              />
-            </motion.div>
-          ))}
-        </div>
+        <PplgGrid />
       </section>
 
     </main>
