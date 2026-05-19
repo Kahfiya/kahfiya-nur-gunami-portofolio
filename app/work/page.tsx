@@ -10,7 +10,7 @@ import ScrollReveal, { ScrollStagger, scrollItem } from "@/components/ui/ScrollR
 import { fadeUp, prefersReducedMotion } from "@/lib/motion-variants";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
-type FilterCategory = "All" | "Web" | "Design" | "Mobile";
+type FilterCategory = "All" | "Web" | "Design" | "School" | "Mobile";
 
 interface Project {
   id: string;
@@ -23,7 +23,7 @@ interface Project {
   category: FilterCategory[];
 }
 
-const FILTERS: FilterCategory[] = ["All", "Web", "Design"];
+const FILTERS: FilterCategory[] = ["All", "Web", "Design", "School"];
 
 // ── Modal ──────────────────────────────────────────────────────────────────
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
@@ -225,8 +225,8 @@ export default function WorkPage() {
       imageUrl: "/Images/Rumah2.jpg",
       imageAlt: "Rumah IPAS — 3D House Model",
       tags: ["3D", "Akulturasi", "IPAS", "School"],
-      href: "https://drive.google.com/drive/folders/1-casing-rumah-iot",
-      category: ["Design"],
+      href: "https://drive.google.com/drive/folders/1U-C_nbNWTz864sFeGunWOybLlseOXpnn?usp=sharing",
+      category: ["Design", "School"],
     },
     {
       id: "proj-panel",
@@ -236,13 +236,14 @@ export default function WorkPage() {
       imageAlt: "Panel LED P10 — Outdoor LED Matrix Display",
       tags: ["Hardware", "LED", "Electronics", "IoT"],
       href: "https://drive.google.com/drive/folders/1npR3hgn1lRBoaJhuFFzINxUsTsczB4q6?usp=sharing",
-      category: ["Design"],
+      category: ["Design", "School"],
     },
   ];
 
   const filterLabel = (f: FilterCategory): string => {
     if (f === "All") return t("work.filter.all");
     if (f === "Design") return t("work.filter.design");
+    if (f === "School") return t("work.filter.school");
     return f;
   };
 
