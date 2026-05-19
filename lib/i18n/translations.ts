@@ -13,7 +13,7 @@ export const translationsEN: Record<string, string> = {
   // ── Hero (Home) ─────────────────────────────────────────────────────────────
   "hero.bio":   "I craft fast, beautiful digital experiences — from concept to code.",
   "hero.im":    "I'm a",
-  "hero.role1": "Students.",
+  "hero.role1": "Student.",
   "hero.role2": "UI/UX Designer.",
   "hero.role3": "Software Engineer.",
   "hero.role4": "Creative Coder.",
@@ -151,7 +151,7 @@ export const translationsID: Record<string, string> = {
   // ── Hero (Home) ─────────────────────────────────────────────────────────────
   "hero.bio":   "Saya membangun pengalaman digital yang cepat dan indah — dari konsep hingga kode.",
   "hero.im":    "Saya seorang",
-  "hero.role1": "Fullstack Developer.",
+  "hero.role1": "Siswa.",
   "hero.role2": "UI/UX Designer.",
   "hero.role3": "Software Engineer.",
   "hero.role4": "Creative Coder.",
