@@ -5,6 +5,7 @@ import PageTransitionWrapper from "@/components/layout/PageTransitionWrapper";
 import PreloaderWrapper from "@/components/layout/PreloaderWrapper";
 import PullToRefresh from "@/components/layout/PullToRefresh";
 import ClickSpark from "@/components/ui/ClickSpark";
+import GSAPInit from "@/components/ui/GSAPInit";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { MusicProvider } from "@/lib/MusicContext";
 import "./globals.css";
@@ -76,6 +77,7 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable}`}
     >
       <body className="font-sans antialiased bg-neutral-50 text-neutral-900">
+        <GSAPInit />
         <LanguageProvider>
           <MusicProvider>
           <PreloaderWrapper>

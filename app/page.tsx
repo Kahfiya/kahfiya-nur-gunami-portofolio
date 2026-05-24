@@ -4,6 +4,8 @@ import { useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import SectionHeading from "@/components/sections/SectionHeading";
 import Typewriter from "@/components/ui/Typewriter";
@@ -42,8 +44,12 @@ const PROJECTS = [
 ];
 
 const CERTIFICATES = [
-  { titleKey: "cert.web.title", issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif Dasar AI.jpg" },
+  { titleKey: "cert.web.title",     issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif Dasar AI.jpg" },
   { titleKey: "cert.frontend.title", issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif financial.jpg" },
+  { titleKey: "cert.python.title",  issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif Memulai Pemrograman dengan Python.jpg" },
+  { titleKey: "cert.ai.title",      issuer: "IBM SkillsBuild",    year: "2026", imageUrl: "/Images/Sertifikat/Sertif Introduction to Artificial Intelligence.jpg" },
+  { titleKey: "cert.claude.title",  issuer: "Anthropic",          year: "2026", imageUrl: "/Images/Sertifikat/Sertif Claude 101.jpg" },
+  { titleKey: "cert.aifund.title",  issuer: "Coursera",           year: "2026", imageUrl: "/Images/Sertifikat/Sertif AI Fundamentals for Non-Data Scientists.jpg" },
 ];
 
 const NAME = "Kahfiya Nur Gunami";
@@ -78,107 +84,116 @@ const FLOATING_TECHS: Array<{
 ];
 
 function FloatingTechCard({ tech }: { tech: typeof FLOATING_TECHS[number] }) {
-  const [hovered, setHovered] = useState(false);
-  const [dragging, setDragging] = useState(false);
+  const [showLabel, setShowLabel] = useState(false);
   const pad = 20;
 
-  return (
-    <motion.div
-      className="absolute cursor-grab active:cursor-grabbing"
-      style={{ left: tech.x, top: tech.y, zIndex: dragging ? 50 : 1 }}
-      drag
-      dragMomentum={false}
-      dragElastic={0.15}
-      whileDrag={{ scale: 1.18, zIndex: 50 }}
-      onDragStart={() => setDragging(true)}
-      onDragEnd={() => setDragging(false)}
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={dragging ? {} : {
-        opacity: [0, 0.7, 0.7],
-        scale: [0.5, 1, 1],
-        y: [0, -tech.drift, 0],
-      }}
-      transition={{
-        opacity: { delay: tech.delay + 0.8, duration: 0.6 },
-        scale:   { delay: tech.delay + 0.8, duration: 0.6 },
-        y: {
-          delay: tech.delay + 1.5,
-          duration: tech.duration,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "easeInOut",
-        },
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Tooltip */}
-      <AnimatePresence>
-        {hovered && !dragging && (
-          <motion.div
-            className="absolute left-1/2 -translate-x-1/2 -top-9 whitespace-nowrap"
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.15 }}
-            style={{
-              background: "rgba(10,10,10,0.85)",
-              color: "#fafafa",
-              fontSize: "0.65rem",
-              fontFamily: "var(--font-inter), system-ui, sans-serif",
-              letterSpacing: "0.05em",
-              padding: "3px 10px",
-              borderRadius: 6,
-              pointerEvents: "none",
-              zIndex: 10,
-            }}
-          >
-            {tech.name}
-            <span
-              style={{
-                position: "absolute",
-                bottom: -4,
-                left: "50%",
-                transform: "translateX(-50%)",
-                width: 0,
-                height: 0,
-                borderLeft: "4px solid transparent",
-                borderRight: "4px solid transparent",
-                borderTop: "4px solid rgba(10,10,10,0.85)",
-              }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+  // Determine tooltip direction based on horizontal position to avoid clipping
+  const xVal = parseFloat(tech.x);
+  const tooltipPos: "top" | "right" | "left" =
+    xVal < 22 ? "right" : xVal > 75 ? "left" : "top";
 
-      {/* Icon pill */}
+  const tooltipStyle: React.CSSProperties =
+    tooltipPos === "top"
+      ? { bottom: "calc(100% + 8px)", left: "50%", transform: "translateX(-50%)" }
+      : tooltipPos === "right"
+      ? { left: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" }
+      : { right: "calc(100% + 8px)", top: "50%", transform: "translateY(-50%)" };
+
+  const arrowStyle: React.CSSProperties =
+    tooltipPos === "top"
+      ? { position: "absolute", bottom: -4, left: "50%", transform: "translateX(-50%)", width: 0, height: 0, borderLeft: "4px solid transparent", borderRight: "4px solid transparent", borderTop: "4px solid rgba(10,10,10,0.85)" }
+      : tooltipPos === "right"
+      ? { position: "absolute", left: -4, top: "50%", transform: "translateY(-50%)", width: 0, height: 0, borderTop: "4px solid transparent", borderBottom: "4px solid transparent", borderRight: "4px solid rgba(10,10,10,0.85)" }
+      : { position: "absolute", right: -4, top: "50%", transform: "translateY(-50%)", width: 0, height: 0, borderTop: "4px solid transparent", borderBottom: "4px solid transparent", borderLeft: "4px solid rgba(10,10,10,0.85)" };
+
+  return (
+    <div
+      className="absolute"
+      style={{ left: tech.x, top: tech.y, zIndex: 1 }}
+      onMouseEnter={() => setShowLabel(true)}
+      onMouseLeave={() => setShowLabel(false)}
+      onPointerDown={(e) => {
+        if (e.pointerType === "touch") {
+          setShowLabel(true);
+          setTimeout(() => setShowLabel(false), 1500);
+        }
+      }}
+    >
       <motion.div
-        className="rounded-2xl flex items-center justify-center backdrop-blur-sm"
-        animate={{ scale: hovered && !dragging ? 1.12 : 1 }}
-        transition={{ duration: 0.2 }}
-        style={{
-          width: tech.size + pad,
-          height: tech.size + pad,
-          background: dragging ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.65)",
-          boxShadow: dragging
-            ? "0 16px 40px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.9)"
-            : hovered
-            ? "0 8px 28px rgba(0,0,0,0.13), inset 0 1px 0 rgba(255,255,255,0.9)"
-            : "0 4px 16px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.85)",
-          border: "1px solid rgba(255,255,255,0.8)",
-          transition: "box-shadow 0.2s, background 0.2s",
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{
+          opacity: [0, 0.7, 0.7],
+          scale: [0.5, 1, 1],
+          y: [0, -tech.drift, 0],
         }}
+        transition={{
+          opacity: { delay: tech.delay + 0.8, duration: 0.6 },
+          scale:   { delay: tech.delay + 0.8, duration: 0.6 },
+          y: {
+            delay: tech.delay + 1.5,
+            duration: tech.duration,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut",
+          },
+        }}
+        className="relative"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={tech.icon}
-          alt={tech.name}
-          width={tech.size}
-          height={tech.size}
-          style={{ width: tech.size, height: tech.size, objectFit: "contain", display: "block" }}
-        />
+        {/* Tooltip */}
+        <AnimatePresence>
+          {showLabel && (
+            <motion.div
+              className="absolute whitespace-nowrap"
+              style={{
+                ...tooltipStyle,
+                background: "rgba(10,10,10,0.85)",
+                color: "#fafafa",
+                fontSize: "0.65rem",
+                fontFamily: "var(--font-inter), system-ui, sans-serif",
+                letterSpacing: "0.05em",
+                padding: "3px 10px",
+                borderRadius: 6,
+                pointerEvents: "none",
+                zIndex: 10,
+              }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.15 }}
+            >
+              {tech.name}
+              <span style={arrowStyle} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Icon pill */}
+        <motion.div
+          className="rounded-2xl flex items-center justify-center backdrop-blur-sm"
+          animate={{ scale: showLabel ? 1.12 : 1 }}
+          transition={{ duration: 0.2 }}
+          style={{
+            width: tech.size + pad,
+            height: tech.size + pad,
+            background: "rgba(255,255,255,0.65)",
+            boxShadow: showLabel
+              ? "0 8px 28px rgba(0,0,0,0.13), inset 0 1px 0 rgba(255,255,255,0.9)"
+              : "0 4px 16px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.85)",
+            border: "1px solid rgba(255,255,255,0.8)",
+            transition: "box-shadow 0.2s",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={tech.icon}
+            alt={tech.name}
+            width={tech.size}
+            height={tech.size}
+            style={{ width: tech.size, height: tech.size, objectFit: "contain", display: "block" }}
+          />
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -246,48 +261,104 @@ function TechMarquee() {
 
 function HeroSection() {
   const { t } = useLanguage();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const load = () => {
+      const v = videoRef.current;
+      if (!v) return;
+      v.src = "/Hero/Hero Section.mp4";
+      v.load();
+    };
+    if ("requestIdleCallback" in window) {
+      const id = requestIdleCallback(load);
+      return () => cancelIdleCallback(id);
+    } else {
+      const id = setTimeout(load, 100);
+      return () => clearTimeout(id);
+    }
+  }, []);
+
+  // GSAP: parallax video + overlay darkens on scroll
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      // Video parallax
+      if (videoRef.current) {
+        gsap.to(videoRef.current, {
+          yPercent: 25,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+      // Overlay gets darker as you scroll
+      if (overlayRef.current) {
+        gsap.to(overlayRef.current, {
+          opacity: 0.75,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "60% top",
+            scrub: true,
+          },
+        });
+      }
+    }, sectionRef);
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       aria-label="Hero"
-      className="relative min-h-[90svh] flex flex-col items-center justify-center px-md tablet:px-2xl bg-gradient-to-br from-neutral-50 via-orange-50/40 to-amber-50/30"
+      className="relative min-h-[90svh] flex flex-col items-center justify-center px-md tablet:px-2xl overflow-hidden bg-neutral-900"
     >
-      {/* Decorative blobs */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
-        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-orange-100/50 blur-3xl" />
-        <div className="absolute -bottom-24 -right-24 w-[400px] h-[400px] rounded-full bg-amber-100/60 blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-orange-50/40 blur-3xl" />
-      </div>
+      <video
+        ref={videoRef}
+        aria-hidden="true"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="none"
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ zIndex: 0 }}
+      />
+      <div ref={overlayRef} aria-hidden="true" className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }} />
 
       <FloatingTechLogos />
 
       <motion.div
         className="relative z-10 w-full max-w-6xl mx-auto text-center flex flex-col items-center gap-lg"
       >
-
-        {/* Name */}
         <motion.h1
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="font-serif leading-tight text-neutral-900 whitespace-nowrap"
+          className="font-serif leading-tight text-white whitespace-nowrap"
           style={{ fontSize: "clamp(2rem, 6vw, 5.5rem)" }}
         >
           {NAME}
         </motion.h1>
 
-        {/* Bio */}
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35, duration: 0.5 }}
-          className="font-sans text-neutral-500 font-light max-w-md"
+          className="font-sans text-white/75 font-light max-w-md"
           style={{ fontSize: "clamp(0.9rem, 1.8vw, 1.05rem)" }}
         >
           {t("hero.bio")}
         </motion.p>
 
-        {/* Typewriter */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -295,18 +366,17 @@ function HeroSection() {
           className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1"
           style={{ fontSize: "clamp(1.1rem, 3vw, 1.75rem)" }}
         >
-          <span className="text-neutral-500 font-sans font-light">{t("hero.im")}</span>
+          <span className="text-white/75 font-sans font-light">{t("hero.im")}</span>
           <Typewriter
             words={[t("hero.role1"), t("hero.role2"), t("hero.role3"), t("hero.role4"), t("hero.role5")]}
             typeSpeed={75}
             deleteSpeed={40}
             pauseAfterType={2000}
-            className="font-serif font-bold text-neutral-900"
-            cursorClassName="bg-accent-500"
+            className="font-serif font-bold text-white"
+            cursorClassName="bg-white"
           />
         </motion.div>
 
-        {/* CTA Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -315,13 +385,12 @@ function HeroSection() {
         >
           <a
             href="/work"
-            className="px-6 py-3 rounded-full bg-neutral-900 text-white font-sans text-sm font-medium hover:bg-neutral-700 transition-colors duration-200"
+            className="px-6 py-3 rounded-full bg-white text-neutral-900 font-sans text-sm font-medium hover:bg-white/90 transition-colors duration-200"
           >
             {t("hero.cta.work")}
           </a>
         </motion.div>
 
-        {/* Social links */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -332,7 +401,7 @@ function HeroSection() {
             { href: "https://github.com/kahfiya", label: "GitHub", icon: (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
             )},
-            { href: "https://linkedin.com/in/kahfiya", label: "LinkedIn", icon: (
+            { href: "https://www.linkedin.com/in/kahfiya-nur-gunami/", label: "LinkedIn", icon: (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
             )},
           ].map(({ href, label, icon }) => (
@@ -342,21 +411,18 @@ function HeroSection() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={label}
-              className="text-neutral-400 hover:text-neutral-700 transition-colors duration-200"
+              className="text-white/60 hover:text-white transition-colors duration-200"
             >
               {icon}
             </a>
           ))}
-          <div className="w-px h-4 bg-neutral-300" />
-          <span className="font-sans text-[11px] tracking-[0.2em] uppercase text-neutral-400">{t("hero.location")}</span>
+          <div className="w-px h-4 bg-white/30" />
+          <span className="font-sans text-[11px] tracking-[0.2em] uppercase text-white/60">{t("hero.location")}</span>
         </motion.div>
 
-        {/* Mobile tech marquee — only on mobile */}
         <TechMarquee />
-
       </motion.div>
 
-      {/* Scroll hint */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
@@ -364,8 +430,8 @@ function HeroSection() {
         transition={{ delay: 1.5 }}
         aria-hidden="true"
       >
-        <span className="font-sans text-[10px] tracking-[0.3em] uppercase text-neutral-400">{t("hero.scroll")}</span>
-        <div className="w-px h-10 bg-gradient-to-b from-neutral-400 to-transparent" />
+        <span className="font-sans text-[10px] tracking-[0.3em] uppercase text-white/50">{t("hero.scroll")}</span>
+        <div className="w-px h-10 bg-gradient-to-b from-white/50 to-transparent" />
       </motion.div>
     </section>
   );
@@ -561,7 +627,7 @@ function CertificateSection() {
   return (
     <section ref={ref} className="px-md tablet:px-2xl py-3xl max-w-7xl mx-auto w-full">
       <SectionHeading title={t("certificates.title")} subtitle={t("certificates.subtitle")} align="left" as="h2" />
-      <div className="grid grid-cols-1 tablet:grid-cols-2 gap-md">
+      <div className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3 gap-md">
         {CERTIFICATES.map((cert, i) => (
           <motion.div
             key={cert.titleKey}

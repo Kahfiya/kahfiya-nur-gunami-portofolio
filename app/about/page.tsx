@@ -33,26 +33,129 @@ function SkillBar({ label, percent }: { label: string; percent: number }) {
   );
 }
 
-// ─── Skills data ─────────────────────────────────────────────────────────────
+// ─── My Stack ────────────────────────────────────────────────────────────────
 
 const CDN = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
 
-const SKILLS: Array<{ name: string; bg: string; percent: number; iconUrl: string }> = [
-  { name: "React",           percent: 1, bg: "#20232a", iconUrl: `${CDN}/react/react-original.svg` },
-  { name: "Next.js",         percent: 1, bg: "#000000", iconUrl: `${CDN}/nextjs/nextjs-original.svg` },
-  { name: "TypeScript",      percent: 1, bg: "#3178C6", iconUrl: `${CDN}/typescript/typescript-original.svg` },
-  { name: "Tailwind CSS",    percent: 1, bg: "#0f172a", iconUrl: `${CDN}/tailwindcss/tailwindcss-original.svg` },
-  { name: "Framer Motion",   percent: 1, bg: "#0d0d0d", iconUrl: "https://cdn.simpleicons.org/framer" },
-  { name: "Figma",           percent: 1, bg: "#1e1e1e", iconUrl: `${CDN}/figma/figma-original.svg` },
-  { name: "UI/UX Design",    percent: 1, bg: "#1a1a2e", iconUrl: `${CDN}/figma/figma-original.svg` },
-  { name: "Python",          percent: 1, bg: "#1e3a5f", iconUrl: `${CDN}/python/python-original.svg` },
-  { name: "HTML/CSS",        percent: 1, bg: "#e34c26", iconUrl: `${CDN}/html5/html5-original.svg` },
-  { name: "C++",             percent: 1, bg: "#00427e", iconUrl: `${CDN}/cplusplus/cplusplus-original.svg` },
-  { name: "C#",              percent: 1, bg: "#68217a", iconUrl: `${CDN}/csharp/csharp-original.svg` },
-  { name: "Public Speaking", percent: 1, bg: "#b45309", iconUrl: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='23'/%3E%3Cline x1='8' y1='23' x2='16' y2='23'/%3E%3C/svg%3E" },
-  { name: "3D Artist",       percent: 1, bg: "#1a0533", iconUrl: `${CDN}/blender/blender-original.svg` },
-  { name: "DevOps Engineer", percent: 1, bg: "#0f2027", iconUrl: `${CDN}/docker/docker-original.svg` },
+const STACK_CATEGORIES = [
+  {
+    label: "FRONTEND",
+    items: [
+      { name: "HTML / CSS",    icon: `${CDN}/html5/html5-original.svg` },
+      { name: "JavaScript",    icon: `${CDN}/javascript/javascript-original.svg` },
+      { name: "TypeScript",    icon: `${CDN}/typescript/typescript-original.svg` },
+      { name: "React",         icon: `${CDN}/react/react-original.svg` },
+      { name: "Next.js",       icon: `${CDN}/nextjs/nextjs-original.svg` },
+      { name: "Tailwind CSS",  icon: `${CDN}/tailwindcss/tailwindcss-original.svg` },
+      { name: "Framer Motion", icon: "https://cdn.simpleicons.org/framer/ffffff" },
+    ],
+  },
+  {
+    label: "DESIGN",
+    items: [
+      { name: "Figma",   icon: `${CDN}/figma/figma-original.svg` },
+      { name: "Blender", icon: `${CDN}/blender/blender-original.svg` },
+    ],
+  },
+  {
+    label: "PROGRAMMING",
+    items: [
+      { name: "Python", icon: `${CDN}/python/python-original.svg` },
+      { name: "C++",    icon: `${CDN}/cplusplus/cplusplus-original.svg` },
+      { name: "C#",     icon: `${CDN}/csharp/csharp-original.svg` },
+    ],
+  },
+  {
+    label: "TOOLS",
+    items: [
+      { name: "Git",    icon: `${CDN}/git/git-original.svg` },
+      { name: "Docker", icon: `${CDN}/docker/docker-original.svg` },
+      { name: "Linux",  icon: `${CDN}/linux/linux-original.svg` },
+    ],
+  },
 ];
+
+function MyStack() {
+  const { t } = useLanguage();
+  return (
+    <section
+      aria-labelledby="stack-heading"
+      className="mb-3xl rounded-3xl overflow-hidden"
+      style={{ background: "#0d0d12" }}
+    >
+      {/* Header */}
+      <div className="px-xl pt-2xl pb-xl border-b border-white/10">
+        <h2
+          id="stack-heading"
+          className="font-sans font-black tracking-tight text-white"
+          style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)" }}
+        >
+          {t("about.skills.title").toUpperCase().split(" ").map((word, i) => (
+            <span key={i}>
+              {i === 1 ? <span className="text-accent-500">{word}</span> : word}
+              {i < t("about.skills.title").split(" ").length - 1 ? " " : ""}
+            </span>
+          ))}
+        </h2>
+      </div>
+
+      {/* Categories */}
+      <div className="divide-y divide-white/10">
+        {STACK_CATEGORIES.map((cat, ci) => (
+          <motion.div
+            key={cat.label}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.5, delay: ci * 0.08 }}
+            className="grid grid-cols-[120px_1fr] tablet:grid-cols-[200px_1fr] gap-0"
+          >
+            {/* Category label */}
+            <div className="flex items-start pt-xl px-xl pb-xl border-r border-white/10">
+              <span
+                className="font-sans font-bold tracking-widest text-white/30"
+                style={{ fontSize: "0.65rem", writingMode: "horizontal-tb" }}
+              >
+                {cat.label}
+              </span>
+            </div>
+
+            {/* Tech items */}
+            <div className="flex flex-wrap gap-sm px-xl py-xl">
+              {cat.items.map((tech, ti) => (
+                <motion.div
+                  key={tech.name}
+                  initial={{ opacity: 0, x: -12 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.35, delay: ci * 0.08 + ti * 0.05 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="flex items-center gap-3 px-4 py-3 rounded-2xl cursor-default"
+                  style={{
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={tech.icon}
+                    alt={tech.name}
+                    width={28}
+                    height={28}
+                    style={{ width: 28, height: 28, objectFit: "contain" }}
+                  />
+                  <span className="font-sans text-sm font-medium text-white/80 whitespace-nowrap">
+                    {tech.name}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 // ─── PPLG Grid + Detail Modal ────────────────────────────────────────────────
 

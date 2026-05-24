@@ -58,6 +58,10 @@ export const translationsEN: Record<string, string> = {
   "cert.frontend.title": "Financial Literacy",
   "cert.uiux.title":       "UI/UX Design Fundamentals",
   "cert.js.title":         "JavaScript Algorithms",
+  "cert.claude.title":     "Claude 101",
+  "cert.ai.title":         "Introduction to Artificial Intelligence",
+  "cert.python.title":     "Memulai Pemrograman dengan Python",
+  "cert.aifund.title":     "AI Fundamentals for Non-Data Scientists",
 
   // ── About Page ───────────────────────────────────────────────────────────────
   "about.title":           "About Me",
@@ -197,6 +201,10 @@ export const translationsID: Record<string, string> = {
   "cert.frontend.title": "Financial Literacy",
   "cert.uiux.title":       "UI/UX Design Fundamentals",
   "cert.js.title":         "JavaScript Algorithms",
+  "cert.claude.title":     "Claude 101",
+  "cert.ai.title":         "Pengantar Kecerdasan Buatan",
+  "cert.python.title":     "Memulai Pemrograman dengan Python",
+  "cert.aifund.title":     "AI Fundamentals for Non-Data Scientists",
 
   // ── About Page ───────────────────────────────────────────────────────────────
   "about.title":           "Tentang Saya",

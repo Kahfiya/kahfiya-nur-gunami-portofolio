@@ -34,13 +34,10 @@ const mobileMenuVariants: Variants = {
 export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] }) {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const pathname = usePathname();
   const { t } = useLanguage();
   const playSound = useClickSound();
-
-  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -52,7 +49,8 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
   useEffect(() => { if (isDesktop) setIsOpen(false); }, [isDesktop]);
   useEffect(() => { setIsOpen(false); }, [pathname]);
 
-  const showDesktop = !mounted ? true : isDesktop;
+  const isHome = pathname === "/";
+  const transparent = isHome && !scrolled;
 
   return (
     <header
@@ -60,7 +58,7 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
         "sticky top-0 z-50 w-full transition-all duration-300",
         scrolled
           ? "backdrop-blur-md bg-neutral-50/80 border-b border-neutral-200"
-          : "bg-transparent",
+          : isHome ? "bg-transparent" : "bg-transparent",
       ].join(" ")}
     >
       <div className="max-w-screen-desktop-lg mx-auto px-md flex items-center justify-between h-16">
@@ -79,13 +77,13 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
             {/* Outer square with clipped corner */}
             <path
               d="M2 2 H34 V28 L28 34 H2 Z"
-              fill="#171717"
+              fill={transparent ? "white" : "#171717"}
               className="transition-all duration-300 group-hover:fill-accent-500"
             />
             {/* K */}
             <path
               d="M7 10 L7 26 M7 18 L13 10 M7 18 L13 26"
-              stroke="white"
+              stroke={transparent ? "#171717" : "white"}
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -93,7 +91,7 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
             {/* N */}
             <path
               d="M16 26 L16 10 L22 26 L22 10"
-              stroke="white"
+              stroke={transparent ? "#171717" : "white"}
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -101,7 +99,7 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
             {/* G */}
             <path
               d="M30 13 C28.5 10.5 25 10 23.5 12.5 C22 15 22 21 23.5 23.5 C25 26 29 26 30 24 L30 19 L27.5 19"
-              stroke="white"
+              stroke={transparent ? "#171717" : "white"}
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -119,8 +117,7 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
         </Link>
 
         {/* Desktop nav */}
-        {showDesktop && (
-          <nav aria-label="Main navigation" className="flex items-center gap-xs">
+        <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-xs">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -129,8 +126,8 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
                 className={[
                   "relative px-4 py-2 font-sans text-sm transition-colors duration-200",
                   pathname === link.href
-                    ? "text-neutral-900 font-medium"
-                    : "text-neutral-500 hover:text-neutral-900 font-normal",
+                    ? transparent ? "text-white font-medium" : "text-neutral-900 font-medium"
+                    : transparent ? "text-white/70 hover:text-white font-normal" : "text-neutral-500 hover:text-neutral-900 font-normal",
                 ].join(" ")}
               >
                 {t(link.translationKey)}
@@ -143,14 +140,12 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
                 )}
               </Link>
             ))}
-            <div className="w-px h-4 bg-neutral-200 mx-2" />
+            <div className={`w-px h-4 mx-2 ${transparent ? "bg-white/30" : "bg-neutral-200"}`} />
             <LanguageToggle />
           </nav>
-        )}
 
         {/* Hamburger (mobile) */}
-        {!showDesktop && (
-          <div className="flex items-center gap-sm">
+        <div className="flex lg:hidden items-center gap-sm">
             <LanguageToggle />
             <button
               type="button"
@@ -158,7 +153,7 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsOpen((p) => !p)}
-              className="flex items-center justify-center w-11 h-11 rounded text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
+              className={`flex items-center justify-center w-11 h-11 rounded transition-colors text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100`}
             >
               <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                 {isOpen ? (
@@ -169,12 +164,11 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
               </svg>
             </button>
           </div>
-        )}
       </div>
 
       {/* Mobile menu */}
       <AnimatePresence>
-        {isOpen && !showDesktop && (
+        {isOpen && (
           <motion.nav
             id="mobile-menu"
             aria-label="Main navigation"
