@@ -75,6 +75,23 @@ const STACK_CATEGORIES = [
   },
 ];
 
+const SKILLS: Array<{ name: string; bg: string; percent: number; iconUrl: string }> = [
+  { name: "React",           percent: 1, bg: "#20232a", iconUrl: `${CDN}/react/react-original.svg` },
+  { name: "Next.js",         percent: 1, bg: "#000000", iconUrl: `${CDN}/nextjs/nextjs-original.svg` },
+  { name: "TypeScript",      percent: 1, bg: "#3178C6", iconUrl: `${CDN}/typescript/typescript-original.svg` },
+  { name: "Tailwind CSS",    percent: 1, bg: "#0f172a", iconUrl: `${CDN}/tailwindcss/tailwindcss-original.svg` },
+  { name: "Framer Motion",   percent: 1, bg: "#0d0d0d", iconUrl: "https://cdn.simpleicons.org/framer" },
+  { name: "Figma",           percent: 1, bg: "#1e1e1e", iconUrl: `${CDN}/figma/figma-original.svg` },
+  { name: "UI/UX Design",    percent: 1, bg: "#1a1a2e", iconUrl: `${CDN}/figma/figma-original.svg` },
+  { name: "Python",          percent: 1, bg: "#1e3a5f", iconUrl: `${CDN}/python/python-original.svg` },
+  { name: "HTML/CSS",        percent: 1, bg: "#e34c26", iconUrl: `${CDN}/html5/html5-original.svg` },
+  { name: "C++",             percent: 1, bg: "#00427e", iconUrl: `${CDN}/cplusplus/cplusplus-original.svg` },
+  { name: "C#",              percent: 1, bg: "#68217a", iconUrl: `${CDN}/csharp/csharp-original.svg` },
+  { name: "Public Speaking", percent: 1, bg: "#b45309", iconUrl: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='23'/%3E%3Cline x1='8' y1='23' x2='16' y2='23'/%3E%3C/svg%3E" },
+  { name: "3D Artist",       percent: 1, bg: "#1a0533", iconUrl: `${CDN}/blender/blender-original.svg` },
+  { name: "DevOps Engineer", percent: 1, bg: "#0f2027", iconUrl: `${CDN}/docker/docker-original.svg` },
+];
+
 function MyStack() {
   const { t } = useLanguage();
   return (
