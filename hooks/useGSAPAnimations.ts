@@ -64,7 +64,7 @@ export function useMarqueeScroll(selector: string) {
         duration: 20,
         repeat: -1,
         modifiers: {
-          x: gsap.utils.unitize((x: number) => parseFloat(x) % width),
+          x: gsap.utils.unitize((x: any) => parseFloat(x) % width),
         },
       });
     });
