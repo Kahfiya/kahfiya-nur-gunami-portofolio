@@ -7,6 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 import { useClickSound } from "@/hooks/useClickSound";
+import type { Language } from "@/lib/i18n/translations";
+import {
+  FlagComponents,
+  LANGUAGES,
+} from "@/components/ui/LanguageToggle";
+
+import Magnetic from "@/components/ui/Magnetic";
 
 type SoundType = "nav" | "lang-en" | "lang-id";
 
@@ -22,46 +29,28 @@ const DEFAULT_LINKS: NavLink[] = [
   { label: "Contact", href: "/contact", translationKey: "nav.contact" },
 ];
 
-// ─── Hamburger → X icon (GPU only: rotate + opacity) ─────────────────────────
+// ─── Hamburger icon ───────────────────────────────────────────────────────────
 
 function HamburgerIcon({ isOpen, color }: { isOpen: boolean; color: string }) {
   return (
     <div className="relative w-6 h-5 flex flex-col justify-between" aria-hidden="true">
-      <motion.span
-        className="block h-[1.75px] rounded-full origin-center"
-        style={{ background: color }}
-        animate={isOpen
-          ? { rotate: 45, y: 9, width: "100%" }
-          : { rotate: 0,  y: 0,  width: "100%" }}
-        transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-      />
-      <motion.span
-        className="block h-[1.75px] rounded-full"
-        style={{ background: color }}
+      <motion.span className="block h-[1.75px] rounded-full origin-center" style={{ background: color }}
+        animate={isOpen ? { rotate: 45, y: 9 } : { rotate: 0, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }} />
+      <motion.span className="block h-[1.75px] rounded-full" style={{ background: color }}
         animate={isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-        transition={{ duration: 0.2 }}
-      />
-      <motion.span
-        className="block h-[1.75px] rounded-full origin-center"
-        style={{ background: color }}
-        animate={isOpen
-          ? { rotate: -45, y: -9, width: "100%" }
-          : { rotate: 0,   y: 0,  width: "100%" }}
-        transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
-      />
+        transition={{ duration: 0.2 }} />
+      <motion.span className="block h-[1.75px] rounded-full origin-center" style={{ background: color }}
+        animate={isOpen ? { rotate: -45, y: -9 } : { rotate: 0, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }} />
     </div>
   );
 }
 
-// ─── Mobile Menu — lightweight full-screen panel ──────────────────────────────
+// ─── Mobile Menu ──────────────────────────────────────────────────────────────
 
 function MobileMenu({
-  isOpen,
-  links,
-  pathname,
-  onClose,
-  t,
-  playSound,
+  isOpen, links, pathname, onClose, t, playSound,
 }: {
   isOpen: boolean;
   links: NavLink[];
@@ -70,110 +59,113 @@ function MobileMenu({
   t: (key: string) => string;
   playSound: (type: SoundType) => void;
 }) {
+  const { language, setLanguage } = useLanguage();
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop — opacity only, no blur animate (expensive on mobile) */}
+          {/* Backdrop */}
           <motion.div
             className="fixed inset-0 z-40 bg-black/60"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={onClose}
           />
 
-          {/* Panel — translateX only (GPU composited) */}
+          {/* Panel */}
           <motion.div
-            className="fixed top-0 right-0 bottom-0 z-50 flex flex-col"
-            style={{
-              width: "min(320px, 85vw)",
-              background: "#111111",
-              willChange: "transform",
-            }}
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
+            className="fixed top-0 right-0 bottom-0 z-50 flex flex-col overflow-y-auto"
+            style={{ width: "min(340px, 88vw)", background: "#111111", willChange: "transform" }}
+            initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
             transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
           >
-            {/* Orange top accent line */}
-            <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-accent-500 to-transparent" />
+            {/* Top accent */}
+            <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-accent-500 to-transparent shrink-0" />
 
-            {/* Close button area */}
-            <div className="flex items-center justify-end px-6 pt-5 pb-2">
-              <button
-                onClick={onClose}
-                aria-label="Close menu"
-                className="w-10 h-10 flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                  <line x1="3" y1="3" x2="15" y2="15" />
-                  <line x1="15" y1="3" x2="3" y2="15" />
+            {/* Header row */}
+            <div className="flex items-center justify-between px-6 pt-5 pb-2 shrink-0">
+              <span className="font-sans text-[10px] tracking-[0.25em] uppercase text-white/25">
+                KNG · Portfolio
+              </span>
+              <button onClick={onClose} aria-label="Close menu"
+                className="w-10 h-10 flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                  <line x1="2" y1="2" x2="14" y2="14" /><line x1="14" y1="2" x2="2" y2="14" />
                 </svg>
               </button>
             </div>
 
             {/* Nav links */}
-            <nav className="flex flex-col flex-1 justify-center px-8 gap-1" aria-label="Mobile navigation">
+            <nav className="flex flex-col px-6 pt-4 pb-2 shrink-0" aria-label="Mobile navigation">
               {links.map((link, i) => {
                 const isActive = pathname === link.href;
                 return (
-                  <motion.div
-                    key={link.href}
-                    initial={{ opacity: 0, x: 32 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3, delay: 0.05 + i * 0.07, ease: "easeOut" }}
-                  >
-                    <Link
-                      href={link.href}
+                  <motion.div key={link.href}
+                    initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}
+                    transition={{ duration: 0.28, delay: 0.05 + i * 0.06, ease: "easeOut" }}>
+                    <Link href={link.href}
                       onClick={() => { playSound("nav"); onClose(); }}
-                      className="flex items-center gap-4 py-5 group"
-                    >
-                      {/* Index */}
+                      className="flex items-center gap-4 py-4 group">
                       <span className="font-sans text-[10px] tracking-widest w-5 shrink-0"
                         style={{ color: isActive ? "rgba(249,115,22,0.7)" : "rgba(255,255,255,0.2)" }}>
                         0{i + 1}
                       </span>
-
-                      {/* Label */}
-                      <span
-                        className="font-serif leading-none"
-                        style={{
-                          fontSize: "clamp(1.75rem, 7vw, 2.5rem)",
-                          color: isActive ? "#f97316" : "rgba(255,255,255,0.88)",
-                        }}
-                      >
+                      <span className="font-serif leading-none"
+                        style={{ fontSize: "clamp(1.6rem, 6.5vw, 2.4rem)", color: isActive ? "#f97316" : "rgba(255,255,255,0.88)" }}>
                         {t(link.translationKey)}
                       </span>
-
-                      {/* Arrow — shows on active */}
-                      {isActive && (
-                        <span className="ml-auto text-accent-500 text-base">→</span>
-                      )}
+                      {isActive && <span className="ml-auto text-accent-500">→</span>}
                     </Link>
-
-                    {/* Divider */}
-                    {i < links.length - 1 && (
-                      <div className="h-px bg-white/[0.06]" />
-                    )}
+                    {i < links.length - 1 && <div className="h-px bg-white/[0.06]" />}
                   </motion.div>
                 );
               })}
             </nav>
 
-            {/* Footer */}
+            {/* ── Language section ── */}
             <motion.div
-              className="flex items-center justify-between px-8 py-6 border-t border-white/[0.08]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.3 }}
+              className="px-6 pt-4 pb-6 shrink-0"
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              transition={{ delay: 0.28, duration: 0.3 }}
             >
-              <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-white/20">
-                KNG · Portfolio
-              </span>
-              <LanguageToggle />
+              <div className="border-t border-white/[0.08] pt-5">
+                <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-white/30 mb-4">
+                  Language
+                </p>
+
+                {/* 2-column grid of language buttons */}
+                <div className="grid grid-cols-2 gap-2">
+                  {LANGUAGES.map((lang) => {
+                    const isActive = lang.code === language;
+                    const LangFlag = FlagComponents[lang.code];
+                    return (
+                      <button
+                        key={lang.code}
+                        type="button"
+                        onClick={() => setLanguage(lang.code)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-150 active:scale-95"
+                        style={{
+                          background: isActive ? "rgba(249,115,22,0.15)" : "rgba(255,255,255,0.05)",
+                          border: `1px solid ${isActive ? "rgba(249,115,22,0.4)" : "rgba(255,255,255,0.08)"}`,
+                        }}
+                      >
+                        <LangFlag size={26} />
+                        <span className="font-sans text-sm font-medium leading-none"
+                          style={{ color: isActive ? "#f97316" : "rgba(255,255,255,0.75)" }}>
+                          {lang.native}
+                        </span>
+                        {isActive && (
+                          <svg className="ml-auto shrink-0" width="12" height="12" viewBox="0 0 12 12"
+                            fill="none" stroke="#f97316" strokeWidth="2" strokeLinecap="round">
+                            <path d="M2 6 L5 9 L10 3" />
+                          </svg>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </>
@@ -207,8 +199,7 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
 
   const isHome      = pathname === "/";
   const transparent = isHome && !scrolled;
-
-  const iconColor = isOpen ? "#ffffff" : transparent ? "#ffffff" : "#171717";
+  const iconColor   = isOpen ? "#ffffff" : transparent ? "#ffffff" : "#171717";
 
   return (
     <>
@@ -221,14 +212,8 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
         }
       `}</style>
 
-      <header
-        className={[
-          "sticky top-0 z-50 w-full transition-all duration-300",
-          scrolled
-            ? "backdrop-blur-md bg-neutral-50/80 border-b border-neutral-200"
-            : "bg-transparent",
-        ].join(" ")}
-      >
+      <header className={["sticky top-0 z-50 w-full transition-all duration-300",
+        scrolled ? "backdrop-blur-md bg-neutral-50/80 border-b border-neutral-200" : "bg-transparent"].join(" ")}>
         <div className="max-w-screen-desktop-lg mx-auto px-md flex items-center justify-between h-16">
 
           {/* Logo */}
@@ -245,26 +230,21 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
           {/* Desktop nav */}
           <nav aria-label="Main navigation" className="nav-desktop items-center gap-xs">
             {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => playSound("nav")}
-                className={[
-                  "relative px-4 py-2 font-sans text-sm transition-colors duration-200",
-                  pathname === link.href
-                    ? transparent ? "text-white font-medium" : "text-neutral-900 font-medium"
-                    : transparent ? "text-white/70 hover:text-white font-normal" : "text-neutral-500 hover:text-neutral-900 font-normal",
-                ].join(" ")}
-              >
-                {t(link.translationKey)}
-                {pathname === link.href && (
-                  <motion.span
-                    layoutId="nav-indicator"
-                    className="absolute bottom-0 left-4 right-4 h-px bg-accent-500"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-              </Link>
+              <Magnetic key={link.href} strength={0.3}>
+                <Link href={link.href} onClick={() => playSound("nav")}
+                  className={["relative px-4 py-2 font-sans text-sm transition-colors duration-200",
+                    pathname === link.href
+                      ? transparent ? "text-white font-medium" : "text-neutral-900 font-medium"
+                      : transparent ? "text-white/70 hover:text-white font-normal" : "text-neutral-500 hover:text-neutral-900 font-normal",
+                  ].join(" ")}>
+                  {t(link.translationKey)}
+                  {pathname === link.href && (
+                    <motion.span layoutId="nav-indicator"
+                      className="absolute bottom-0 left-4 right-4 h-px bg-accent-500"
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }} />
+                  )}
+                </Link>
+              </Magnetic>
             ))}
             <div className={`w-px h-4 mx-2 ${transparent ? "bg-white/30" : "bg-neutral-200"}`} />
             <LanguageToggle />
@@ -272,28 +252,19 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
 
           {/* Mobile hamburger */}
           <div className="nav-mobile items-center gap-2">
-            <button
-              type="button"
+            <button type="button"
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
-              aria-controls="mobile-menu"
               onClick={() => setIsOpen((p) => !p)}
-              className="relative flex items-center justify-center w-11 h-11 rounded-xl transition-colors z-[60]"
-            >
+              className="relative flex items-center justify-center w-11 h-11 rounded-xl transition-colors z-[60]">
               <HamburgerIcon isOpen={isOpen} color={iconColor} />
             </button>
           </div>
         </div>
       </header>
 
-      <MobileMenu
-        isOpen={isOpen}
-        links={links}
-        pathname={pathname}
-        onClose={() => setIsOpen(false)}
-        t={t}
-        playSound={playSound}
-      />
+      <MobileMenu isOpen={isOpen} links={links} pathname={pathname}
+        onClose={() => setIsOpen(false)} t={t} playSound={playSound} />
     </>
   );
 }

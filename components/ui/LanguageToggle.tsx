@@ -9,13 +9,9 @@ import type { Language } from "@/lib/i18n/translations";
 
 function FlagGB({ size }: { size: number }) {
   return (
-    <svg width={size} height={size * 0.6} viewBox="0 0 60 36" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: 2, flexShrink: 0 }}>
-      <rect width="60" height="36" fill="#012169"/>
-      <path d="M0,0 L60,36 M60,0 L0,36" stroke="#fff" strokeWidth="7.2"/>
-      <path d="M0,0 L60,36 M60,0 L0,36" stroke="#C8102E" strokeWidth="4.8"/>
-      <path d="M30,0 V36 M0,18 H60" stroke="#fff" strokeWidth="12"/>
-      <path d="M30,0 V36 M0,18 H60" stroke="#C8102E" strokeWidth="7.2"/>
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/Flag Language/English.png" alt="English" width={size} height={Math.round(size * 0.67)}
+      style={{ width: size, height: Math.round(size * 0.67), objectFit: "cover", borderRadius: 2, flexShrink: 0, display: "block" }} />
   );
 }
 
@@ -30,14 +26,9 @@ function FlagID({ size }: { size: number }) {
 
 function FlagMY({ size }: { size: number }) {
   return (
-    <svg width={size} height={size * 0.5} viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: 2, flexShrink: 0 }}>
-      <rect width="28" height="14" fill="#fff"/>
-      {[0,2,4,6,8,10,12].map(y => <rect key={y} y={y} width="28" height="1" fill="#CC0001"/>)}
-      <rect width="14" height="7" fill="#006847"/>
-      <circle cx="6" cy="3.5" r="2.2" fill="#FFD100"/>
-      <circle cx="6.8" cy="3.5" r="1.7" fill="#006847"/>
-      <polygon points="9.5,3.5 8.8,2.2 10.2,2.2 9.5,1 10.9,1.8 10.5,0.3 11.5,1.4 11.5,0 12.5,1.4 12.5,0.3 13.5,1.8 12.1,1 13.5,2.2 11.8,2.2" fill="#FFD100"/>
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/Flag Language/Malaysia.png" alt="Malaysia" width={size} height={Math.round(size * 0.67)}
+      style={{ width: size, height: Math.round(size * 0.67), objectFit: "cover", borderRadius: 2, flexShrink: 0, display: "block" }} />
   );
 }
 
@@ -53,39 +44,25 @@ function FlagRU({ size }: { size: number }) {
 
 function FlagJP({ size }: { size: number }) {
   return (
-    <svg width={size} height={size * 0.67} viewBox="0 0 3 2" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: 2, flexShrink: 0 }}>
-      <rect width="3" height="2" fill="#fff"/>
-      <circle cx="1.5" cy="1" r="0.6" fill="#BC002D"/>
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/Flag Language/Japan.png" alt="Japan" width={size} height={Math.round(size * 0.67)}
+      style={{ width: size, height: Math.round(size * 0.67), objectFit: "cover", borderRadius: 2, flexShrink: 0, display: "block" }} />
   );
 }
 
 function FlagCN({ size }: { size: number }) {
   return (
-    <svg width={size} height={size * 0.67} viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: 2, flexShrink: 0 }}>
-      <rect width="30" height="20" fill="#DE2910"/>
-      <polygon points="5,2 6.18,5.09 9.51,5.09 6.9,7.01 7.94,10.18 5,8.5 2.06,10.18 3.1,7.01 0.49,5.09 3.82,5.09" fill="#FFDE00"/>
-      <polygon points="11,1 11.59,2.81 13.49,2.81 12,3.88 12.55,5.69 11,4.7 9.45,5.69 10,3.88 8.51,2.81 10.41,2.81" fill="#FFDE00" transform="scale(0.5) translate(12,2)"/>
-      <polygon points="11,1 11.59,2.81 13.49,2.81 12,3.88 12.55,5.69 11,4.7 9.45,5.69 10,3.88 8.51,2.81 10.41,2.81" fill="#FFDE00" transform="scale(0.5) translate(16,5)"/>
-      <polygon points="11,1 11.59,2.81 13.49,2.81 12,3.88 12.55,5.69 11,4.7 9.45,5.69 10,3.88 8.51,2.81 10.41,2.81" fill="#FFDE00" transform="scale(0.5) translate(16,10)"/>
-      <polygon points="11,1 11.59,2.81 13.49,2.81 12,3.88 12.55,5.69 11,4.7 9.45,5.69 10,3.88 8.51,2.81 10.41,2.81" fill="#FFDE00" transform="scale(0.5) translate(12,14)"/>
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/Flag Language/China.png" alt="China" width={size} height={Math.round(size * 0.67)}
+      style={{ width: size, height: Math.round(size * 0.67), objectFit: "cover", borderRadius: 2, flexShrink: 0, display: "block" }} />
   );
 }
 
 function FlagKR({ size }: { size: number }) {
   return (
-    <svg width={size} height={size * 0.67} viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg" style={{ borderRadius: 2, flexShrink: 0 }}>
-      <rect width="30" height="20" fill="#fff"/>
-      <circle cx="15" cy="10" r="5" fill="#CD2E3A"/>
-      <path d="M15,5 A5,5 0 0,1 15,15 Z" fill="#003478"/>
-      <line x1="4" y1="4" x2="8" y2="8" stroke="#000" strokeWidth="1.2"/>
-      <line x1="3" y1="6" x2="7" y2="10" stroke="#000" strokeWidth="1.2"/>
-      <line x1="2" y1="8" x2="6" y2="12" stroke="#000" strokeWidth="1.2"/>
-      <line x1="22" y1="8" x2="26" y2="4" stroke="#000" strokeWidth="1.2"/>
-      <line x1="23" y1="10" x2="27" y2="6" stroke="#000" strokeWidth="1.2"/>
-      <line x1="24" y1="12" x2="28" y2="8" stroke="#000" strokeWidth="1.2"/>
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/Flag Language/Korea.png" alt="Korea" width={size} height={Math.round(size * 0.67)}
+      style={{ width: size, height: Math.round(size * 0.67), objectFit: "cover", borderRadius: 2, flexShrink: 0, display: "block" }} />
   );
 }
 
@@ -101,7 +78,7 @@ function FlagIN({ size }: { size: number }) {
   );
 }
 
-const FLAG_COMPONENTS: Record<Language, React.FC<{ size: number }>> = {
+export const FlagComponents: Record<Language, React.FC<{ size: number }>> = {
   en: FlagGB,
   id: FlagID,
   ms: FlagMY,
@@ -112,10 +89,10 @@ const FLAG_COMPONENTS: Record<Language, React.FC<{ size: number }>> = {
   hi: FlagIN,
 };
 
-const LANGUAGES: { code: Language; native: string }[] = [
+export const LANGUAGES: { code: Language; native: string }[] = [
   { code: "en", native: "English"   },
   { code: "id", native: "Indonesia" },
-  { code: "ms", native: "Melayu"    },
+  { code: "ms", native: "Malaysia"  },
   { code: "ru", native: "Русский"   },
   { code: "ja", native: "日本語"     },
   { code: "zh", native: "中文"       },
@@ -148,7 +125,7 @@ export default function LanguageToggle() {
   }, []);
 
   const current = LANGUAGES.find((l) => l.code === language) ?? LANGUAGES[0];
-  const CurrentFlag = FLAG_COMPONENTS[language];
+  const CurrentFlag = FlagComponents[language];
 
   return (
     <div ref={ref} className="relative">
@@ -198,7 +175,7 @@ export default function LanguageToggle() {
           >
             {LANGUAGES.map((lang) => {
               const isActive = lang.code === language;
-              const LangFlag = FLAG_COMPONENTS[lang.code];
+              const LangFlag = FlagComponents[lang.code];
               return (
                 <li key={lang.code} role="option" aria-selected={isActive}>
                   <button

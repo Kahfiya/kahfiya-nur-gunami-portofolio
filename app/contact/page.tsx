@@ -11,7 +11,6 @@ const ContactForm = dynamic(() => import("@/components/ui/ContactForm"), { ssr: 
 export default function ContactPage() {
   const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
-  const [showForm, setShowForm] = useState(false);
 
   const SOCIALS = [
     {
@@ -27,7 +26,7 @@ export default function ContactPage() {
     },
     {
       label: "GitHub",
-      value: "github.com/Kahfiya Nur Gunami",
+      value: "github.com/kahfiya",
       href: "https://github.com/kahfiya",
       icon: (
         <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 shrink-0 text-accent-500">
@@ -37,7 +36,7 @@ export default function ContactPage() {
     },
     {
       label: "LinkedIn",
-      value: "linkedin.com/in/Kahfiya Nur Gunami",
+      value: "linkedin.com/in/kahfiya-nur-gunami",
       href: "https://www.linkedin.com/in/kahfiya-nur-gunami/",
       icon: (
         <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 shrink-0 text-accent-500">
@@ -102,7 +101,7 @@ export default function ContactPage() {
       />
 
       {/* ── Content ── */}
-      <div className="px-md tablet:px-2xl desktop:px-3xl py-2xl max-w-[1280px] mx-auto grid grid-cols-1 tablet:grid-cols-2 gap-3xl">
+      <div className="px-md tablet:px-2xl desktop:px-3xl py-2xl max-w-[1280px] mx-auto grid grid-cols-1 tablet:grid-cols-2 gap-2xl items-start">
 
         {/* Socials */}
         <div className="flex flex-col gap-xl">
@@ -129,59 +128,36 @@ export default function ContactPage() {
               </motion.div>
             ))}
           </div>
-
-          {!showForm && !submitted && (
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-              onClick={() => setShowForm(true)}
-              className="mt-xl self-start px-xl py-md bg-accent-500 text-white font-sans font-bold text-sm rounded-full hover:bg-accent-600 transition-colors"
-            >
-              {t("contact.cta")}
-            </motion.button>
-          )}
         </div>
 
-        {/* Form / Success */}
-        <div>
+        {/* Form */}
+        <motion.div
+          className="min-w-0 w-full"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
           {submitted ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center justify-center gap-md py-2xl"
-              aria-live="polite"
-            >
+            <div className="flex flex-col items-center justify-center gap-md py-2xl" aria-live="polite">
               <div className="w-20 h-20 rounded-full bg-accent-500/20 flex items-center justify-center">
                 <svg viewBox="0 0 52 52" className="w-10 h-10" fill="none">
                   <motion.path
                     d="M14 27 l9 9 l16-18"
-                    stroke="#f97316"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
+                    stroke="#f97316" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+                    initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                   />
                 </svg>
               </div>
               <p className="font-serif text-2xl text-[var(--color-text-primary)] text-center">{t("form.success.heading")}</p>
               <p className="font-sans text-[var(--color-text-secondary)] text-sm text-center">{t("form.success.body")}</p>
-            </motion.div>
-          ) : showForm ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <ContactForm onSuccess={() => setSubmitted(true)} />
-            </motion.div>
+            </div>
           ) : (
-            <div className="hidden tablet:block" />
+            <ContactForm onSuccess={() => setSubmitted(true)} />
           )}
-        </div>
+        </motion.div>
       </div>
     </main>
   );
 }
+

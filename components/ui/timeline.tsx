@@ -1,6 +1,14 @@
 "use client";
 
-import { useScroll, motion, useInView } from "framer-motion";
+/**
+ * Timeline — Light theme, scroll-scrubbed vertical timeline
+ *
+ * - Follows site's light theme (white bg, dark text, orange accent)
+ * - Vertical accent line scrubbed 1:1 by scroll (hand-controlled, no autoplay)
+ * - Clean numbered index badge instead of ugly circle dot
+ */
+
+import { useScroll, useTransform, motion, useInView } from "framer-motion";
 import React, { useRef } from "react";
 
 interface TimelineEntry {
@@ -12,132 +20,145 @@ interface TimelineEntry {
   achievements?: string[];
 }
 
+// ─── Single Item ──────────────────────────────────────────────────────────────
+
+function TimelineItem({ item, index }: { item: TimelineEntry; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-8%" });
+
+  return (
+    <div ref={ref} className="relative pl-16 tablet:pl-24 py-6 last:pb-0">
+
+      {/* ── Index badge ── */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={isInView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="absolute left-0 top-7 w-8 h-8 flex items-center justify-center
+                   bg-accent-500 rounded-sm z-10 shadow-sm"
+        aria-hidden="true"
+      >
+        <span className="font-serif font-black text-white text-[11px] leading-none">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+      </motion.div>
+
+      {/* ── Horizontal connector tick ── */}
+      <div
+        className="absolute left-8 top-[44px] w-8 h-px bg-accent-500/30"
+        aria-hidden="true"
+      />
+
+      {/* ── Card ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay: 0.06 }}
+        className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)]
+                   p-6 tablet:p-8 shadow-sm hover:shadow-md transition-shadow duration-300
+                   hover:border-accent-500/30"
+      >
+        {/* Period */}
+        <p className="font-sans text-[10px] tracking-[0.28em] uppercase text-accent-500 mb-2">
+          {item.period}
+        </p>
+
+        {/* Title */}
+        <h3
+          className="font-serif font-black text-[var(--color-text-primary)] leading-tight mb-1"
+          style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.55rem)" }}
+        >
+          {item.title}
+        </h3>
+
+        {/* Subtitle */}
+        {item.subtitle && (
+          <p className="font-sans text-sm text-[var(--color-text-secondary)] italic mb-4">
+            {item.subtitle}
+          </p>
+        )}
+
+        {/* Divider */}
+        <div className="h-px bg-[var(--color-border)] my-4" />
+
+        {/* Description */}
+        <p className="font-sans text-sm text-[var(--color-text-secondary)] leading-relaxed mb-5 max-w-2xl">
+          {item.description}
+        </p>
+
+        {/* Tags */}
+        {item.tags && item.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {item.tags.map((tag) => (
+              <span
+                key={tag}
+                className="font-sans text-[10px] tracking-widest uppercase px-3 py-1
+                           rounded-sm border border-[var(--color-border)]
+                           text-[var(--color-text-secondary)]
+                           bg-[var(--color-bg-secondary)]"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Achievements */}
+        {item.achievements && item.achievements.length > 0 && (
+          <ul className="flex flex-col gap-2">
+            {item.achievements.map((a) => (
+              <li key={a} className="flex items-start gap-2.5">
+                <span
+                  className="mt-[6px] w-1.5 h-1.5 rounded-full bg-accent-500/50 flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <span className="font-sans text-xs text-[var(--color-text-secondary)] leading-relaxed">{a}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Section ──────────────────────────────────────────────────────────────────
+
 export function TimelineSection({ data }: { data: TimelineEntry[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Scrub: fill line is driven 1:1 by scroll — hand-controlled, no autoplay
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"],
+    offset: ["start 85%", "end 15%"],
   });
+  const lineScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <div ref={containerRef} className="relative bg-[var(--color-bg-primary)]">
-      {/* Center vertical line — subtle */}
-      <div className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-[var(--color-border)]" />
+    <div ref={containerRef} className="relative px-md tablet:px-2xl desktop:px-3xl py-2xl">
 
-      {/* Animated fill line — accent orange */}
+      {/* Rail: faint background line */}
+      <div
+        className="absolute top-0 bottom-0 w-px bg-[var(--color-border)]"
+        style={{ left: "calc(var(--spacing-md, 1rem) + 2rem)" }}
+        aria-hidden="true"
+      />
+
+      {/* Scrubbed fill line — orange, hand-controlled */}
       <motion.div
-        className="absolute left-1/2 top-0 w-px -translate-x-1/2 origin-top bg-gradient-to-b from-accent-500 via-accent-400 to-transparent"
-        style={{ scaleY: scrollYProgress, height: "100%" }}
+        className="absolute top-0 w-px origin-top"
+        style={{
+          left: "calc(var(--spacing-md, 1rem) + 2rem)",
+          scaleY: lineScaleY,
+          height: "100%",
+          background: "linear-gradient(to bottom, #f97316 0%, rgba(249,115,22,0.25) 100%)",
+        }}
+        aria-hidden="true"
       />
 
       {data.map((item, index) => (
         <TimelineItem key={index} item={item} index={index} />
       ))}
-    </div>
-  );
-}
-
-function TimelineItem({ item, index }: { item: TimelineEntry; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-15%" });
-  const isLeft = index % 2 === 0;
-
-  return (
-    <div ref={ref} className="relative min-h-[80vh] flex items-center py-2xl">
-      {/* Dot */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-10">
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="w-3 h-3 rounded-full bg-[var(--color-bg-primary)] border-2 border-accent-500 shadow-[0_0_10px_rgba(249,115,22,0.35)]"
-        />
-      </div>
-
-      <div className="w-full grid grid-cols-2">
-        {/* Left side */}
-        <div className={`px-8 tablet:px-16 desktop:px-20 flex ${isLeft ? "justify-end" : "justify-start"}`}>
-          {isLeft && (
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="max-w-sm text-right"
-            >
-              <p className="text-accent-500 font-sans text-xs mb-3 tracking-widest uppercase font-medium">
-                {item.period}
-              </p>
-              <h2 className="text-[var(--color-text-primary)] font-serif text-3xl tablet:text-4xl font-bold leading-tight mb-2">
-                {item.title}
-              </h2>
-              {item.subtitle && (
-                <p className="text-[var(--color-text-secondary)] font-sans text-sm mb-4 italic">{item.subtitle}</p>
-              )}
-              <p className="text-[var(--color-text-secondary)] font-sans text-sm leading-relaxed mb-5">
-                {item.description}
-              </p>
-              {item.tags && (
-                <div className="flex flex-wrap gap-2 justify-end mb-3">
-                  {item.tags.map((tag) => (
-                    <span key={tag} className="text-xs px-3 py-1 rounded-full bg-neutral-100 text-neutral-700 border border-[var(--color-border)] font-sans">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {item.achievements && (
-                <div className="flex flex-col gap-1 items-end">
-                  {item.achievements.map((a) => (
-                    <p key={a} className="text-xs text-[var(--color-text-secondary)] font-sans">{a}</p>
-                  ))}
-                </div>
-              )}
-            </motion.div>
-          )}
-        </div>
-
-        {/* Right side */}
-        <div className={`px-8 tablet:px-16 desktop:px-20 flex ${isLeft ? "justify-start" : "justify-end"}`}>
-          {!isLeft && (
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="max-w-sm text-left"
-            >
-              <p className="text-accent-500 font-sans text-xs mb-3 tracking-widest uppercase font-medium">
-                {item.period}
-              </p>
-              <h2 className="text-[var(--color-text-primary)] font-serif text-3xl tablet:text-4xl font-bold leading-tight mb-2">
-                {item.title}
-              </h2>
-              {item.subtitle && (
-                <p className="text-[var(--color-text-secondary)] font-sans text-sm mb-4 italic">{item.subtitle}</p>
-              )}
-              <p className="text-[var(--color-text-secondary)] font-sans text-sm leading-relaxed mb-5">
-                {item.description}
-              </p>
-              {item.tags && (
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {item.tags.map((tag) => (
-                    <span key={tag} className="text-xs px-3 py-1 rounded-full bg-neutral-100 text-neutral-700 border border-[var(--color-border)] font-sans">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {item.achievements && (
-                <div className="flex flex-col gap-1">
-                  {item.achievements.map((a) => (
-                    <p key={a} className="text-xs text-[var(--color-text-secondary)] font-sans">{a}</p>
-                  ))}
-                </div>
-              )}
-            </motion.div>
-          )}
-        </div>
-      </div>
     </div>
   );
 }

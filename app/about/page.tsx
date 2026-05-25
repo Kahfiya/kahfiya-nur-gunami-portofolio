@@ -9,6 +9,7 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 import MusicPlayer from "@/components/ui/MusicPlayer";
 import TiltedCard from "@/components/ui/TiltedCard";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import ScrollScrub from "@/components/ui/ScrollScrub";
 
 // ─── Skill Bar ────────────────────────────────────────────────────────────────
 
@@ -48,6 +49,7 @@ const STACK_CATEGORIES = [
       { name: "Next.js",       icon: `${CDN}/nextjs/nextjs-original.svg` },
       { name: "Tailwind CSS",  icon: `${CDN}/tailwindcss/tailwindcss-original.svg` },
       { name: "Framer Motion", icon: "https://cdn.simpleicons.org/framer/ffffff" },
+      { name: "GSAP",          icon: "https://cdn.simpleicons.org/greensock/88CE02" },
     ],
   },
   {
@@ -70,110 +72,102 @@ const STACK_CATEGORIES = [
     items: [
       { name: "Git",    icon: `${CDN}/git/git-original.svg` },
       { name: "Docker", icon: `${CDN}/docker/docker-original.svg` },
-      { name: "Linux",  icon: `${CDN}/linux/linux-original.svg` },
+      { name: "Windows 11", icon: `${CDN}/windows11/windows11-original.svg` },
     ],
   },
 ];
 
-const SKILLS: Array<{ name: string; bg: string; percent: number; iconUrl: string }> = [
-  { name: "React",           percent: 85, bg: "#20232a", iconUrl: `${CDN}/react/react-original.svg` },
-  { name: "Next.js",         percent: 82, bg: "#000000", iconUrl: `${CDN}/nextjs/nextjs-original.svg` },
-  { name: "TypeScript",      percent: 78, bg: "#3178C6", iconUrl: `${CDN}/typescript/typescript-original.svg` },
-  { name: "Tailwind CSS",    percent: 88, bg: "#0f172a", iconUrl: `${CDN}/tailwindcss/tailwindcss-original.svg` },
-  { name: "Framer Motion",   percent: 75, bg: "#0d0d0d", iconUrl: "https://cdn.simpleicons.org/framer" },
-  { name: "Figma",           percent: 80, bg: "#1e1e1e", iconUrl: `${CDN}/figma/figma-original.svg` },
-  { name: "UI/UX Design",    percent: 77, bg: "#1a1a2e", iconUrl: `${CDN}/figma/figma-original.svg` },
-  { name: "Python",          percent: 70, bg: "#1e3a5f", iconUrl: `${CDN}/python/python-original.svg` },
-  { name: "HTML/CSS",        percent: 92, bg: "#e34c26", iconUrl: `${CDN}/html5/html5-original.svg` },
-  { name: "C++",             percent: 60, bg: "#00427e", iconUrl: `${CDN}/cplusplus/cplusplus-original.svg` },
-  { name: "C#",              percent: 55, bg: "#68217a", iconUrl: `${CDN}/csharp/csharp-original.svg` },
-  { name: "Public Speaking", percent: 72, bg: "#b45309", iconUrl: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='23'/%3E%3Cline x1='8' y1='23' x2='16' y2='23'/%3E%3C/svg%3E" },
-  { name: "3D Artist",       percent: 65, bg: "#1a0533", iconUrl: `${CDN}/blender/blender-original.svg` },
-  { name: "DevOps Engineer", percent: 58, bg: "#0f2027", iconUrl: `${CDN}/docker/docker-original.svg` },
-];
-
 function MyStack() {
   const { t } = useLanguage();
+
   return (
     <section
       aria-labelledby="stack-heading"
-      className="mb-3xl rounded-3xl overflow-hidden"
-      style={{ background: "#0d0d12" }}
+      className="mb-3xl rounded-3xl overflow-hidden relative border border-[var(--color-border)]
+                 bg-[var(--color-bg-primary)] shadow-sm"
     >
+      {/* Subtle orange glow top-right */}
+      <div className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
+        style={{ background: "radial-gradient(circle at top right, rgba(249,115,22,0.06) 0%, transparent 65%)" }} />
+
       {/* Header */}
-      <div className="px-xl pt-2xl pb-xl border-b border-white/10">
-        <h2
-          id="stack-heading"
-          className="font-sans font-black tracking-tight text-white"
-          style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)" }}
-        >
-          {t("about.skills.title").toUpperCase().split(" ").map((word, i) => (
-            <span key={i}>
-              {i === 1 ? <span className="text-accent-500">{word}</span> : word}
-              {i < t("about.skills.title").split(" ").length - 1 ? " " : ""}
+      <div className="relative px-xl pt-2xl pb-xl border-b border-[var(--color-border)]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-accent-500 font-sans font-black text-xl"
+              style={{ display: "inline-block", animation: "spin 6s linear infinite" }}>✦</span>
+            <h2 id="stack-heading" className="font-sans font-black tracking-tight text-[var(--color-text-primary)]"
+              style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)" }}>
+              MY <span className="text-accent-500">STACK</span>
+            </h2>
+          </div>
+          <div className="hidden tablet:flex items-center gap-2 px-3 py-1.5 rounded-full
+                          border border-accent-500/20 bg-accent-500/5">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            <span className="font-sans text-[10px] tracking-widest uppercase text-[var(--color-text-secondary)]">
+              Always Learning
             </span>
-          ))}
-        </h2>
+          </div>
+        </div>
       </div>
 
       {/* Categories */}
-      <div className="divide-y divide-white/10">
+      <div className="relative divide-y divide-[var(--color-border)]">
         {STACK_CATEGORIES.map((cat, ci) => (
           <motion.div
             key={cat.label}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.5, delay: ci * 0.08 }}
-            className="grid grid-cols-[120px_1fr] tablet:grid-cols-[200px_1fr] gap-0"
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.5, delay: ci * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col tablet:flex-row"
           >
             {/* Category label */}
-            <div className="flex items-start pt-xl px-xl pb-xl border-r border-white/10">
-              <span
-                className="font-sans font-bold tracking-widest text-white/30"
-                style={{ fontSize: "0.65rem", writingMode: "horizontal-tb" }}
-              >
+            <div className="flex items-center tablet:items-start pt-xl px-xl pb-3 tablet:pb-xl tablet:w-44 shrink-0">
+              <span className="font-sans font-bold tracking-[0.2em] text-[var(--color-text-secondary)] opacity-50"
+                style={{ fontSize: "0.6rem" }}>
                 {cat.label}
               </span>
             </div>
 
             {/* Tech items */}
-            <div className="flex flex-wrap gap-sm px-xl py-xl">
-              {cat.items.map((tech, ti) => (
-                <motion.div
-                  key={tech.name}
-                  initial={{ opacity: 0, x: -12 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.1 }}
-                  transition={{ duration: 0.35, delay: ci * 0.08 + ti * 0.05 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center gap-3 px-4 py-3 rounded-2xl cursor-default"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={tech.icon}
-                    alt={tech.name}
-                    width={28}
-                    height={28}
-                    style={{ width: 28, height: 28, objectFit: "contain" }}
-                  />
-                  <span className="font-sans text-sm font-medium text-white/80 whitespace-nowrap">
-                    {tech.name}
-                  </span>
-                </motion.div>
-              ))}
+            <div className="tablet:border-l tablet:border-[var(--color-border)] px-xl pb-xl tablet:pt-xl">
+              <ScrollScrub stagger={0.04} scrub={true} start="top 90%" end="top 50%"
+                className="flex flex-wrap gap-2.5">
+                {cat.items.map((tech) => (
+                  <motion.div
+                    key={tech.name}
+                    initial={{ opacity: 0, scale: 0.85 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                    transition={{ duration: 0.3, delay: ci * 0.06 }}
+                    whileHover={{ scale: 1.07, y: -3 }}
+                    className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default group
+                               border border-[var(--color-border)] bg-[var(--color-bg-secondary)]
+                               hover:border-accent-500/40 hover:bg-accent-500/5
+                               transition-all duration-200"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={tech.icon} alt={tech.name} width={20} height={20}
+                      style={{ width: 20, height: 20, objectFit: "contain", flexShrink: 0 }} />
+                    <span className="font-sans text-sm font-medium text-[var(--color-text-secondary)]
+                                     group-hover:text-accent-500 whitespace-nowrap transition-colors duration-200">
+                      {tech.name}
+                    </span>
+                  </motion.div>
+                ))}
+              </ScrollScrub>
             </div>
           </motion.div>
         ))}
       </div>
+
+      {/* Bottom accent line */}
+      <div className="h-px"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(249,115,22,0.35), transparent)" }} />
     </section>
   );
 }
-
 // ─── PPLG Grid + Detail Modal ────────────────────────────────────────────────
 
 const PPLG_CARDS = [
@@ -334,9 +328,11 @@ export default function AboutPage() {
             </SpotlightCard>
           </ScrollReveal>
           <ScrollReveal direction="right" delay={0.2} className="flex flex-col justify-center gap-md">
-            <p className="font-sans text-[var(--color-text-secondary)] text-base leading-relaxed">{t("about.bio.p1")}</p>
-            <p className="font-sans text-[var(--color-text-secondary)] text-base leading-relaxed">{t("about.bio.p2")}</p>
-            <p className="font-sans text-[var(--color-text-secondary)] text-base leading-relaxed">{t("about.bio.p3")}</p>
+            <ScrollScrub stagger={0.08} scrub={1} start="top 85%" end="top 40%">
+              <p className="font-sans text-[var(--color-text-secondary)] text-base leading-relaxed">{t("about.bio.p1")}</p>
+              <p className="font-sans text-[var(--color-text-secondary)] text-base leading-relaxed">{t("about.bio.p2")}</p>
+              <p className="font-sans text-[var(--color-text-secondary)] text-base leading-relaxed">{t("about.bio.p3")}</p>
+            </ScrollScrub>
             <MusicPlayer />
           </ScrollReveal>
         </div>
@@ -350,40 +346,8 @@ export default function AboutPage() {
         <Timeline data={timelineData} />
       </ScrollReveal>
 
-      {/* ── Skills Section ── */}
-      <section aria-labelledby="skills-heading" className="mb-3xl">
-        <SectionHeading title={t("about.skills.title")} as="h2" />
-        <div className="grid grid-cols-1 tablet:grid-cols-2 gap-md max-w-3xl">
-          {SKILLS.map((skill, i) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.4, delay: i * 0.04 }}
-              className="flex items-center gap-md"
-            >
-              {/* Logo badge */}
-              <div
-                className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
-                style={{ background: skill.bg }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={skill.iconUrl} alt={skill.name} width={20} height={20} style={{ width: 20, height: 20, objectFit: "contain" }} />
-              </div>
-
-              {/* Label + bar */}
-              <div className="flex-1 flex flex-col gap-xs">
-                <div className="flex justify-between items-center">
-                  <span className="font-sans text-sm font-medium text-[var(--color-text-primary)]">{skill.name}</span>
-                  <span className="font-sans text-xs text-[var(--color-text-secondary)]">{skill.percent}%</span>
-                </div>
-                <SkillBar percent={skill.percent} label={skill.name} />
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      {/* ── My Stack ── */}
+      <MyStack />
 
       {/* ── PPLG Competencies ── */}
       <section aria-labelledby="pplg-heading">

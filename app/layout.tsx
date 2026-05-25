@@ -6,6 +6,7 @@ import PreloaderWrapper from "@/components/layout/PreloaderWrapper";
 import PullToRefresh from "@/components/layout/PullToRefresh";
 import ClickSpark from "@/components/ui/ClickSpark";
 import GSAPInit from "@/components/ui/GSAPInit";
+import ParticleRain from "@/components/ui/ParticleRain";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { MusicProvider } from "@/lib/MusicContext";
 import "./globals.css";
@@ -78,6 +79,7 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased bg-neutral-50 text-neutral-900">
         <GSAPInit />
+        <ParticleRain />
         <LanguageProvider>
           <MusicProvider>
           <PreloaderWrapper>

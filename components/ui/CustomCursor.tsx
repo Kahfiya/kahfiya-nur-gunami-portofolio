@@ -1,118 +1,93 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
 export default function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const dotRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const isVisibleRef = useRef(false);
-  const pos = useRef({ x: 0, y: 0 });
-  const smoothPos = useRef({ x: 0, y: 0 });
-  const rafRef = useRef<number>(0);
+  const dotRef   = useRef<HTMLDivElement>(null);
+  const ringRef  = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    // Only show on desktop
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    const dot  = dotRef.current!;
+    const ring = ringRef.current!;
+    const label = labelRef.current!;
 
+    // Fast dot follows cursor exactly
     const onMove = (e: MouseEvent) => {
-      pos.current = { x: e.clientX, y: e.clientY };
-      if (!isVisibleRef.current) {
-        isVisibleRef.current = true;
-        setIsVisible(true);
-      }
-
-      // Dot follows instantly
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${e.clientX - 4}px, ${e.clientY - 4}px, 0)`;
-      }
+      gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.08, ease: "none" });
+      gsap.to(ring, { x: e.clientX, y: e.clientY, duration: 0.35, ease: "power2.out" });
     };
 
-    const animate = () => {
-      smoothPos.current.x += (pos.current.x - smoothPos.current.x) * 0.1;
-      smoothPos.current.y += (pos.current.y - smoothPos.current.y) * 0.1;
-
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${smoothPos.current.x - 20}px, ${smoothPos.current.y - 20}px, 0)`;
-      }
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    const onEnter = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("a, button, [role='button'], input, textarea, select")) {
-        setIsHovering(true);
+    // State: hover link/button
+    const onEnterLink = (e: Event) => {
+      const el = e.currentTarget as HTMLElement;
+      const text = el.dataset.cursor || "";
+      gsap.to(ring, { scale: 2.2, opacity: 0.6, duration: 0.3, ease: "back.out(2)" });
+      gsap.to(dot,  { scale: 0,   duration: 0.2 });
+      if (text) {
+        label.textContent = text;
+        gsap.to(label, { opacity: 1, scale: 1, duration: 0.2 });
       }
     };
 
-    const onLeave = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest("a, button, [role='button'], input, textarea, select")) {
-        setIsHovering(false);
-      }
+    const onLeaveLink = () => {
+      gsap.to(ring,  { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" });
+      gsap.to(dot,   { scale: 1, duration: 0.3 });
+      gsap.to(label, { opacity: 0, scale: 0.8, duration: 0.15 });
     };
 
-    const onMouseLeave = () => {
-      isVisibleRef.current = false;
-      setIsVisible(false);
-    };
-    const onMouseEnter = () => {
-      isVisibleRef.current = true;
-      setIsVisible(true);
+    // State: hover image/card
+    const onEnterCard = () => {
+      gsap.to(ring, { scale: 3, borderColor: "#f97316", opacity: 0.4, duration: 0.4, ease: "power2.out" });
     };
 
     window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseover", onEnter);
-    window.addEventListener("mouseout", onLeave);
-    document.documentElement.addEventListener("mouseleave", onMouseLeave);
-    document.documentElement.addEventListener("mouseenter", onMouseEnter);
-    rafRef.current = requestAnimationFrame(animate);
+
+    const links = document.querySelectorAll("a, button, [data-cursor]");
+    const cards = document.querySelectorAll("[data-cursor-card]");
+
+    links.forEach((el) => {
+      el.addEventListener("mouseenter", onEnterLink);
+      el.addEventListener("mouseleave", onLeaveLink);
+    });
+    cards.forEach((el) => {
+      el.addEventListener("mouseenter", onEnterCard);
+      el.addEventListener("mouseleave", onLeaveLink);
+    });
+
+    // Hide on leave window
+    const onLeave = () => gsap.to([dot, ring], { opacity: 0, duration: 0.2 });
+    const onEnter = () => gsap.to([dot, ring], { opacity: 1, duration: 0.2 });
+    document.addEventListener("mouseleave", onLeave);
+    document.addEventListener("mouseenter", onEnter);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseover", onEnter);
-      window.removeEventListener("mouseout", onLeave);
-      document.documentElement.removeEventListener("mouseleave", onMouseLeave);
-      document.documentElement.removeEventListener("mouseenter", onMouseEnter);
-      cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("mouseleave", onLeave);
+      document.removeEventListener("mouseenter", onEnter);
+      links.forEach((el) => {
+        el.removeEventListener("mouseenter", onEnterLink);
+        el.removeEventListener("mouseleave", onLeaveLink);
+      });
+      cards.forEach((el) => {
+        el.removeEventListener("mouseenter", onEnterCard);
+        el.removeEventListener("mouseleave", onLeaveLink);
+      });
     };
   }, []);
 
   return (
     <>
-      {/* Outer ring — follows with lag */}
-      <div
-        ref={cursorRef}
-        aria-hidden="true"
-        className="fixed top-0 left-0 pointer-events-none z-[9999] will-change-transform"
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: "50%",
-          border: `1.5px solid ${isHovering ? "#f97316" : "rgba(23,23,23,0.5)"}`,
-          opacity: isVisible ? 1 : 0,
-          transition: "opacity 0.3s, border-color 0.2s, width 0.2s, height 0.2s",
-          transform: "translate3d(-100px, -100px, 0)",
-          mixBlendMode: "difference" as const,
-          ...(isHovering ? { width: 56, height: 56 } : {}),
-        }}
-      />
-      {/* Inner dot — instant */}
-      <div
-        ref={dotRef}
-        aria-hidden="true"
-        className="fixed top-0 left-0 pointer-events-none z-[9999] will-change-transform"
-        style={{
-          width: 8,
-          height: 8,
-          borderRadius: "50%",
-          backgroundColor: isHovering ? "#f97316" : "#171717",
-          opacity: isVisible ? 1 : 0,
-          transition: "opacity 0.3s, background-color 0.2s",
-          transform: "translate3d(-100px, -100px, 0)",
-        }}
-      />
+      {/* Dot */}
+      <div ref={dotRef} aria-hidden="true" className="fixed top-0 left-0 z-[9999] pointer-events-none"
+        style={{ width: 8, height: 8, borderRadius: "50%", background: "#f97316", transform: "translate(-50%,-50%)" }} />
+      {/* Ring */}
+      <div ref={ringRef} aria-hidden="true" className="fixed top-0 left-0 z-[9998] pointer-events-none flex items-center justify-center"
+        style={{ width: 36, height: 36, borderRadius: "50%", border: "1.5px solid #f97316", transform: "translate(-50%,-50%)", mixBlendMode: "difference" }}>
+        <span ref={labelRef} className="font-sans text-[8px] font-bold text-white uppercase tracking-wider"
+          style={{ opacity: 0, transform: "scale(0.8)", whiteSpace: "nowrap" }} />
+      </div>
     </>
   );
 }

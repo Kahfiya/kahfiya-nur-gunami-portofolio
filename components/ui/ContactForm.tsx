@@ -41,7 +41,7 @@ function reducer(s: FormState, a: Action): FormState {
   }
 }
 
-const inputClass = "w-full bg-[var(--color-bg-primary)] border border-[var(--color-border)] rounded-2xl px-5 py-4 text-base text-[var(--color-text-primary)] font-sans placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-200";
+const inputClass = "w-full bg-neutral-100 border border-neutral-300 rounded-2xl px-5 py-4 text-base text-neutral-900 font-sans placeholder:text-neutral-500 focus:outline-none focus:bg-white focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-200";
 
 export function ContactForm({ onSuccess }: ContactFormProps) {
   const { t } = useLanguage();
@@ -96,7 +96,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   }
 
   return (
-    <motion.form ref={scope} onSubmit={handleSubmit} noValidate className="flex flex-col gap-md w-full">
+    <motion.form ref={scope} onSubmit={handleSubmit} noValidate className="flex flex-col gap-md w-full min-w-0">
       {/* Name */}
       <div>
         <input
