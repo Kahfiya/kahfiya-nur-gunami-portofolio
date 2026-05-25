@@ -1,7 +1,24 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { translationsEN, translationsID, Language } from "./translations";
+import {
+  translationsEN, translationsID, translationsRU,
+  translationsJA, translationsZH, translationsKO,
+  translationsHI, translationsMS, Language,
+} from "./translations";
+
+const DICTS: Record<Language, Record<string, string>> = {
+  en: translationsEN,
+  id: translationsID,
+  ru: translationsRU,
+  ja: translationsJA,
+  zh: translationsZH,
+  ko: translationsKO,
+  hi: translationsHI,
+  ms: translationsMS,
+};
+
+const VALID: Language[] = ["en", "id", "ru", "ja", "zh", "ko", "hi", "ms"];
 
 interface LanguageContextType {
   language: Language;
@@ -16,38 +33,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("kng_language");
-      if (saved === "en" || saved === "id") {
-        // Valid stored value — apply it
-        setLanguageState(saved);
-      } else if (saved !== null) {
-        // Invalid stored value — overwrite with default "en"
-        localStorage.setItem("kng_language", "en");
-        // State already defaults to "en", no change needed
-      }
-      // null means nothing stored — keep default "en" state, no action needed
-    } catch {
-      // localStorage unavailable — keep default language "en"
-    }
+      const saved = localStorage.getItem("kng_language") as Language | null;
+      if (saved && VALID.includes(saved)) setLanguageState(saved);
+    } catch { /* localStorage unavailable */ }
   }, []);
 
   const setLanguage = (lang: Language) => {
-    if (lang !== "en" && lang !== "id") return;
+    if (!VALID.includes(lang)) return;
     setLanguageState(lang);
-    try {
-      localStorage.setItem("kng_language", lang);
-    } catch {
-      // localStorage unavailable — language state still updated
-    }
+    try { localStorage.setItem("kng_language", lang); } catch { /* ignore */ }
   };
 
-  // Translation function — returns translated string or key as fallback
   const t = (key: string): string => {
-    if (key === "") return "";
-    const dict = language === "en" ? translationsEN : translationsID;
-    const val = dict[key];
-    if (!val || !val.trim()) return key;
-    return val;
+    if (!key) return "";
+    const val = DICTS[language]?.[key] || DICTS["en"]?.[key];
+    return val?.trim() ? val : key;
   };
 
   return (
@@ -58,9 +58,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 }
 
 export function useLanguage() {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error("useLanguage must be used within LanguageProvider");
-  }
-  return context;
+  const ctx = useContext(LanguageContext);
+  if (!ctx) throw new Error("useLanguage must be used within LanguageProvider");
+  return ctx;
 }

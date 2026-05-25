@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, useMotionValue, useTransform, type Variants } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 import { useClickSound } from "@/hooks/useClickSound";
@@ -22,38 +22,38 @@ const DEFAULT_LINKS: NavLink[] = [
   { label: "Contact", href: "/contact", translationKey: "nav.contact" },
 ];
 
-// ─── Animated Hamburger Icon ──────────────────────────────────────────────────
+// ─── Hamburger → X icon (GPU only: rotate + opacity) ─────────────────────────
 
-function HamburgerIcon({ isOpen, transparent }: { isOpen: boolean; transparent: boolean }) {
-  const color = transparent ? "#ffffff" : "#171717";
+function HamburgerIcon({ isOpen, color }: { isOpen: boolean; color: string }) {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      {/* Top bar */}
-      <motion.line
-        x1="3" y1="6" x2="21" y2="6"
-        stroke={color} strokeWidth="1.75" strokeLinecap="round"
-        animate={isOpen ? { x1: 4, y1: 4, x2: 20, y2: 20 } : { x1: 3, y1: 6, x2: 21, y2: 6 }}
-        transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
+    <div className="relative w-6 h-5 flex flex-col justify-between" aria-hidden="true">
+      <motion.span
+        className="block h-[1.75px] rounded-full origin-center"
+        style={{ background: color }}
+        animate={isOpen
+          ? { rotate: 45, y: 9, width: "100%" }
+          : { rotate: 0,  y: 0,  width: "100%" }}
+        transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
       />
-      {/* Middle bar */}
-      <motion.line
-        x1="3" y1="12" x2="21" y2="12"
-        stroke={color} strokeWidth="1.75" strokeLinecap="round"
-        animate={isOpen ? { opacity: 0, x1: 12, x2: 12 } : { opacity: 1, x1: 3, x2: 21 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
+      <motion.span
+        className="block h-[1.75px] rounded-full"
+        style={{ background: color }}
+        animate={isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+        transition={{ duration: 0.2 }}
       />
-      {/* Bottom bar */}
-      <motion.line
-        x1="3" y1="18" x2="21" y2="18"
-        stroke={color} strokeWidth="1.75" strokeLinecap="round"
-        animate={isOpen ? { x1: 4, y1: 20, x2: 20, y2: 4 } : { x1: 3, y1: 18, x2: 21, y2: 18 }}
-        transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
+      <motion.span
+        className="block h-[1.75px] rounded-full origin-center"
+        style={{ background: color }}
+        animate={isOpen
+          ? { rotate: -45, y: -9, width: "100%" }
+          : { rotate: 0,   y: 0,  width: "100%" }}
+        transition={{ duration: 0.3, ease: [0.76, 0, 0.24, 1] }}
       />
-    </svg>
+    </div>
   );
 }
 
-// ─── Mobile Menu Overlay ──────────────────────────────────────────────────────
+// ─── Mobile Menu — lightweight full-screen panel ──────────────────────────────
 
 function MobileMenu({
   isOpen,
@@ -70,175 +70,111 @@ function MobileMenu({
   t: (key: string) => string;
   playSound: (type: SoundType) => void;
 }) {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const bgX = useTransform(mouseX, [0, 1], ["0%", "4%"]);
-  const bgY = useTransform(mouseY, [0, 1], ["0%", "4%"]);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    mouseX.set(e.clientX / window.innerWidth);
-    mouseY.set(e.clientY / window.innerHeight);
-  };
-
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — opacity only, no blur animate (expensive on mobile) */}
           <motion.div
-            className="fixed inset-0 z-40"
-            style={{ backdropFilter: "blur(0px)" }}
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(12px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            transition={{ duration: 0.4 }}
+            className="fixed inset-0 z-40 bg-black/60"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
             onClick={onClose}
           />
 
-          {/* Panel — slides in from right */}
+          {/* Panel — translateX only (GPU composited) */}
           <motion.div
-            className="fixed top-0 right-0 bottom-0 z-50 flex flex-col overflow-hidden"
-            style={{ width: "min(360px, 100vw)" }}
+            className="fixed top-0 right-0 bottom-0 z-50 flex flex-col"
+            style={{
+              width: "min(320px, 85vw)",
+              background: "#111111",
+              willChange: "transform",
+            }}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-            onMouseMove={handleMouseMove}
+            transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
           >
-            {/* Animated gradient background */}
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(135deg, #0a0a0a 0%, #171717 50%, #1a0a00 100%)",
-                x: bgX,
-                y: bgY,
-                scale: 1.08,
-              }}
-            />
+            {/* Orange top accent line */}
+            <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-accent-500 to-transparent" />
 
-            {/* Noise texture overlay */}
-            <div
-              className="absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-              }}
-            />
-
-            {/* Accent glow */}
-            <motion.div
-              className="absolute -top-32 -right-32 w-64 h-64 rounded-full"
-              style={{ background: "radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%)" }}
-              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute -bottom-20 -left-20 w-48 h-48 rounded-full"
-              style={{ background: "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)" }}
-              animate={{ scale: [1.2, 1, 1.2], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            />
-
-            {/* Content */}
-            <div className="relative z-10 flex flex-col h-full px-8 pt-20 pb-10">
-
-              {/* Nav links */}
-              <nav className="flex flex-col gap-1 flex-1 justify-center" aria-label="Mobile navigation">
-                {links.map((link, i) => {
-                  const isActive = pathname === link.href;
-                  return (
-                    <motion.div
-                      key={link.href}
-                      initial={{ opacity: 0, x: 60, filter: "blur(8px)" }}
-                      animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, x: 40, filter: "blur(4px)" }}
-                      transition={{
-                        duration: 0.45,
-                        delay: isOpen ? 0.15 + i * 0.08 : i * 0.04,
-                        ease: [0.76, 0, 0.24, 1],
-                      }}
-                    >
-                      <Link
-                        href={link.href}
-                        onClick={() => { playSound("nav"); onClose(); }}
-                        className="group relative flex items-center gap-4 py-4 overflow-hidden"
-                      >
-                        {/* Index number */}
-                        <motion.span
-                          className="font-sans text-[10px] tracking-[0.2em] text-white/20 w-5 shrink-0"
-                          animate={isActive ? { color: "rgba(249,115,22,0.6)" } : {}}
-                        >
-                          0{i + 1}
-                        </motion.span>
-
-                        {/* Link text */}
-                        <span
-                          className="font-serif leading-none transition-colors duration-300"
-                          style={{
-                            fontSize: "clamp(2rem, 8vw, 2.75rem)",
-                            color: isActive ? "#f97316" : "rgba(255,255,255,0.85)",
-                          }}
-                        >
-                          {t(link.translationKey)}
-                        </span>
-
-                        {/* Hover underline */}
-                        <motion.span
-                          className="absolute bottom-3 left-9 h-px bg-accent-500 origin-left"
-                          initial={{ scaleX: isActive ? 1 : 0 }}
-                          whileHover={{ scaleX: 1 }}
-                          transition={{ duration: 0.3, ease: "easeOut" }}
-                          style={{ width: "calc(100% - 2.25rem)" }}
-                        />
-
-                        {/* Arrow */}
-                        <motion.span
-                          className="ml-auto text-white/20 text-lg"
-                          initial={{ x: -8, opacity: 0 }}
-                          whileHover={{ x: 0, opacity: 1 }}
-                          transition={{ duration: 0.2 }}
-                        >
-                          →
-                        </motion.span>
-                      </Link>
-
-                      {/* Divider */}
-                      {i < links.length - 1 && (
-                        <motion.div
-                          className="h-px bg-white/5"
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{ delay: 0.2 + i * 0.08, duration: 0.4 }}
-                        />
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </nav>
-
-              {/* Footer */}
-              <motion.div
-                className="flex items-center justify-between pt-6 border-t border-white/10"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 0.45, duration: 0.4 }}
+            {/* Close button area */}
+            <div className="flex items-center justify-end px-6 pt-5 pb-2">
+              <button
+                onClick={onClose}
+                aria-label="Close menu"
+                className="w-10 h-10 flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors"
               >
-                <span className="font-sans text-[10px] tracking-[0.25em] uppercase text-white/25">
-                  KNG · Portfolio
-                </span>
-                <LanguageToggle />
-              </motion.div>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                  <line x1="3" y1="3" x2="15" y2="15" />
+                  <line x1="15" y1="3" x2="3" y2="15" />
+                </svg>
+              </button>
             </div>
 
-            {/* Left border accent */}
+            {/* Nav links */}
+            <nav className="flex flex-col flex-1 justify-center px-8 gap-1" aria-label="Mobile navigation">
+              {links.map((link, i) => {
+                const isActive = pathname === link.href;
+                return (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: 32 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3, delay: 0.05 + i * 0.07, ease: "easeOut" }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => { playSound("nav"); onClose(); }}
+                      className="flex items-center gap-4 py-5 group"
+                    >
+                      {/* Index */}
+                      <span className="font-sans text-[10px] tracking-widest w-5 shrink-0"
+                        style={{ color: isActive ? "rgba(249,115,22,0.7)" : "rgba(255,255,255,0.2)" }}>
+                        0{i + 1}
+                      </span>
+
+                      {/* Label */}
+                      <span
+                        className="font-serif leading-none"
+                        style={{
+                          fontSize: "clamp(1.75rem, 7vw, 2.5rem)",
+                          color: isActive ? "#f97316" : "rgba(255,255,255,0.88)",
+                        }}
+                      >
+                        {t(link.translationKey)}
+                      </span>
+
+                      {/* Arrow — shows on active */}
+                      {isActive && (
+                        <span className="ml-auto text-accent-500 text-base">→</span>
+                      )}
+                    </Link>
+
+                    {/* Divider */}
+                    {i < links.length - 1 && (
+                      <div className="h-px bg-white/[0.06]" />
+                    )}
+                  </motion.div>
+                );
+              })}
+            </nav>
+
+            {/* Footer */}
             <motion.div
-              className="absolute left-0 top-0 bottom-0 w-px"
-              style={{ background: "linear-gradient(to bottom, transparent, rgba(249,115,22,0.4), transparent)" }}
-              initial={{ scaleY: 0 }}
-              animate={{ scaleY: 1 }}
-              exit={{ scaleY: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
+              className="flex items-center justify-between px-8 py-6 border-t border-white/[0.08]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.3 }}
+            >
+              <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-white/20">
+                KNG · Portfolio
+              </span>
+              <LanguageToggle />
+            </motion.div>
           </motion.div>
         </>
       )}
@@ -262,10 +198,8 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close on route change
   useEffect(() => { setIsOpen(false); }, [pathname]);
 
-  // Lock body scroll when menu open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -273,6 +207,8 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
 
   const isHome      = pathname === "/";
   const transparent = isHome && !scrolled;
+
+  const iconColor = isOpen ? "#ffffff" : transparent ? "#ffffff" : "#171717";
 
   return (
     <>
@@ -335,29 +271,21 @@ export default function Navbar({ links = DEFAULT_LINKS }: { links?: NavLink[] })
           </nav>
 
           {/* Mobile hamburger */}
-          <div className="nav-mobile items-center gap-sm">
+          <div className="nav-mobile items-center gap-2">
             <button
               type="button"
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsOpen((p) => !p)}
-              className={[
-                "relative flex items-center justify-center w-11 h-11 rounded-xl transition-colors z-[60]",
-                isOpen
-                  ? "text-white"
-                  : transparent
-                    ? "text-white hover:bg-white/10"
-                    : "text-neutral-700 hover:bg-neutral-100",
-              ].join(" ")}
+              className="relative flex items-center justify-center w-11 h-11 rounded-xl transition-colors z-[60]"
             >
-              <HamburgerIcon isOpen={isOpen} transparent={transparent || isOpen} />
+              <HamburgerIcon isOpen={isOpen} color={iconColor} />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile full-screen menu */}
       <MobileMenu
         isOpen={isOpen}
         links={links}

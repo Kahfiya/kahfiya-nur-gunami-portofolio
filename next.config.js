@@ -31,7 +31,7 @@ const nextConfig = {
           { key: "X-Content-Type-Options",     value: "nosniff" },
           { key: "Referrer-Policy",            value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy",         value: "camera=(), microphone=(), geolocation=()" },
-          { key: "Content-Security-Policy",    value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net https://cdn.simpleicons.org; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://res.cloudinary.com;" },
+          { key: "Content-Security-Policy", value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://cdn.jsdelivr.net https://cdn.simpleicons.org https://flagcdn.com; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://res.cloudinary.com;" },
         ],
       },
     ];
