@@ -81,22 +81,22 @@ function FlagIN({ size }: { size: number }) {
 export const FlagComponents: Record<Language, React.FC<{ size: number }>> = {
   en: FlagGB,
   id: FlagID,
-  ms: FlagMY,
+  my: FlagMY,
   ru: FlagRU,
-  ja: FlagJP,
-  zh: FlagCN,
-  ko: FlagKR,
+  jp: FlagJP,
+  cn: FlagCN,
+  kr: FlagKR,
   hi: FlagIN,
 };
 
 export const LANGUAGES: { code: Language; native: string }[] = [
   { code: "en", native: "English"   },
   { code: "id", native: "Indonesia" },
-  { code: "ms", native: "Malaysia"  },
+  { code: "my", native: "Malaysia"  },
   { code: "ru", native: "Русский"   },
-  { code: "ja", native: "日本語"     },
-  { code: "zh", native: "中文"       },
-  { code: "ko", native: "한국어"     },
+  { code: "jp", native: "日本語"     },
+  { code: "cn", native: "中文"       },
+  { code: "kr", native: "한국어"     },
   { code: "hi", native: "हिन्दी"     },
 ];
 

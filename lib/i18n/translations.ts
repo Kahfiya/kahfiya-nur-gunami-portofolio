@@ -1,6 +1,6 @@
 ﻿// ─── Language Type ────────────────────────────────────────────────────────────
 
-export type Language = "en" | "id" | "ru" | "ja" | "zh" | "ko" | "hi" | "ms";
+export type Language = "en" | "id" | "ru" | "jp" | "cn" | "kr" | "hi" | "my";
 
 // ─── English ──────────────────────────────────────────────────────────────────
 
@@ -18,6 +18,7 @@ export const translationsEN: Record<string, string> = {
   "footer.marquee.student": "STUDENT", "footer.marquee.collaborate": "OPEN TO COLLABORATE",
   "footer.marquee.build": "LET'S BUILD TOGETHER", "footer.marquee.based": "BASED IN INDONESIA",
   "footer.rights": "All rights reserved.",
+  "cert.label": "Credentials", "cert.growing": "Always growing", "cert.verified": "Verified",
   "whatido.title": "What I Do",
   "whatido.subtitle": "From pixel-perfect interfaces to full-stack systems — here's how I can help.",
   "whatido.frontend.title": "Frontend Development",
@@ -31,10 +32,10 @@ export const translationsEN: Record<string, string> = {
   "project.lumidh.desc": "Premium perfume e-commerce with elegant appearance — signature scents collection with luxurious shopping experience.",
   "project.adria.desc": "Graphic design studio — breathing design for your brand. Branding, visual content, and visual identity.",
   "certificates.title": "Certificates", "certificates.subtitle": "Continuous learning — verified credentials from trusted platforms.",
-  "cert.web.title": "Dasar AI", "cert.frontend.title": "Financial Literacy",
+  "cert.web.title": "AI Basics", "cert.frontend.title": "Financial Literacy",
   "cert.uiux.title": "UI/UX Design Fundamentals", "cert.js.title": "JavaScript Algorithms",
   "cert.claude.title": "Claude 101", "cert.ai.title": "Introduction to Artificial Intelligence",
-  "cert.python.title": "Memulai Pemrograman dengan Python", "cert.aifund.title": "AI Fundamentals for Non-Data Scientists",
+  "cert.python.title": "Getting Started with Python Programming", "cert.aifund.title": "AI Fundamentals for Non-Data Scientists",
   "about.title": "About Me",
   "about.bio.p1": "Hi, I'm Kahfiya Nur Gunami — a passionate software engineering student from Banjarmasin, Indonesia. I love crafting clean, performant web experiences that blend thoughtful design with solid engineering.",
   "about.bio.p2": "My journey started with curiosity about how websites work, and it quickly grew into a deep interest in frontend development, UI/UX design, and modern JavaScript ecosystems.",
@@ -66,7 +67,7 @@ export const translationsEN: Record<string, string> = {
   "contact.subtitle": "Get in touch", "contact.heading1": "Let's Build", "contact.heading2": "Something Great.",
   "contact.intro": "Have an interesting project? Or just want to chat about ideas? I'm always open to new collaborations.",
   "contact.socials.label": "Contact", "contact.cta": "Send Message →",
-  "form.name.placeholder": "Name", "form.email.placeholder": "Email", "form.message.placeholder": "Message",
+  "form.name.placeholder": "Name", "form.email.placeholder": "example@gmail.com", "form.message.placeholder": "Message",
   "form.submit": "Send Message", "form.submitting": "Sending...",
   "form.success.heading": "Message sent!", "form.success.body": "I'll get back to you as soon as possible.",
   "form.error.name": "Name is required.", "form.error.email": "Please enter a valid email.", "form.error.message": "Message must be at least 10 characters.",
@@ -133,10 +134,14 @@ export const translationsID: Record<string, string> = {
   "contact.subtitle": "Hubungi Saya", "contact.heading1": "Mari Bangun", "contact.heading2": "Sesuatu yang Hebat.",
   "contact.intro": "Punya project menarik? Atau sekadar ingin ngobrol soal ide? Saya selalu terbuka untuk kolaborasi baru.",
   "contact.socials.label": "Kontak", "contact.cta": "Kirim Pesan →",
-  "form.name.placeholder": "Nama", "form.email.placeholder": "Email", "form.message.placeholder": "Pesan",
+  "form.name.placeholder": "Nama", "form.email.placeholder": "contoh@gmail.com", "form.message.placeholder": "Pesan",
   "form.submit": "Kirim Pesan", "form.submitting": "Mengirim...",
   "form.success.heading": "Pesan terkirim!", "form.success.body": "Saya akan membalas secepatnya.",
   "form.error.name": "Nama wajib diisi.", "form.error.email": "Masukkan email yang valid.", "form.error.message": "Pesan minimal 10 karakter.",
+  "cert.label": "Kredensial", "cert.growing": "Selalu bertambah", "cert.verified": "Terverifikasi",
+  "footer.marquee.student": "SISWA", "footer.marquee.collaborate": "TERBUKA UNTUK KOLABORASI",
+  "footer.marquee.build": "MARI BANGUN BERSAMA", "footer.marquee.based": "BERBASIS DI INDONESIA",
+  "footer.rights": "Hak cipta dilindungi.",
 };
 
 // ─── Russian ──────────────────────────────────────────────────────────────────
@@ -198,10 +203,14 @@ export const translationsRU: Record<string, string> = {
   "contact.subtitle": "Связаться", "contact.heading1": "Давайте создадим", "contact.heading2": "Что-то великое.",
   "contact.intro": "Есть интересный проект? Или просто хотите поговорить об идеях? Я всегда открыт к новому сотрудничеству.",
   "contact.socials.label": "Контакты", "contact.cta": "Отправить сообщение →",
-  "form.name.placeholder": "Имя", "form.email.placeholder": "Email", "form.message.placeholder": "Сообщение",
+  "form.name.placeholder": "Имя", "form.email.placeholder": "example@gmail.com", "form.message.placeholder": "Сообщение",
   "form.submit": "Отправить", "form.submitting": "Отправка...",
   "form.success.heading": "Сообщение отправлено!", "form.success.body": "Я отвечу вам как можно скорее.",
   "form.error.name": "Имя обязательно.", "form.error.email": "Введите корректный email.", "form.error.message": "Сообщение должно содержать не менее 10 символов.",
+  "cert.label": "Сертификаты", "cert.growing": "Всегда растёт", "cert.verified": "Подтверждено",
+  "footer.marquee.student": "СТУДЕНТ", "footer.marquee.collaborate": "ОТКРЫТ К СОТРУДНИЧЕСТВУ",
+  "footer.marquee.build": "ДАВАЙТЕ СОЗДАВАТЬ ВМЕСТЕ", "footer.marquee.based": "ИЗ ИНДОНЕЗИИ",
+  "footer.rights": "Все права защищены.",
 };
 
 // ─── Japanese ─────────────────────────────────────────────────────────────────
@@ -263,10 +272,14 @@ export const translationsJA: Record<string, string> = {
   "contact.subtitle": "お問い合わせ", "contact.heading1": "一緒に作りましょう", "contact.heading2": "素晴らしいものを。",
   "contact.intro": "面白いプロジェクトがありますか？アイデアについて話したいですか？新しいコラボレーションをいつでも歓迎します。",
   "contact.socials.label": "連絡先", "contact.cta": "メッセージを送る →",
-  "form.name.placeholder": "お名前", "form.email.placeholder": "メールアドレス", "form.message.placeholder": "メッセージ",
+  "form.name.placeholder": "お名前", "form.email.placeholder": "example@gmail.com", "form.message.placeholder": "メッセージ",
   "form.submit": "送信する", "form.submitting": "送信中...",
   "form.success.heading": "送信完了！", "form.success.body": "できるだけ早くご返信します。",
   "form.error.name": "お名前は必須です。", "form.error.email": "有効なメールアドレスを入力してください。", "form.error.message": "メッセージは10文字以上必要です。",
+  "cert.label": "資格・証明書", "cert.growing": "常に成長中", "cert.verified": "認証済み",
+  "footer.marquee.student": "学生", "footer.marquee.collaborate": "コラボ募集中",
+  "footer.marquee.build": "一緒に作りましょう", "footer.marquee.based": "インドネシア在住",
+  "footer.rights": "著作権所有。",
 };
 
 // ─── Chinese (Simplified) ─────────────────────────────────────────────────────
@@ -328,10 +341,14 @@ export const translationsZH: Record<string, string> = {
   "contact.subtitle": "联系我", "contact.heading1": "让我们共同创造", "contact.heading2": "伟大的事物。",
   "contact.intro": "有有趣的项目？或者只是想聊聊想法？我随时欢迎新的合作。",
   "contact.socials.label": "联系方式", "contact.cta": "发送消息 →",
-  "form.name.placeholder": "姓名", "form.email.placeholder": "邮箱", "form.message.placeholder": "消息",
+  "form.name.placeholder": "姓名", "form.email.placeholder": "example@gmail.com", "form.message.placeholder": "消息",
   "form.submit": "发送消息", "form.submitting": "发送中...",
   "form.success.heading": "消息已发送！", "form.success.body": "我会尽快回复您。",
   "form.error.name": "姓名为必填项。", "form.error.email": "请输入有效的邮箱地址。", "form.error.message": "消息至少需要10个字符。",
+  "cert.label": "证书", "cert.growing": "持续增长", "cert.verified": "已验证",
+  "footer.marquee.student": "学生", "footer.marquee.collaborate": "开放合作",
+  "footer.marquee.build": "一起创造", "footer.marquee.based": "来自印度尼西亚",
+  "footer.rights": "版权所有。",
 };
 
 // ─── Korean ───────────────────────────────────────────────────────────────────
@@ -393,10 +410,14 @@ export const translationsKO: Record<string, string> = {
   "contact.subtitle": "연락하기", "contact.heading1": "함께 만들어요", "contact.heading2": "멋진 것을.",
   "contact.intro": "흥미로운 프로젝트가 있으신가요? 아이디어에 대해 이야기하고 싶으신가요? 새로운 협업을 언제나 환영합니다.",
   "contact.socials.label": "연락처", "contact.cta": "메시지 보내기 →",
-  "form.name.placeholder": "이름", "form.email.placeholder": "이메일", "form.message.placeholder": "메시지",
+  "form.name.placeholder": "이름", "form.email.placeholder": "example@gmail.com", "form.message.placeholder": "메시지",
   "form.submit": "메시지 보내기", "form.submitting": "전송 중...",
   "form.success.heading": "메시지가 전송되었습니다!", "form.success.body": "최대한 빨리 답변 드리겠습니다.",
   "form.error.name": "이름은 필수입니다.", "form.error.email": "유효한 이메일을 입력해주세요.", "form.error.message": "메시지는 최소 10자 이상이어야 합니다.",
+  "cert.label": "자격증", "cert.growing": "계속 성장 중", "cert.verified": "인증됨",
+  "footer.marquee.student": "학생", "footer.marquee.collaborate": "협업 가능",
+  "footer.marquee.build": "함께 만들어요", "footer.marquee.based": "인도네시아 기반",
+  "footer.rights": "저작권 보호.",
 };
 
 // ─── Hindi ────────────────────────────────────────────────────────────────────
@@ -458,10 +479,14 @@ export const translationsHI: Record<string, string> = {
   "contact.subtitle": "संपर्क करें", "contact.heading1": "मिलकर बनाएँ", "contact.heading2": "कुछ महान।",
   "contact.intro": "कोई दिलचस्प प्रोजेक्ट है? या बस आइडिया के बारे में बात करना चाहते हैं? मैं हमेशा नए सहयोग के लिए तैयार हूँ।",
   "contact.socials.label": "संपर्क", "contact.cta": "संदेश भेजें →",
-  "form.name.placeholder": "नाम", "form.email.placeholder": "ईमेल", "form.message.placeholder": "संदेश",
+  "form.name.placeholder": "नाम", "form.email.placeholder": "example@gmail.com", "form.message.placeholder": "संदेश",
   "form.submit": "संदेश भेजें", "form.submitting": "भेज रहे हैं...",
   "form.success.heading": "संदेश भेजा गया!", "form.success.body": "मैं जल्द से जल्द जवाब दूँगा।",
   "form.error.name": "नाम आवश्यक है।", "form.error.email": "कृपया एक वैध ईमेल दर्ज करें।", "form.error.message": "संदेश कम से कम 10 अक्षर का होना चाहिए।",
+  "cert.label": "प्रमाणपत्र", "cert.growing": "हमेशा बढ़ रहा है", "cert.verified": "सत्यापित",
+  "footer.marquee.student": "छात्र", "footer.marquee.collaborate": "सहयोग के लिए तैयार",
+  "footer.marquee.build": "मिलकर बनाएं", "footer.marquee.based": "इंडोनेशिया से",
+  "footer.rights": "सर्वाधिकार सुरक्षित।",
 };
 
 // ─── Malay ────────────────────────────────────────────────────────────────────
@@ -523,8 +548,12 @@ export const translationsMS: Record<string, string> = {
   "contact.subtitle": "Hubungi Saya", "contact.heading1": "Mari Bina", "contact.heading2": "Sesuatu yang Hebat.",
   "contact.intro": "Ada projek menarik? Atau sekadar ingin berbual tentang idea? Saya sentiasa terbuka untuk kerjasama baharu.",
   "contact.socials.label": "Hubungi", "contact.cta": "Hantar Mesej →",
-  "form.name.placeholder": "Nama", "form.email.placeholder": "E-mel", "form.message.placeholder": "Mesej",
+  "form.name.placeholder": "Nama", "form.email.placeholder": "example@gmail.com", "form.message.placeholder": "Mesej",
   "form.submit": "Hantar Mesej", "form.submitting": "Menghantar...",
   "form.success.heading": "Mesej dihantar!", "form.success.body": "Saya akan membalas secepat mungkin.",
   "form.error.name": "Nama diperlukan.", "form.error.email": "Sila masukkan e-mel yang sah.", "form.error.message": "Mesej mestilah sekurang-kurangnya 10 aksara.",
+  "cert.label": "Sijil", "cert.growing": "Sentiasa berkembang", "cert.verified": "Disahkan",
+  "footer.marquee.student": "PELAJAR", "footer.marquee.collaborate": "TERBUKA UNTUK KERJASAMA",
+  "footer.marquee.build": "MARI BINA BERSAMA", "footer.marquee.based": "BERASASKAN DI INDONESIA",
+  "footer.rights": "Hak cipta terpelihara.",
 };

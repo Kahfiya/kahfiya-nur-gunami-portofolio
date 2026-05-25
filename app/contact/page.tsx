@@ -1,17 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import ScrollScrub from "@/components/ui/ScrollScrub";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ContactForm = dynamic(() => import("@/components/ui/ContactForm"), { ssr: false });
 
 export default function ContactPage() {
   const { t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
+  const headingRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = headingRef.current;
+    if (!el) return;
+
+    const ctx = gsap.context(() => {
+      const words = el.querySelectorAll<HTMLElement>(".contact-word");
+      gsap.fromTo(
+        words,
+        { clipPath: "inset(0 100% 0 0)", opacity: 0 },
+        {
+          clipPath: "inset(0 0% 0 0)",
+          opacity: 1,
+          ease: "expo.out",
+          stagger: 0.05,
+          duration: 1,
+        }
+      );
+
+      const divider = el.querySelector<HTMLElement>(".contact-divider");
+      if (divider) {
+        gsap.fromTo(
+          divider,
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.8, ease: "expo.out", delay: 0.3 }
+        );
+      }
+    }, el);
+
+    return () => ctx.revert();
+  }, []);
 
   const SOCIALS = [
     {
@@ -50,56 +86,61 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
       {/* ── Heading ── */}
-      <div className="px-md tablet:px-2xl desktop:px-3xl pt-3xl pb-2xl max-w-[1280px] mx-auto">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="font-sans text-[var(--color-text-secondary)] text-sm tracking-widest uppercase mb-4"
-        >
+      <div ref={headingRef} className="px-md tablet:px-2xl desktop:px-3xl pt-3xl pb-2xl max-w-[1280px] mx-auto">
+        <p className="contact-word font-sans text-[var(--color-text-secondary)] text-sm tracking-widest uppercase mb-4 inline-block">
           {t("contact.subtitle")}
-        </motion.p>
+        </p>
 
         <div className="overflow-hidden pb-4">
-          <motion.h1
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif leading-none text-[var(--color-text-primary)]"
+          <h1
+            className="contact-word font-serif leading-none text-[var(--color-text-primary)] inline-block"
             style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}
           >
             {t("contact.heading1")}
-          </motion.h1>
+          </h1>
         </div>
         <div className="overflow-hidden pb-6">
-          <motion.h1
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif leading-none text-accent-500"
+          <h1
+            className="contact-word font-serif leading-none text-accent-500 inline-block"
             style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}
           >
             {t("contact.heading2")}
-          </motion.h1>
+          </h1>
         </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="font-sans text-[var(--color-text-secondary)] text-base tablet:text-lg mt-xl max-w-lg leading-relaxed"
+        <p
+          className="contact-word font-sans text-[var(--color-text-secondary)] text-base tablet:text-lg mt-xl max-w-lg leading-relaxed inline-block"
         >
           {t("contact.intro")}
-        </motion.p>
+        </p>
       </div>
 
       {/* ── Divider ── */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-        className="h-px bg-[var(--color-border)] mx-md tablet:mx-2xl desktop:mx-3xl origin-left"
+      <div
+        className="contact-divider h-px bg-[var(--color-border)] mx-md tablet:mx-2xl desktop:mx-3xl origin-left"
+        style={{ transform: "scaleX(0)" }}
       />
+
+      {/* ── Marquee name strip ── */}
+      <div className="overflow-x-hidden py-6 border-b border-[var(--color-border)]" aria-hidden="true">
+        <motion.div
+          className="flex whitespace-nowrap"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        >
+          {[...Array(6)].map((_, i) => (
+            <span key={i} className="font-serif font-black uppercase tracking-tight text-[var(--color-text-primary)] pr-10"
+              style={{ fontSize: "clamp(1.2rem, 3vw, 2rem)", opacity: 0.25 }}>
+              Kahfiya Nur Gunami
+              <span className="text-accent-500 mx-4 font-sans font-normal inline-flex items-center gap-2" style={{ fontSize: "0.6em", verticalAlign: "middle" }}>
+                <motion.span animate={{ rotate: 360 }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }} style={{ display: "inline-block" }}>✦</motion.span>
+                {" UI/UX · Frontend · Creative Coder "}
+                <motion.span animate={{ rotate: 360 }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }} style={{ display: "inline-block" }}>✦</motion.span>
+              </span>
+            </span>
+          ))}
+        </motion.div>
+      </div>
 
       {/* ── Content ── */}
       <div className="px-md tablet:px-2xl desktop:px-3xl py-2xl max-w-[1280px] mx-auto grid grid-cols-1 tablet:grid-cols-2 gap-2xl items-start">

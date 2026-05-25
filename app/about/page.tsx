@@ -10,29 +10,10 @@ import MusicPlayer from "@/components/ui/MusicPlayer";
 import TiltedCard from "@/components/ui/TiltedCard";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import ScrollScrub from "@/components/ui/ScrollScrub";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// ─── Skill Bar ────────────────────────────────────────────────────────────────
-
-function SkillBar({ label, percent }: { label: string; percent: number }) {
-  return (
-    <div
-      className="h-2 w-full rounded-full bg-neutral-200 overflow-hidden"
-      role="progressbar"
-      aria-valuenow={percent}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-label={`${label} proficiency ${percent}%`}
-    >
-      <motion.div
-        className="h-full rounded-full bg-accent-500"
-        initial={{ width: 0 }}
-        whileInView={{ width: `${percent}%` }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-      />
-    </div>
-  );
-}
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── My Stack ────────────────────────────────────────────────────────────────
 
@@ -79,9 +60,57 @@ const STACK_CATEGORIES = [
 
 function MyStack() {
   const { t } = useLanguage();
+  const sectionRef = React.useRef<HTMLElement>(null);
+
+  React.useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Each category row: slide up + fade, scrub-synced
+      const rows = section.querySelectorAll<HTMLElement>(".stack-row");
+      rows.forEach((row, ri) => {
+        gsap.fromTo(row,
+          { opacity: 0, y: 28 },
+          {
+            opacity: 1, y: 0,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: row,
+              start: "top 92%",
+              end: "top 65%",
+              scrub: 1.5,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+
+        // Each tech pill inside the row — staggered scrub
+        const pills = row.querySelectorAll<HTMLElement>(".stack-pill");
+        gsap.fromTo(pills,
+          { opacity: 0, y: 16, scale: 0.92 },
+          {
+            opacity: 1, y: 0, scale: 1,
+            ease: "power2.out",
+            stagger: 0.06,
+            scrollTrigger: {
+              trigger: row,
+              start: "top 88%",
+              end: "top 50%",
+              scrub: 1.2,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       aria-labelledby="stack-heading"
       className="mb-3xl rounded-3xl overflow-hidden relative border border-[var(--color-border)]
                  bg-[var(--color-bg-primary)] shadow-sm"
@@ -114,10 +143,7 @@ function MyStack() {
       {/* Categories */}
       <div className="relative divide-y divide-[var(--color-border)]">
         {STACK_CATEGORIES.map((cat, ci) => (
-          <div
-            key={cat.label}
-            className="flex flex-col tablet:flex-row"
-          >
+          <div key={cat.label} className="stack-row flex flex-col tablet:flex-row">
             {/* Category label */}
             <div className="flex items-center tablet:items-start pt-xl px-xl pb-3 tablet:pb-xl tablet:w-44 shrink-0">
               <span className="font-sans font-bold tracking-[0.2em] text-[var(--color-text-secondary)] opacity-50"
@@ -128,12 +154,11 @@ function MyStack() {
 
             {/* Tech items */}
             <div className="tablet:border-l tablet:border-[var(--color-border)] px-xl pb-xl tablet:pt-xl">
-              <ScrollScrub stagger={0.04} scrub={true} start="top 90%" end="top 50%"
-                className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2.5">
                 {cat.items.map((tech) => (
                   <div
                     key={tech.name}
-                    className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default group
+                    className="stack-pill flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default group
                                border border-[var(--color-border)] bg-[var(--color-bg-secondary)]
                                hover:border-accent-500/40 hover:bg-accent-500/5
                                hover:scale-105 hover:-translate-y-0.5
@@ -148,7 +173,7 @@ function MyStack() {
                     </span>
                   </div>
                 ))}
-              </ScrollScrub>
+              </div>
             </div>
           </div>
         ))}

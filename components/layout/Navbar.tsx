@@ -86,7 +86,7 @@ function MobileMenu({
             {/* Header row */}
             <div className="flex items-center justify-between px-6 pt-5 pb-2 shrink-0">
               <span className="font-sans text-[10px] tracking-[0.25em] uppercase text-white/25">
-                KNG · Portfolio
+                Kahfiya Nur Gunami
               </span>
               <button onClick={onClose} aria-label="Close menu"
                 className="w-10 h-10 flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-colors">

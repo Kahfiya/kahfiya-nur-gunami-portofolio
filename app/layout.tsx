@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import PageTransitionWrapper from "@/components/layout/PageTransitionWrapper";
 import PreloaderWrapper from "@/components/layout/PreloaderWrapper";
 import PullToRefresh from "@/components/layout/PullToRefresh";
+import SmoothScrollProvider from "@/components/layout/SmoothScrollProvider";
 import ClickSpark from "@/components/ui/ClickSpark";
 import GSAPInit from "@/components/ui/GSAPInit";
 import ParticleRain from "@/components/ui/ParticleRain";
@@ -83,6 +84,7 @@ export default function RootLayout({
         <LanguageProvider>
           <MusicProvider>
           <PreloaderWrapper>
+            <SmoothScrollProvider>
             <ClickSpark
               sparkColor="#f97316"
               sparkSize={12}
@@ -97,6 +99,7 @@ export default function RootLayout({
                 <PageTransitionWrapper>{children}</PageTransitionWrapper>
               </PullToRefresh>
             </ClickSpark>
+            </SmoothScrollProvider>
           </PreloaderWrapper>
           </MusicProvider>
         </LanguageProvider>

@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { X, ExternalLink } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SectionHeading from "@/components/sections/SectionHeading";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
-import ScrollReveal, { ScrollStagger, scrollItem } from "@/components/ui/ScrollReveal";
-import { fadeUp, prefersReducedMotion } from "@/lib/motion-variants";
+import { prefersReducedMotion } from "@/lib/motion-variants";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type FilterCategory = "All" | "Web" | "Design" | "School" | "Mobile";
 
@@ -166,6 +169,7 @@ export default function WorkPage() {
   const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState<FilterCategory>("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const PROJECTS: Project[] = [
     {
@@ -251,6 +255,38 @@ export default function WorkPage() {
     ? PROJECTS
     : PROJECTS.filter((p) => p.category.includes(activeFilter));
 
+  // GSAP scrub on grid cards — re-runs when filter changes
+  useLayoutEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const cards = grid.querySelectorAll<HTMLElement>(".project-card-wrap");
+    if (!cards.length) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 50, scale: 0.93 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          ease: "expo.out",
+          stagger: 0.07,
+          scrollTrigger: {
+            trigger: grid,
+            start: "top 88%",
+            end: "top 20%",
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    }, grid);
+
+    return () => ctx.revert();
+  }, [activeFilter]);
+
   return (
     <main className="px-4 tablet:px-8 desktop:px-12 py-8 desktop:py-12 max-w-screen-xl mx-auto">
       <SectionHeading title={t("work.title")} as="h1" />
@@ -276,16 +312,18 @@ export default function WorkPage() {
       </div>
 
       {/* Project Grid */}
-      <motion.div layout className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3">
+      <div ref={gridRef} className="grid grid-cols-1 tablet:grid-cols-2 desktop:grid-cols-3">
         <AnimatePresence mode="popLayout">
           {filtered.map((project) => {
-            // Design projects open modal; Web projects open in new tab
             const isDesign = project.category.includes("Design");
             return (
-              <motion.div key={project.id} layout
-                variants={fadeUp} initial="hidden" animate="visible"
+              <motion.div
+                key={project.id}
+                layout
+                className="project-card-wrap"
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: "easeOut" }}>
+                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.25, ease: "easeOut" }}
+              >
                 <ProjectCard3D
                   project={project}
                   onClick={isDesign ? () => setSelectedProject(project) : undefined}
@@ -294,7 +332,7 @@ export default function WorkPage() {
             );
           })}
         </AnimatePresence>
-      </motion.div>
+      </div>
 
       {/* Modal */}
       <AnimatePresence>

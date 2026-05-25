@@ -1,8 +1,17 @@
 "use client";
 
-import { useRef } from "react";
+/**
+ * HomeWhatIDo — High-end GSAP scrub with staggered card reveals
+ * Each card slides in from below with scale + rotation for depth.
+ * Heading uses clip-path wipe per word.
+ */
+
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import ScrollScrub from "@/components/ui/ScrollScrub";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const SERVICES = [
   {
@@ -42,32 +51,100 @@ const SERVICES = [
 
 export default function HomeWhatIDo() {
   const { t } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // ── Label + heading clip wipe ──────────────────────────────────────────
+      const headingWords = section.querySelectorAll<HTMLElement>(".whatido-word");
+      gsap.fromTo(headingWords,
+        { clipPath: "inset(0 100% 0 0)", opacity: 0 },
+        {
+          clipPath: "inset(0 0% 0 0)", opacity: 1,
+          ease: "expo.out", stagger: 0.06,
+          scrollTrigger: {
+            trigger: section.querySelector(".whatido-heading"),
+            start: "top 88%", end: "top 45%",
+            scrub: 1.2, invalidateOnRefresh: true,
+          },
+        }
+      );
+
+      // ── Cards — dramatic stagger with rotation ─────────────────────────────
+      const cards = section.querySelectorAll<HTMLElement>(".service-card");
+      gsap.fromTo(cards,
+        { opacity: 0, y: 80, scale: 0.88, rotateX: 8, transformOrigin: "center bottom" },
+        {
+          opacity: 1, y: 0, scale: 1, rotateX: 0,
+          ease: "expo.out", stagger: 0.15,
+          scrollTrigger: {
+            trigger: section.querySelector(".service-grid"),
+            start: "top 85%", end: "top 15%",
+            scrub: 1.5, invalidateOnRefresh: true,
+          },
+        }
+      );
+
+      // ── Accent line on each card — draws in on scroll ──────────────────────
+      const lines = section.querySelectorAll<HTMLElement>(".card-accent-line");
+      gsap.fromTo(lines,
+        { scaleX: 0 },
+        {
+          scaleX: 1, ease: "expo.out", stagger: 0.15,
+          scrollTrigger: {
+            trigger: section.querySelector(".service-grid"),
+            start: "top 80%", end: "top 20%",
+            scrub: 1.5, invalidateOnRefresh: true,
+          },
+        }
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section className="px-md tablet:px-2xl py-3xl max-w-7xl mx-auto w-full">
+    <section ref={sectionRef} className="px-md tablet:px-2xl py-3xl max-w-7xl mx-auto w-full" style={{ perspective: "1000px" }}>
+
       {/* Heading */}
-      <ScrollScrub stagger={0.05} start="top 90%" end="top 55%" className="mb-2xl">
-        <div>
-          <p className="font-sans text-xs tracking-[0.2em] uppercase text-accent-500 mb-3">— Services</p>
-          <h2 className="font-serif font-bold text-[var(--color-text-primary)]" style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}>
-            {t("whatido.title")}
-          </h2>
-          <p className="font-sans text-[var(--color-text-secondary)] mt-3 max-w-xl" style={{ fontSize: "clamp(0.875rem, 1.5vw, 1rem)" }}>
-            {t("whatido.subtitle")}
-          </p>
-        </div>
-      </ScrollScrub>
+      <div className="whatido-heading mb-2xl">
+        <p className="whatido-word font-sans text-xs tracking-[0.2em] uppercase text-accent-500 mb-3 inline-block">
+          — Services
+        </p>
+        <h2 className="font-serif font-bold text-[var(--color-text-primary)] flex flex-wrap gap-x-[0.25em]"
+          style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}>
+          {t("whatido.title").split(" ").map((w, i) => (
+            <span key={i} className="whatido-word inline-block">{w}</span>
+          ))}
+        </h2>
+        <p className="whatido-word font-sans text-[var(--color-text-secondary)] mt-3 max-w-xl inline-block"
+          style={{ fontSize: "clamp(0.875rem, 1.5vw, 1rem)" }}>
+          {t("whatido.subtitle")}
+        </p>
+      </div>
 
       {/* Cards */}
-      <ScrollScrub stagger={0.05} start="top 88%" end="top 40%" className="grid grid-cols-1 tablet:grid-cols-3 gap-lg">
+      <div className="service-grid grid grid-cols-1 tablet:grid-cols-3 gap-lg">
         {SERVICES.map((svc) => (
           <div
             key={svc.titleKey}
-            className="group relative flex flex-col gap-md p-xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+            className="service-card group relative flex flex-col gap-md p-xl rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] overflow-hidden transition-shadow duration-300 hover:shadow-xl"
+            style={{ willChange: "transform" }}
           >
-            <div className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              style={{ background: `linear-gradient(90deg, transparent, ${svc.accent}, transparent)` }} />
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center"
+            {/* Accent line — drawn by scrub */}
+            <div
+              className="card-accent-line absolute top-0 left-0 right-0 h-[2px] origin-left"
+              style={{ background: `linear-gradient(90deg, ${svc.accent}, transparent)` }}
+            />
+
+            {/* Hover glow */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              style={{ background: `radial-gradient(ellipse at top left, ${svc.accent}10 0%, transparent 60%)` }} />
+
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
               style={{ background: `${svc.accent}15`, color: svc.accent }}>
               {svc.icon}
             </div>
@@ -84,7 +161,7 @@ export default function HomeWhatIDo() {
             </div>
           </div>
         ))}
-      </ScrollScrub>
+      </div>
     </section>
   );
 }

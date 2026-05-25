@@ -11,14 +11,14 @@ const DICTS: Record<Language, Record<string, string>> = {
   en: translationsEN,
   id: translationsID,
   ru: translationsRU,
-  ja: translationsJA,
-  zh: translationsZH,
-  ko: translationsKO,
+  jp: translationsJA,
+  cn: translationsZH,
+  kr: translationsKO,
   hi: translationsHI,
-  ms: translationsMS,
+  my: translationsMS,
 };
 
-const VALID: Language[] = ["en", "id", "ru", "ja", "zh", "ko", "hi", "ms"];
+const VALID: Language[] = ["en", "id", "ru", "jp", "cn", "kr", "hi", "my"];
 
 interface LanguageContextType {
   language: Language;

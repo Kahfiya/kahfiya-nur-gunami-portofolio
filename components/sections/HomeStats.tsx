@@ -1,62 +1,126 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { useInView } from "framer-motion";
+/**
+ * HomeStats — scrub-driven counter + reveal
+ * Counter value is driven by scroll position (not time-based autoplay).
+ * The user's hand literally counts the numbers up.
+ */
+
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import ScrollScrub from "@/components/ui/ScrollScrub";
 
-function useCounter(target: number, duration = 1.4, start = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let startTime: number | null = null;
-    const step = (ts: number) => {
-      if (!startTime) startTime = ts;
-      const p = Math.min((ts - startTime) / (duration * 1000), 1);
-      setCount(Math.floor(p * target));
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [start, target, duration]);
-  return count;
+gsap.registerPlugin(ScrollTrigger);
+
+interface StatData {
+  value: number;
+  suffix: string;
+  labelKey: string;
+  subKey: string;
 }
 
-function Stat({ value, suffix = "", label, sub, delay, inView }: {
-  value: number; suffix?: string; label: string; sub: string; delay: number; inView: boolean;
-}) {
-  const count = useCounter(value, 1.2, inView);
-  return (
-    <div
-      className="relative flex flex-col items-center text-center gap-2 px-xl py-3xl group"
-    >
-      {/* Glow on hover */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: "radial-gradient(ellipse at center, rgba(249,115,22,0.06) 0%, transparent 70%)" }} />
-      <span
-        className="font-serif font-black text-[var(--color-text-primary)] leading-none tabular-nums"
-        style={{ fontSize: "clamp(2.8rem, 5vw, 4rem)" }}
-      >
-        {count}{suffix}
-      </span>
-      <span className="font-sans text-sm font-semibold text-[var(--color-text-primary)]">{label}</span>
-      <span className="font-sans text-xs text-[var(--color-text-secondary)]">{sub}</span>
-    </div>
-  );
-}
+const STATS: StatData[] = [
+  { value: 4,   suffix: "+", labelKey: "stats.projects.label", subKey: "stats.projects.sub" },
+  { value: 10,  suffix: "+", labelKey: "stats.stack.label",    subKey: "stats.stack.sub"    },
+  { value: 100, suffix: "%", labelKey: "stats.passion.label",  subKey: "stats.passion.sub"  },
+];
 
 export default function HomeStats() {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.3 });
+  const sectionRef = useRef<HTMLElement>(null);
   const { t } = useLanguage();
 
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // ── Scrub-driven counter — the number follows your scroll ──────────────
+      STATS.forEach((stat, i) => {
+        const numEl = section.querySelector<HTMLElement>(`[data-stat="${i}"]`);
+        if (!numEl) return;
+
+        const proxy = { val: 0 };
+        gsap.fromTo(
+          proxy,
+          { val: 0 },
+          {
+            val: stat.value,
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+              end: "top 20%",
+              scrub: 1.5,
+              invalidateOnRefresh: true,
+            },
+            onUpdate() {
+              numEl.textContent = Math.round(proxy.val) + stat.suffix;
+            },
+          }
+        );
+      });
+
+      // ── Staggered card reveal ──────────────────────────────────────────────
+      const cards = section.querySelectorAll<HTMLElement>(".stat-card");
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 40, scale: 0.94 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          ease: "expo.out",
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+            end: "top 40%",
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section ref={ref} className="home-stats-section px-md tablet:px-2xl py-2xl max-w-7xl mx-auto w-full">
-      <ScrollScrub stagger={0.05} start="top 90%" end="top 60%"
-        className="grid grid-cols-1 tablet:grid-cols-3 divide-y tablet:divide-y-0 tablet:divide-x divide-[var(--color-border)] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] overflow-hidden shadow-sm">
-        <Stat value={4}   suffix="+" label={t("stats.projects.label")} sub={t("stats.projects.sub")}  delay={0}   inView={inView} />
-        <Stat value={10}  suffix="+" label={t("stats.stack.label")}    sub={t("stats.stack.sub")}     delay={0.1} inView={inView} />
-        <Stat value={100} suffix="%" label={t("stats.passion.label")}  sub={t("stats.passion.sub")}   delay={0.2} inView={inView} />
-      </ScrollScrub>
+    <section
+      ref={sectionRef}
+      className="home-stats-section px-md tablet:px-2xl py-2xl max-w-7xl mx-auto w-full"
+    >
+      <div className="grid grid-cols-1 tablet:grid-cols-3 divide-y tablet:divide-y-0 tablet:divide-x
+                      divide-[var(--color-border)] rounded-2xl border border-[var(--color-border)]
+                      bg-[var(--color-bg-primary)] overflow-hidden shadow-sm">
+        {STATS.map((stat, i) => (
+          <div
+            key={stat.labelKey}
+            className="stat-card relative flex flex-col items-center text-center gap-2 px-xl py-3xl group"
+          >
+            {/* Hover glow */}
+            <div
+              className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              style={{ background: "radial-gradient(ellipse at center, rgba(249,115,22,0.07) 0%, transparent 70%)" }}
+            />
+            {/* Number — driven by scrub */}
+            <span
+              data-stat={i}
+              className="font-serif font-black text-[var(--color-text-primary)] leading-none tabular-nums"
+              style={{ fontSize: "clamp(2.8rem, 5vw, 4rem)" }}
+            >
+              0{stat.suffix}
+            </span>
+            <span className="font-sans text-sm font-semibold text-[var(--color-text-primary)]">
+              {t(stat.labelKey)}
+            </span>
+            <span className="font-sans text-xs text-[var(--color-text-secondary)]">
+              {t(stat.subKey)}
+            </span>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

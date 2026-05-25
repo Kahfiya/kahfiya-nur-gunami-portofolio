@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * SplitReveal — GSAP scrub per-character / per-word reveal
+ *
+ * Upgraded from onEnter play() to full scrub — the user's hand controls
+ * how fast each character/word appears. Feels tactile and premium.
+ */
+
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,13 +15,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface SplitRevealProps {
   children: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: "h1" | "h2" | "h3" | "h4" | "p" | "span" | "div";
   className?: string;
+  style?: React.CSSProperties;
   delay?: number;
-  /** "words" | "chars" */
   split?: "words" | "chars";
   trigger?: "scroll" | "immediate";
-  style?: React.CSSProperties;
+  scrub?: number | boolean;
+  start?: string;
+  end?: string;
 }
 
 export default function SplitReveal({
@@ -25,54 +34,80 @@ export default function SplitReveal({
   delay = 0,
   split = "words",
   trigger = "scroll",
+  scrub = 1,
+  start = "top 88%",
+  end = "top 40%",
 }: SplitRevealProps) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    // Manual split — no SplitText plugin needed (free tier)
-    const text = el.textContent || "";
+    const text  = el.textContent || "";
     const units = split === "chars" ? text.split("") : text.split(" ");
 
+    // Build DOM — each unit wrapped in overflow:hidden + inner span
     el.innerHTML = units
-      .map((u) => `<span class="split-unit" style="display:inline-block;overflow:hidden;vertical-align:bottom"><span class="split-inner" style="display:inline-block">${u === " " ? "&nbsp;" : u}</span></span>`)
+      .map(
+        (u) =>
+          `<span class="split-unit" style="display:inline-block;overflow:hidden;vertical-align:bottom">` +
+          `<span class="split-inner" style="display:inline-block;will-change:transform">${
+            u === " " ? "&nbsp;" : u
+          }</span></span>`
+      )
       .join(split === "words" ? " " : "");
 
     const inners = el.querySelectorAll<HTMLElement>(".split-inner");
 
     const ctx = gsap.context(() => {
-      const anim = gsap.fromTo(
-        inners,
-        { y: "110%", opacity: 0, rotateX: -40 },
-        {
-          y: "0%",
-          opacity: 1,
-          rotateX: 0,
-          duration: 0.8,
-          ease: "back.out(1.4)",
-          stagger: split === "chars" ? 0.025 : 0.07,
-          delay,
-          paused: trigger === "scroll",
-        }
-      );
-
-      if (trigger === "scroll") {
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top 85%",
-          onEnter: () => anim.play(),
-        });
+      if (trigger === "immediate") {
+        // Hero — plays on mount with spring-like ease
+        gsap.fromTo(
+          inners,
+          { y: "110%", opacity: 0, rotateX: -30 },
+          {
+            y: "0%",
+            opacity: 1,
+            rotateX: 0,
+            duration: 0.85,
+            ease: "back.out(1.2)",
+            stagger: split === "chars" ? 0.022 : 0.065,
+            delay,
+          }
+        );
+      } else {
+        // Scroll — fully scrub-driven, hand controls the reveal
+        gsap.fromTo(
+          inners,
+          { y: "110%", opacity: 0 },
+          {
+            y: "0%",
+            opacity: 1,
+            ease: "expo.out",
+            stagger: split === "chars" ? 0.018 : 0.055,
+            delay,
+            scrollTrigger: {
+              trigger: el,
+              start,
+              end,
+              scrub,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
       }
     }, el);
 
     return () => ctx.revert();
-  }, [children, delay, split, trigger]);
+  }, [children, delay, split, trigger, scrub, start, end]);
 
   return (
-    // @ts-expect-error dynamic tag
-    <Tag ref={ref} className={className} style={{ perspective: "600px", ...style }}>
+    <Tag
+      ref={ref as React.RefObject<HTMLDivElement>}
+      className={className}
+      style={{ perspective: "600px", ...style }}
+    >
       {children}
     </Tag>
   );
