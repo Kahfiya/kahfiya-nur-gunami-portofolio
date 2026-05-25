@@ -1,4 +1,7 @@
 import { ImageResponse } from "next/og";
+import { NextRequest } from "next/server";
+
+export const runtime = "edge";
 
 export const alt = "Kahfiya Nur Gunami | Fullstack Developer & Designer";
 export const size = { width: 1200, height: 630 };
@@ -81,7 +84,7 @@ export default async function Image() {
             marginBottom: "40px",
           }}
         >
-          Fullstack Developer & Designer
+          Fullstack Developer &amp; Designer
         </div>
 
         {/* Tags */}

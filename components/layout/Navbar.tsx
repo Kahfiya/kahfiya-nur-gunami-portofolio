@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, type Variants } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 import { useClickSound } from "@/hooks/useClickSound";
+
+type SoundType = "nav" | "lang-en" | "lang-id";
 
 interface NavLink {
   label: string;
@@ -66,7 +68,7 @@ function MobileMenu({
   pathname: string;
   onClose: () => void;
   t: (key: string) => string;
-  playSound: (type: string) => void;
+  playSound: (type: SoundType) => void;
 }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
