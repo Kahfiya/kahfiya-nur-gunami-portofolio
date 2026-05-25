@@ -83,18 +83,20 @@ const SOCIALS = [
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> },
 ];
 
-// ─── Mobile Skill Tags ────────────────────────────────────────────────────────
+// ─── Mobile Skill Pills (scrollable horizontal strip) ────────────────────────
 
 const MOBILE_SKILLS = [
-  { label: "Next.js",      color: "#ffffff", bg: "rgba(255,255,255,0.1)" },
-  { label: "React",        color: "#61DAFB", bg: "rgba(97,218,251,0.1)"  },
-  { label: "TypeScript",   color: "#3178C6", bg: "rgba(49,120,198,0.15)" },
-  { label: "Tailwind CSS", color: "#38BDF8", bg: "rgba(56,189,248,0.1)"  },
-  { label: "Figma",        color: "#F24E1E", bg: "rgba(242,78,30,0.1)"   },
-  { label: "Framer Motion",color: "#BB4BFF", bg: "rgba(187,75,255,0.1)"  },
-  { label: "Python",       color: "#FFD43B", bg: "rgba(255,212,59,0.1)"  },
-  { label: "Blender",      color: "#F5792A", bg: "rgba(245,121,42,0.1)"  },
-  { label: "UI/UX Design", color: "#f97316", bg: "rgba(249,115,22,0.12)" },
+  { name: "Next.js",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
+  { name: "React",         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
+  { name: "TypeScript",    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
+  { name: "Tailwind CSS",  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+  { name: "Figma",         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" },
+  { name: "Framer Motion", icon: "https://cdn.simpleicons.org/framer/ffffff" },
+  { name: "Python",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" },
+  { name: "Blender",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" },
+  { name: "Node.js",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },
+  { name: "Git",           icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
+  { name: "Docker",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
 ];
 
 // ─── Mobile Hero ──────────────────────────────────────────────────────────────
@@ -103,54 +105,59 @@ function MobileHero({ t }: { t: (key: string) => string }) {
   return (
     <section
       aria-label="Hero"
-      className="relative min-h-[100svh] flex flex-col overflow-hidden"
-      style={{ background: "#0a0a0a" }}
+      className="relative min-h-[100svh] flex flex-col overflow-hidden bg-neutral-900"
     >
-      {/* SVG illustration — top half */}
-      <div className="relative w-full shrink-0" style={{ height: "52vw", maxHeight: 260 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/Hero/Hero Mobile.svg"
-          alt=""
-          aria-hidden="true"
-          className="w-full h-full object-cover object-top"
-          style={{ display: "block" }}
-        />
-        {/* Fade bottom of SVG into dark bg */}
-        <div className="absolute inset-x-0 bottom-0 h-24"
-          style={{ background: "linear-gradient(to bottom, transparent, #0a0a0a)" }} />
-      </div>
+      {/* ── Full-screen background PNG ── */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/Hero/Hero Mobile.svg"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        style={{ zIndex: 0 }}
+      />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col flex-1 px-6 pt-2 pb-8">
+      {/* ── Dark gradient overlay — heavier at bottom so text is readable ── */}
+      <div
+        className="absolute inset-0"
+        style={{
+          zIndex: 1,
+          background:
+            "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0.88) 100%)",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* ── Main content — sits over video ── */}
+      <div className="relative z-10 flex flex-col flex-1 justify-end px-6 pb-6">
 
         {/* Name */}
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="font-serif text-white leading-[1.05]"
-          style={{ fontSize: "clamp(2rem, 9vw, 3rem)" }}
+          style={{ fontSize: "clamp(2.2rem, 9vw, 3.2rem)" }}
         >
           {NAME}
         </motion.h1>
 
-        {/* Typewriter */}
+        {/* Typewriter row */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
-          className="flex items-center gap-2 mt-3"
-          style={{ fontSize: "clamp(0.95rem, 4vw, 1.2rem)" }}
+          className="flex items-center gap-2 mt-2"
+          style={{ fontSize: "clamp(0.9rem, 4vw, 1.1rem)" }}
         >
-          <span className="text-white/50 font-sans font-light">{t("hero.im")}</span>
+          <span className="text-white/55 font-sans font-light">{t("hero.im")}</span>
           <Typewriter
             words={[t("hero.role1"), t("hero.role2"), t("hero.role3"), t("hero.role4"), t("hero.role5")]}
             typeSpeed={70}
             deleteSpeed={35}
             pauseAfterType={1800}
             className="font-serif font-bold text-white"
-            cursorClassName="bg-accent-500"
+            cursorClassName="bg-white"
           />
         </motion.div>
 
@@ -159,51 +166,35 @@ function MobileHero({ t }: { t: (key: string) => string }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          className="font-sans text-white/50 font-light leading-relaxed mt-3"
-          style={{ fontSize: "clamp(0.8rem, 3.5vw, 0.9rem)" }}
+          className="font-sans text-white/50 font-light leading-relaxed mt-3 max-w-xs"
+          style={{ fontSize: "clamp(0.78rem, 3.5vw, 0.88rem)" }}
         >
           {t("hero.bio")}
         </motion.p>
-
-        {/* Skill tags */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55, duration: 0.5 }}
-          className="flex flex-wrap gap-2 mt-4"
-        >
-          {MOBILE_SKILLS.map((skill, i) => (
-            <motion.span
-              key={skill.label}
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6 + i * 0.04, duration: 0.3 }}
-              className="font-sans text-xs font-medium px-3 py-1.5 rounded-full"
-              style={{
-                color: skill.color,
-                background: skill.bg,
-                border: `1px solid ${skill.color}30`,
-              }}
-            >
-              {skill.label}
-            </motion.span>
-          ))}
-        </motion.div>
 
         {/* CTA buttons */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75, duration: 0.5 }}
+          transition={{ delay: 0.55, duration: 0.5 }}
           className="flex gap-3 mt-5"
         >
-          <a href="/work"
-            className="flex-1 text-center py-3.5 rounded-2xl font-sans text-sm font-semibold bg-white text-neutral-900 active:scale-95 transition-transform duration-150">
+          <a
+            href="/work"
+            className="flex-1 text-center py-3.5 rounded-2xl font-sans text-sm font-semibold
+                       bg-white text-neutral-900 active:scale-95 transition-transform duration-150"
+          >
             {t("hero.cta.work")}
           </a>
-          <a href="/contact"
-            className="flex-1 text-center py-3.5 rounded-2xl font-sans text-sm font-semibold text-white active:scale-95 transition-transform duration-150"
-            style={{ background: "rgba(249,115,22,0.15)", border: "1px solid rgba(249,115,22,0.35)" }}>
+          <a
+            href="/contact"
+            className="flex-1 text-center py-3.5 rounded-2xl font-sans text-sm font-semibold
+                       text-white active:scale-95 transition-transform duration-150"
+            style={{
+              background: "rgba(249,115,22,0.18)",
+              border: "1px solid rgba(249,115,22,0.4)",
+            }}
+          >
             {t("hero.cta.contact")}
           </a>
         </motion.div>
@@ -212,21 +203,72 @@ function MobileHero({ t }: { t: (key: string) => string }) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.5 }}
-          className="flex items-center gap-4 mt-5"
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="flex items-center gap-4 mt-4"
         >
           {SOCIALS.map(({ href, label, icon }) => (
-            <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-              className="text-white/40 hover:text-white transition-colors duration-200">
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={label}
+              className="text-white/45 active:text-white transition-colors duration-200"
+            >
               {icon}
             </a>
           ))}
-          <div className="w-px h-4 bg-white/15" aria-hidden="true" />
+          <div className="w-px h-4 bg-white/20" aria-hidden="true" />
           <span className="font-sans text-[10px] tracking-[0.18em] uppercase text-white/35">
             {t("hero.location")}
           </span>
         </motion.div>
       </div>
+
+      {/* ── Tech pills — horizontal scrollable strip at very bottom ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.85, duration: 0.5 }}
+        className="relative z-10 pb-4 pt-2"
+        style={{
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+          background: "rgba(0,0,0,0.35)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+        }}
+      >
+        <div
+          className="flex gap-2.5 overflow-x-auto px-6"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {MOBILE_SKILLS.map((skill, i) => (
+            <motion.div
+              key={skill.name}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9 + i * 0.04, duration: 0.25 }}
+              className="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl"
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.12)",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={skill.icon}
+                alt={skill.name}
+                width={16}
+                height={16}
+                style={{ width: 16, height: 16, objectFit: "contain", flexShrink: 0 }}
+              />
+              <span className="font-sans text-xs font-medium text-white/70 whitespace-nowrap">
+                {skill.name}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
     </section>
   );
 }
