@@ -24,7 +24,8 @@ export default function SectionHeading({
     <div className={`mb-md tablet:mb-2xl ${alignClass}`}>
       <motion.div
         initial="hidden"
-        animate="visible"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
         variants={{
           hidden: {},
           visible: { transition: { staggerChildren: 0.08 } },
@@ -48,7 +49,8 @@ export default function SectionHeading({
         <motion.p
           variants={fadeUp}
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ delay: 0.3 }}
           className="mt-md text-[var(--color-text-secondary)] text-base tablet:text-lg"
         >

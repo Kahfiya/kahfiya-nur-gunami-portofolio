@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
+import ScrollScrub from "@/components/ui/ScrollScrub";
 
 const ContactForm = dynamic(() => import("@/components/ui/ContactForm"), { ssr: false });
 
@@ -104,18 +105,13 @@ export default function ContactPage() {
       <div className="px-md tablet:px-2xl desktop:px-3xl py-2xl max-w-[1280px] mx-auto grid grid-cols-1 tablet:grid-cols-2 gap-2xl items-start">
 
         {/* Socials */}
-        <div className="flex flex-col gap-xl">
+        <ScrollScrub stagger={0.1} start="top 88%" end="top 30%" className="flex flex-col gap-xl">
           <p className="font-sans text-[var(--color-text-secondary)] text-xs tracking-widest uppercase">
             {t("contact.socials.label")}
           </p>
           <div className="flex flex-col gap-lg">
-            {SOCIALS.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.5 + i * 0.1 }}
-              >
+            {SOCIALS.map((s) => (
+              <div key={s.label}>
                 <p className="font-sans text-[var(--color-text-secondary)] text-xs mb-1">{s.label}</p>
                 <Link
                   href={s.href}
@@ -125,18 +121,13 @@ export default function ContactPage() {
                   {s.value}
                   <span className="opacity-0 group-hover:opacity-100 transition-opacity text-accent-500">→</span>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </div>
+        </ScrollScrub>
 
         {/* Form */}
-        <motion.div
-          className="min-w-0 w-full"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
+        <ScrollScrub stagger={0.08} start="top 88%" end="top 30%" className="min-w-0 w-full">
           {submitted ? (
             <div className="flex flex-col items-center justify-center gap-md py-2xl" aria-live="polite">
               <div className="w-20 h-20 rounded-full bg-accent-500/20 flex items-center justify-center">
@@ -155,7 +146,7 @@ export default function ContactPage() {
           ) : (
             <ContactForm onSuccess={() => setSubmitted(true)} />
           )}
-        </motion.div>
+        </ScrollScrub>
       </div>
     </main>
   );

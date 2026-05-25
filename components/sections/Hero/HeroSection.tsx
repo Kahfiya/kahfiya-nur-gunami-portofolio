@@ -99,6 +99,104 @@ const MOBILE_SKILLS = [
   { name: "Docker",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" },
 ];
 
+// ─── Tech Marquee — auto-scroll, pauseable on touch ─────────────────────────
+
+function TechMarquee() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    // Duplicate pills already rendered via JSX (×2), so we animate -50%
+    const ctx = gsap.context(() => {
+      tweenRef.current = gsap.to(track, {
+        x: "-50%",
+        ease: "none",
+        duration: 18,
+        repeat: -1,
+        // modifiers keep it seamless without jumping
+        modifiers: {
+          x: gsap.utils.unitize((x: number) => x % (track.scrollWidth / 2)),
+        },
+      });
+    });
+
+    // Pause on touch, resume on release
+    const pause  = () => tweenRef.current?.pause();
+    const resume = () => tweenRef.current?.play();
+    track.addEventListener("touchstart", pause,  { passive: true });
+    track.addEventListener("touchend",   resume, { passive: true });
+
+    return () => {
+      ctx.revert();
+      track.removeEventListener("touchstart", pause);
+      track.removeEventListener("touchend",   resume);
+    };
+  }, []);
+
+  const pills = (
+    <>
+      {MOBILE_SKILLS.map((skill) => (
+        <div
+          key={skill.name}
+          className="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl"
+          style={{
+            background: "rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.12)",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={skill.icon}
+            alt={skill.name}
+            width={16}
+            height={16}
+            style={{ width: 16, height: 16, objectFit: "contain", flexShrink: 0 }}
+          />
+          <span className="font-sans text-xs font-medium text-white/70 whitespace-nowrap">
+            {skill.name}
+          </span>
+        </div>
+      ))}
+    </>
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.85, duration: 0.5 }}
+      className="relative z-10 py-3 overflow-hidden"
+      style={{
+        borderTop: "1px solid rgba(255,255,255,0.08)",
+        background: "rgba(0,0,0,0.4)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+      }}
+      aria-hidden="true"
+    >
+      {/* Left + right edge fade */}
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-10 z-10"
+        style={{ background: "linear-gradient(to right, rgba(0,0,0,0.5), transparent)" }} />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-10 z-10"
+        style={{ background: "linear-gradient(to left, rgba(0,0,0,0.5), transparent)" }} />
+
+      {/* Track — doubled for seamless loop */}
+      <div
+        ref={trackRef}
+        className="flex gap-2.5 w-max px-3"
+        style={{ willChange: "transform" }}
+      >
+        {pills}
+        {/* Duplicate for seamless loop */}
+        {pills}
+      </div>
+    </motion.div>
+  );
+}
+
 // ─── Mobile Hero ──────────────────────────────────────────────────────────────
 
 function MobileHero({ t }: { t: (key: string) => string }) {
@@ -225,50 +323,8 @@ function MobileHero({ t }: { t: (key: string) => string }) {
         </motion.div>
       </div>
 
-      {/* ── Tech pills — horizontal scrollable strip at very bottom ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.85, duration: 0.5 }}
-        className="relative z-10 pb-4 pt-2"
-        style={{
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-          background: "rgba(0,0,0,0.35)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
-        }}
-      >
-        <div
-          className="flex gap-2.5 overflow-x-auto px-6"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {MOBILE_SKILLS.map((skill, i) => (
-            <motion.div
-              key={skill.name}
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.9 + i * 0.04, duration: 0.25 }}
-              className="flex-shrink-0 flex items-center gap-2 px-3 py-2 rounded-xl"
-              style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.12)",
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={skill.icon}
-                alt={skill.name}
-                width={16}
-                height={16}
-                style={{ width: 16, height: 16, objectFit: "contain", flexShrink: 0 }}
-              />
-              <span className="font-sans text-xs font-medium text-white/70 whitespace-nowrap">
-                {skill.name}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+      {/* ── Tech pills — auto-scrolling marquee strip ── */}
+      <TechMarquee />
     </section>
   );
 }

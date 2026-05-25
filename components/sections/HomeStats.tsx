@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
+import { useInView } from "framer-motion";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import ScrollScrub from "@/components/ui/ScrollScrub";
 
@@ -26,10 +26,7 @@ function Stat({ value, suffix = "", label, sub, delay, inView }: {
 }) {
   const count = useCounter(value, 1.2, inView);
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
+    <div
       className="relative flex flex-col items-center text-center gap-2 px-xl py-3xl group"
     >
       {/* Glow on hover */}
@@ -43,7 +40,7 @@ function Stat({ value, suffix = "", label, sub, delay, inView }: {
       </span>
       <span className="font-sans text-sm font-semibold text-[var(--color-text-primary)]">{label}</span>
       <span className="font-sans text-xs text-[var(--color-text-secondary)]">{sub}</span>
-    </motion.div>
+    </div>
   );
 }
 

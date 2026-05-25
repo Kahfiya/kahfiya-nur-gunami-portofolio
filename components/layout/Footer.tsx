@@ -204,7 +204,7 @@ export default function Footer() {
               <span className="font-serif font-black text-white text-[10px] leading-none">KNG</span>
             </div>
             <p className="font-sans text-xs text-[var(--color-text-secondary)]">
-              © {new Date().getFullYear()} Kahfiya Nur Gunami
+              © {new Date().getFullYear()} Kahfiya Nur Gunami. All rights reserved.
             </p>
           </div>
           <nav className="flex items-center gap-xl" aria-label="Footer navigation">

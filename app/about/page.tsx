@@ -114,12 +114,8 @@ function MyStack() {
       {/* Categories */}
       <div className="relative divide-y divide-[var(--color-border)]">
         {STACK_CATEGORIES.map((cat, ci) => (
-          <motion.div
+          <div
             key={cat.label}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.5, delay: ci * 0.08, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col tablet:flex-row"
           >
             {/* Category label */}
@@ -135,16 +131,12 @@ function MyStack() {
               <ScrollScrub stagger={0.04} scrub={true} start="top 90%" end="top 50%"
                 className="flex flex-wrap gap-2.5">
                 {cat.items.map((tech) => (
-                  <motion.div
+                  <div
                     key={tech.name}
-                    initial={{ opacity: 0, scale: 0.85 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, amount: 0.1 }}
-                    transition={{ duration: 0.3, delay: ci * 0.06 }}
-                    whileHover={{ scale: 1.07, y: -3 }}
                     className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default group
                                border border-[var(--color-border)] bg-[var(--color-bg-secondary)]
                                hover:border-accent-500/40 hover:bg-accent-500/5
+                               hover:scale-105 hover:-translate-y-0.5
                                transition-all duration-200"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -154,11 +146,11 @@ function MyStack() {
                                      group-hover:text-accent-500 whitespace-nowrap transition-colors duration-200">
                       {tech.name}
                     </span>
-                  </motion.div>
+                  </div>
                 ))}
               </ScrollScrub>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 
@@ -184,14 +176,11 @@ function PplgGrid() {
 
   return (
     <>
-      <div className="grid grid-cols-2 tablet:grid-cols-3 gap-lg">
+      <ScrollScrub stagger={0.1} start="top 88%" end="top 30%"
+        className="grid grid-cols-2 tablet:grid-cols-3 gap-lg">
         {PPLG_CARDS.map(({ key, icon, bg, href }, i) => (
-          <motion.button
+          <button
             key={key}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.4, delay: i * 0.07 }}
             onClick={() => setActive(PPLG_CARDS[i])}
             className="text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 rounded-[15px]"
             aria-label={`View details: ${t(`pplg.${key}.title`)}`}
@@ -216,9 +205,9 @@ function PplgGrid() {
                 </div>
               }
             />
-          </motion.button>
+          </button>
         ))}
-      </div>
+      </ScrollScrub>
 
       {/* Detail Modal */}
       <AnimatePresence>
