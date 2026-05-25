@@ -125,6 +125,9 @@ export default function PullToRefresh({ onRefresh, children }: PullToRefreshProp
   const handleTouchStart = useCallback((e: TouchEvent) => {
     const el = containerRef.current;
     if (!el || el.scrollTop > 0) return;
+    // Don't intercept taps on interactive elements
+    const target = e.target as HTMLElement;
+    if (target.closest("a, button, [role='button'], input, select, textarea")) return;
     startY.current = e.touches[0].clientY;
     isDragging.current = true;
   }, []);
@@ -134,11 +137,12 @@ export default function PullToRefresh({ onRefresh, children }: PullToRefreshProp
       if (!isDragging.current || state === "refreshing") return;
       const delta = e.touches[0].clientY - startY.current;
       if (delta <= 0) return;
-
-      e.preventDefault();
       const resistance = delta > PULL_THRESHOLD ? PULL_THRESHOLD + (delta - PULL_THRESHOLD) * 0.3 : delta;
       const clamped = Math.min(resistance, PULL_MAX);
       pullY.set(clamped);
+
+      // Only prevent default scroll when actively pulling down
+      if (clamped > 5) e.preventDefault();
 
       if (clamped >= PULL_THRESHOLD && state !== "ready") {
         setState("ready");

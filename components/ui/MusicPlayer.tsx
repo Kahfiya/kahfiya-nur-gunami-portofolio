@@ -69,11 +69,15 @@ export default function MusicPlayer() {
     seek(ratio);
   };
 
-  // Auto-scroll active lyric line
+  // Auto-scroll active lyric line — scroll only within the lyrics container, never the page
   useEffect(() => {
     if (!lyricsRef.current || activeLine < 0) return;
-    const el = lyricsRef.current.children[activeLine] as HTMLElement;
-    el?.scrollIntoView({ block: "center", behavior: "smooth" });
+    const container = lyricsRef.current;
+    const el = container.children[activeLine] as HTMLElement;
+    if (!el) return;
+    const containerMid = container.clientHeight / 2;
+    const targetTop = el.offsetTop - containerMid + el.clientHeight / 2;
+    container.scrollTo({ top: targetTop, behavior: "smooth" });
   }, [activeLine]);
 
   // Keyboard shortcuts
@@ -283,7 +287,7 @@ export default function MusicPlayer() {
                 ✕
               </button>
             </div>
-            <div ref={lyricsRef} className="max-h-48 overflow-y-auto pr-1 space-y-1">
+            <div ref={lyricsRef} className="max-h-48 overflow-y-auto overscroll-contain pr-1 space-y-1">
               {lyricsLoading ? (
                 <p className="font-sans text-xs text-neutral-400 animate-pulse text-center py-4">
                   Fetching lyrics…

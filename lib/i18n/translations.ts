@@ -189,7 +189,7 @@ export const translationsID: Record<string, string> = {
 
   // ── Featured Projects (Home) ─────────────────────────────────────────────────
   "projects.title":      "Proyek Unggulan",
-  "projects.subtitle":   "Pilihan karya yang mencakup branding, pengembangan web, dan desain motion.",
+  "projects.subtitle":   "Pilihan karya yang mencakup branding, pengembangan web.",
   "project.marbas.desc": "Website e-commerce — desain yang memiliki nilai nusantara. Branding, parfum premium khas nusantara, dan pengalaman belanja yang nyaman.",
   "project.lumidh.desc": "E-commerce parfum premium dengan tampilan elegan — koleksi signature scents dengan pengalaman belanja yang mewah.",
   "project.adria.desc":  "Studio desain grafis — desain yang bernapas untuk brand Anda. Branding, konten visual, dan identitas visual.",
