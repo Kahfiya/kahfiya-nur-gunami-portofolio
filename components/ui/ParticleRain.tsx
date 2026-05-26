@@ -41,6 +41,10 @@ export default function ParticleRain() {
     // Respect reduced motion
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    // Mobile: skip particle rain — rAF canvas loop causes GPU pressure and
+    // composite layer conflicts with other fixed elements
+    if (window.innerWidth < 768) return;
+
     let width  = window.innerWidth;
     let height = window.innerHeight;
     let raf: number;

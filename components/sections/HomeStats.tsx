@@ -35,47 +35,41 @@ export default function HomeStats() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // ── Scrub-driven counter — the number follows your scroll ──────────────
+      const isMobile = window.innerWidth < 768;
+
+      // ── Scrub-driven counter ───────────────────────────────────────────────
       STATS.forEach((stat, i) => {
         const numEl = section.querySelector<HTMLElement>(`[data-stat="${i}"]`);
         if (!numEl) return;
 
         const proxy = { val: 0 };
-        gsap.fromTo(
-          proxy,
-          { val: 0 },
-          {
-            val: stat.value,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 80%",
-              end: "top 20%",
-              scrub: 1.5,
-              invalidateOnRefresh: true,
-            },
-            onUpdate() {
-              numEl.textContent = Math.round(proxy.val) + stat.suffix;
-            },
-          }
-        );
+        gsap.fromTo(proxy, { val: 0 }, {
+          val: stat.value,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            end: isMobile ? "top 50%" : "top 20%",
+            scrub: 1.5,
+            invalidateOnRefresh: true,
+          },
+          onUpdate() {
+            numEl.textContent = Math.round(proxy.val) + stat.suffix;
+          },
+        });
       });
 
       // ── Staggered card reveal ──────────────────────────────────────────────
       const cards = section.querySelectorAll<HTMLElement>(".stat-card");
-      gsap.fromTo(
-        cards,
+      gsap.fromTo(cards,
         { opacity: 0, y: 40, scale: 0.94 },
         {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          ease: "expo.out",
-          stagger: 0.08,
+          opacity: 1, y: 0, scale: 1,
+          ease: "expo.out", stagger: 0.08,
           scrollTrigger: {
             trigger: section,
             start: "top 85%",
-            end: "top 40%",
+            end: isMobile ? "top 55%" : "top 40%",
             scrub: 1,
             invalidateOnRefresh: true,
           },

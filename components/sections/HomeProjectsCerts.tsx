@@ -191,35 +191,53 @@ export function HomeCertificates() {
 
       // ── Each row reveals with a staggered clip from bottom ───────────────
       const rows = section.querySelectorAll<HTMLElement>(".cert-row");
-      rows.forEach((row, i) => {
-        gsap.fromTo(row,
-          { opacity: 0, y: 32, clipPath: "inset(100% 0 0 0)" },
-          {
-            opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)",
-            ease: "expo.out",
-            scrollTrigger: {
-              trigger: row,
-              start: "top 92%", end: "top 62%",
-              scrub: 1, invalidateOnRefresh: true,
-            },
-          }
-        );
+      const isMobile = window.innerWidth < 768;
 
-
-        // Image reveal — scale from center
-        const img = row.querySelector<HTMLElement>(".cert-img-wrap");
-        if (img) {
-          gsap.fromTo(img,
-            { scale: 1.15, opacity: 0 },
+      rows.forEach((row) => {
+        if (isMobile) {
+          // Mobile: simple fade-up, no clipPath — clipPath scrub needs
+          // enough scroll distance which mobile screens don't have
+          gsap.fromTo(row,
+            { opacity: 0, y: 24 },
             {
-              scale: 1, opacity: 1, ease: "expo.out",
+              opacity: 1, y: 0,
+              ease: "expo.out",
               scrollTrigger: {
                 trigger: row,
-                start: "top 90%", end: "top 55%",
-                scrub: 1.2, invalidateOnRefresh: true,
+                start: "top 95%",
+                toggleActions: "play none none none",
+                invalidateOnRefresh: true,
               },
             }
           );
+        } else {
+          gsap.fromTo(row,
+            { opacity: 0, y: 32, clipPath: "inset(100% 0 0 0)" },
+            {
+              opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)",
+              ease: "expo.out",
+              scrollTrigger: {
+                trigger: row,
+                start: "top 92%", end: "top 62%",
+                scrub: 1, invalidateOnRefresh: true,
+              },
+            }
+          );
+
+          const img = row.querySelector<HTMLElement>(".cert-img-wrap");
+          if (img) {
+            gsap.fromTo(img,
+              { scale: 1.15, opacity: 0 },
+              {
+                scale: 1, opacity: 1, ease: "expo.out",
+                scrollTrigger: {
+                  trigger: row,
+                  start: "top 90%", end: "top 55%",
+                  scrub: 1.2, invalidateOnRefresh: true,
+                },
+              }
+            );
+          }
         }
       });
 
