@@ -31,29 +31,40 @@ const playfair = Playfair_Display({
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://portofolio.kahfiya.dev"),
+  metadataBase: new URL("https://kahfiya-nur-gunami-portofolio.vercel.app"),
   title: {
-    default: "Kahfiya Nur Gunami | Fullstack Developer & Designer",
+    default: "Kahfiya Nur Gunami | Junior Frontend Developer",
     template: "%s | Kahfiya Nur Gunami",
   },
   description:
-    "Portfolio of Kahfiya Nur Gunami - Crafting digital experiences with modern web technologies.",
+    "Portfolio Kahfiya Nur Gunami — Junior Frontend Developer dari Banjarmasin. Terbuka untuk peluang magang & freelance. Spesialis Next.js, React, dan UI/UX.",
   authors: [{ name: "Kahfiya Nur Gunami" }],
-  keywords: ["fullstack developer", "web designer", "portfolio", "Banjarmasin", "Next.js"],
+  keywords: [
+    "Kahfiya Nur Gunami",
+    "junior frontend developer",
+    "frontend developer Banjarmasin",
+    "magang frontend developer",
+    "freelance web developer",
+    "portfolio web developer",
+    "Next.js developer",
+    "React developer",
+    "UI/UX designer",
+    "SMKN 2 Banjarmasin",
+  ],
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "id_ID",
     siteName: "Kahfiya Nur Gunami",
-    title: "Kahfiya Nur Gunami | Fullstack Developer & Designer",
+    title: "Kahfiya Nur Gunami | Junior Frontend Developer",
     description:
-      "Portfolio of Kahfiya Nur Gunami - Crafting digital experiences with modern web technologies.",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kahfiya Nur Gunami Portfolio" }],
+      "Portfolio Kahfiya Nur Gunami — Junior Frontend Developer dari Banjarmasin. Terbuka untuk peluang magang & freelance. Spesialis Next.js, React, dan UI/UX.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kahfiya Nur Gunami — Junior Frontend Developer Portfolio" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kahfiya Nur Gunami | Fullstack Developer & Designer",
+    title: "Kahfiya Nur Gunami | Junior Frontend Developer",
     description:
-      "Portfolio of Kahfiya Nur Gunami - Crafting digital experiences with modern web technologies.",
+      "Portfolio Kahfiya Nur Gunami — Junior Frontend Developer dari Banjarmasin. Terbuka untuk peluang magang & freelance.",
     images: ["/Images/Kahfiya Nur Gunami.jpg"],
   },
   robots: { index: true, follow: true },
