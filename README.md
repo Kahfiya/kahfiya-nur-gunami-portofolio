@@ -2,7 +2,7 @@
 
 Personal portfolio website built with Next.js 14, featuring smooth scroll animations, multilingual support, and an interactive music player.
 
-**Live:** [kahfiya-nur-gunami-portofolio-oted.vercel.app](https://kahfiya-nur-gunami-portofolio-oted.vercel.app)
+**Live:** [kahfiya-nur-gunami-portofolio.vercel.app](https://kahfiya-nur-gunami-portofolio.vercel.app)
 
 ---
 
