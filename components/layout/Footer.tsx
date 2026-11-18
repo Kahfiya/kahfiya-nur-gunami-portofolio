@@ -200,7 +200,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-[var(--color-border)] pt-xl flex flex-col tablet:flex-row items-center justify-between gap-4">
           <p className="font-sans text-xs text-[var(--color-text-secondary)]">
-            © {new Date().getFullYear()} Kahfiya Nur Gunami.
+            © 2025 Kahfiya Nur Gunami.
           </p>
           <nav className="flex items-center gap-xl" aria-label="Footer navigation">
             {navLinks.map(({ href, label }) => (
