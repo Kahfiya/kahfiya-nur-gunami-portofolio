@@ -19,14 +19,16 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
       return;
     }
 
+    const isMobile = window.innerWidth < 768;
+
     animate(0, 100, {
-      duration: 2.4,
+      duration: isMobile ? 1.1 : 2.0,
       ease: [0.16, 1, 0.3, 1],
       onUpdate: (v) => setNum(Math.round(v)),
       onComplete: () => {
         setNum(100);
         setPhase("reveal");
-        setTimeout(() => setPhase("exit"), 900);
+        setTimeout(() => setPhase("exit"), isMobile ? 350 : 700);
       },
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps

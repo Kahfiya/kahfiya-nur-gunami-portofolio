@@ -123,11 +123,17 @@ export default function PullToRefresh({ onRefresh, children }: PullToRefreshProp
   const scale = useTransform(pullY, [0, PULL_THRESHOLD], [0.5, 1]);
 
   const handleTouchStart = useCallback((e: TouchEvent) => {
-    const el = containerRef.current;
-    if (!el || el.scrollTop > 0) return;
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    if (scrollY > 5) {
+      isDragging.current = false;
+      return;
+    }
     // Don't intercept taps on interactive elements
     const target = e.target as HTMLElement;
-    if (target.closest("a, button, [role='button'], input, select, textarea")) return;
+    if (target.closest("a, button, [role='button'], input, select, textarea")) {
+      isDragging.current = false;
+      return;
+    }
     startY.current = e.touches[0].clientY;
     isDragging.current = true;
   }, []);
@@ -135,14 +141,22 @@ export default function PullToRefresh({ onRefresh, children }: PullToRefreshProp
   const handleTouchMove = useCallback(
     (e: TouchEvent) => {
       if (!isDragging.current || state === "refreshing") return;
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      if (scrollY > 5) {
+        isDragging.current = false;
+        return;
+      }
       const delta = e.touches[0].clientY - startY.current;
-      if (delta <= 0) return;
+      if (delta <= 0) {
+        isDragging.current = false;
+        return;
+      }
       const resistance = delta > PULL_THRESHOLD ? PULL_THRESHOLD + (delta - PULL_THRESHOLD) * 0.3 : delta;
       const clamped = Math.min(resistance, PULL_MAX);
       pullY.set(clamped);
 
-      // Only prevent default scroll when actively pulling down
-      if (clamped > 5) e.preventDefault();
+      // Only prevent default scroll when actively pulling down at the very top
+      if (clamped > 10 && e.cancelable) e.preventDefault();
 
       if (clamped >= PULL_THRESHOLD && state !== "ready") {
         setState("ready");
@@ -201,7 +215,7 @@ export default function PullToRefresh({ onRefresh, children }: PullToRefreshProp
     state === "complete" ? "Updated!" : "";
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden">
+    <div ref={containerRef} className="relative overflow-x-clip">
       {/* Indicator */}
       <AnimatePresence>
         {state !== "idle" && (

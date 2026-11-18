@@ -67,6 +67,13 @@ export const metadata: Metadata = {
       "Portfolio Kahfiya Nur Gunami — Junior Frontend Developer dari Banjarmasin. Terbuka untuk peluang magang & freelance.",
     images: ["/Images/Kahfiya Nur Gunami.jpg"],
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
   robots: { index: true, follow: true },
 };
 

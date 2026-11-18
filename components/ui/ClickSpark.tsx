@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback, useState } from "react";
 
 interface ClickSparkProps {
   sparkColor?: string;
@@ -32,9 +32,22 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sparksRef = useRef<Spark[]>([]);
-  const startTimeRef = useRef<number | null>(null);
+  const isRunningRef = useRef(false);
+  const animIdRef = useRef<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Detect mobile touch devices to eliminate idle canvas overhead
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile, { passive: true });
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const parent = canvas.parentElement;
@@ -62,8 +75,9 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     return () => {
       ro.disconnect();
       clearTimeout(resizeTimeout);
+      if (animIdRef.current) cancelAnimationFrame(animIdRef.current);
     };
-  }, []);
+  }, [isMobile]);
 
   const easeFunc = useCallback(
     (t: number) => {
@@ -77,16 +91,16 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     [easing]
   );
 
-  useEffect(() => {
+  const startAnimation = useCallback(() => {
+    if (isRunningRef.current) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animationId: number;
+    isRunningRef.current = true;
 
     const draw = (timestamp: number) => {
-      if (!startTimeRef.current) startTimeRef.current = timestamp;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       sparksRef.current = sparksRef.current.filter((spark) => {
@@ -113,14 +127,20 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
         return true;
       });
 
-      animationId = requestAnimationFrame(draw);
+      if (sparksRef.current.length > 0) {
+        animIdRef.current = requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        isRunningRef.current = false;
+        animIdRef.current = null;
+      }
     };
 
-    animationId = requestAnimationFrame(draw);
-    return () => cancelAnimationFrame(animationId);
-  }, [sparkColor, sparkSize, sparkRadius, sparkCount, duration, easeFunc, extraScale]);
+    animIdRef.current = requestAnimationFrame(draw);
+  }, [duration, easeFunc, extraScale, sparkColor, sparkRadius, sparkSize]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
@@ -136,11 +156,14 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     }));
 
     sparksRef.current.push(...newSparks);
+    startAnimation();
   };
 
   return (
     <div className="relative w-full min-h-screen" onClick={handleClick}>
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-[9999]" />
+      {!isMobile && (
+        <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-[9999]" />
+      )}
       {children}
     </div>
   );

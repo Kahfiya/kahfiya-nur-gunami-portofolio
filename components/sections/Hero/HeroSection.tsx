@@ -112,14 +112,10 @@ function TechMarquee() {
     // Duplicate pills already rendered via JSX (×2), so we animate -50%
     const ctx = gsap.context(() => {
       tweenRef.current = gsap.to(track, {
-        x: "-50%",
+        xPercent: -50,
         ease: "none",
-        duration: 18,
+        duration: 20,
         repeat: -1,
-        // modifiers keep it seamless without jumping
-        modifiers: {
-          x: gsap.utils.unitize((x: number) => x % (track.scrollWidth / 2)),
-        },
       });
     });
 
@@ -171,9 +167,7 @@ function TechMarquee() {
       className="relative z-10 py-3 overflow-hidden"
       style={{
         borderTop: "1px solid rgba(255,255,255,0.08)",
-        background: "rgba(0,0,0,0.4)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        background: "rgba(12,12,14,0.92)",
       }}
       aria-hidden="true"
     >
@@ -205,15 +199,17 @@ function MobileHero({ t }: { t: (key: string) => string }) {
       aria-label="Hero"
       className="relative min-h-[100svh] flex flex-col overflow-hidden bg-neutral-900"
     >
-      {/* ── Full-screen background PNG ── */}
+      {/* ── Full-screen background WebP / JPG ── */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/Hero/Hero Mobile.svg"
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 w-full h-full object-cover object-center"
-        style={{ zIndex: 0 }}
-      />
+      <picture className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+        <source srcSet="/Hero/Hero-Mobile.webp" type="image/webp" />
+        <img
+          src="/Hero/Hero-Mobile.jpg"
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-cover object-center"
+        />
+      </picture>
 
       {/* ── Dark gradient overlay — heavier at bottom so text is readable ── */}
       <div
