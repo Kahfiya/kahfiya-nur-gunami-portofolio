@@ -134,7 +134,7 @@ export default function ContactPage() {
               Kahfiya Nur Gunami
               <span className="text-accent-500 mx-4 font-sans font-normal inline-flex items-center gap-2" style={{ fontSize: "0.6em", verticalAlign: "middle" }}>
                 <motion.span animate={{ rotate: 360 }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }} style={{ display: "inline-block" }}>✦</motion.span>
-                {" UI/UX · Frontend · Creative Coder "}
+                {" UI/UX · Frontend · Vibe Coder "}
                 <motion.span animate={{ rotate: 360 }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }} style={{ display: "inline-block" }}>✦</motion.span>
               </span>
             </span>
