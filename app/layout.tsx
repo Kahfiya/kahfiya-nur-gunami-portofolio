@@ -32,49 +32,87 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://kahfiya-nur-gunami-portofolio.vercel.app"),
+  applicationName: "Kahfiya Nur Gunami",
   title: {
-    default: "Kahfiya Nur Gunami | Junior Frontend Developer",
+    default: "Kahfiya Nur Gunami | Vibe Coder & Fullstack Developer",
     template: "%s | Kahfiya Nur Gunami",
   },
   description:
-    "Portfolio Kahfiya Nur Gunami — Junior Frontend Developer dari Banjarmasin. Terbuka untuk peluang magang & freelance. Spesialis Next.js, React, dan UI/UX.",
-  authors: [{ name: "Kahfiya Nur Gunami" }],
+    "Portfolio resmi Kahfiya Nur Gunami — Vibe Coder & Fullstack Developer dari Banjarmasin. Spesialis AI-assisted engineering, Next.js, React, modern web architecture, dan UI/UX Design.",
+  authors: [{ name: "Kahfiya Nur Gunami", url: "https://kahfiya-nur-gunami-portofolio.vercel.app" }],
+  creator: "Kahfiya Nur Gunami",
+  publisher: "Kahfiya Nur Gunami",
   keywords: [
     "Kahfiya Nur Gunami",
-    "junior frontend developer",
-    "frontend developer Banjarmasin",
-    "magang frontend developer",
-    "freelance web developer",
-    "portfolio web developer",
-    "Next.js developer",
-    "React developer",
-    "UI/UX designer",
+    "Kahfiya",
+    "Vibe Coder",
+    "Vibe Coding",
+    "Fullstack Developer",
+    "Frontend Developer Banjarmasin",
     "SMKN 2 Banjarmasin",
+    "Next.js Developer",
+    "React Developer",
+    "UI/UX Designer",
+    "AI Agentic Development",
+    "Antigravity",
+    "Portfolio Web Developer",
   ],
+  alternates: {
+    canonical: "https://kahfiya-nur-gunami-portofolio.vercel.app",
+  },
   openGraph: {
     type: "website",
     locale: "id_ID",
+    url: "https://kahfiya-nur-gunami-portofolio.vercel.app",
     siteName: "Kahfiya Nur Gunami",
-    title: "Kahfiya Nur Gunami | Junior Frontend Developer",
+    title: "Kahfiya Nur Gunami | Vibe Coder & Fullstack Developer",
     description:
-      "Portfolio Kahfiya Nur Gunami — Junior Frontend Developer dari Banjarmasin. Terbuka untuk peluang magang & freelance. Spesialis Next.js, React, dan UI/UX.",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Kahfiya Nur Gunami — Junior Frontend Developer Portfolio" }],
+      "Portfolio resmi Kahfiya Nur Gunami — Vibe Coder & Fullstack Developer dari Banjarmasin. Spesialis AI-assisted engineering, Next.js, React, dan UI/UX Design.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Kahfiya Nur Gunami — Vibe Coder & Fullstack Developer Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kahfiya Nur Gunami | Junior Frontend Developer",
+    title: "Kahfiya Nur Gunami | Vibe Coder & Fullstack Developer",
     description:
-      "Portfolio Kahfiya Nur Gunami — Junior Frontend Developer dari Banjarmasin. Terbuka untuk peluang magang & freelance.",
-    images: ["/Images/Kahfiya Nur Gunami.jpg"],
+      "Portfolio resmi Kahfiya Nur Gunami — Vibe Coder & Fullstack Developer dari Banjarmasin.",
+    images: ["/og-image.png"],
+    creator: "@kahfiya",
   },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
       { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
     ],
-    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
   },
-  robots: { index: true, follow: true },
+  manifest: "/site.webmanifest",
+  other: {
+    "thumbnail": "https://kahfiya-nur-gunami-portofolio.vercel.app/og-image.png",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 // ─── Viewport ─────────────────────────────────────────────────────────────────
@@ -91,11 +129,44 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const jsonLdWebsite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Kahfiya Nur Gunami",
+    alternateName: ["Kahfiya", "Kahfiya Portfolio", "Kahfiya Vibe Coder"],
+    url: "https://kahfiya-nur-gunami-portofolio.vercel.app",
+    description: "Portfolio resmi Kahfiya Nur Gunami — Vibe Coder & Fullstack Developer",
+    author: {
+      "@type": "Person",
+      name: "Kahfiya Nur Gunami",
+    },
+  };
+
+  const jsonLdPerson = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Kahfiya Nur Gunami",
+    url: "https://kahfiya-nur-gunami-portofolio.vercel.app",
+    image: "https://kahfiya-nur-gunami-portofolio.vercel.app/Images/Kahfiya%20Nur%20Gunami.jpg",
+    jobTitle: "Vibe Coder & Fullstack Developer",
+    sameAs: ["https://github.com/kahfiya"],
+  };
+
   return (
     <html
       lang="en"
       className={`${inter.variable} ${playfair.variable}`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
+        />
+      </head>
       <body className="font-sans antialiased bg-neutral-50 text-neutral-900">
         <GSAPInit />
         <ParticleRain />
