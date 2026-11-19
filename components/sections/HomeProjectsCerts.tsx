@@ -227,16 +227,24 @@ export function HomeCertificates() {
     <section ref={sectionRef} className="px-md tablet:px-2xl py-3xl max-w-7xl mx-auto w-full">
       {/* ── Section Header matching Ahmed Ragab style ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 tablet:mb-12 border-b border-[var(--color-border)] pb-6">
-        <div className="flex items-center gap-2.5">
-          <span className="text-accent-500 text-2xl font-black select-none">✱</span>
+        <div className="flex items-center gap-3">
+          <span
+            className="text-accent-500 font-sans font-black text-xl tablet:text-2xl select-none"
+            style={{ display: "inline-block", animation: "spin 6s linear infinite" }}
+          >
+            ✦
+          </span>
           <h2 className="text-2xl tablet:text-3xl desktop:text-4xl font-sans font-black tracking-wide uppercase">
             <span className="text-accent-500">{t("certificates.title")}</span>{" "}
             <span className="text-[var(--color-text-primary)]">LIST</span>
           </h2>
         </div>
-        <p className="font-sans text-xs tablet:text-sm text-[var(--color-text-secondary)]">
-          {CERTIFICATES.length} {t("cert.label")} · {t("cert.growing")}
-        </p>
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-accent-500/20 bg-accent-500/5 self-start sm:self-auto">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+          <span className="font-sans text-[11px] tracking-wider uppercase font-bold text-[var(--color-text-secondary)]">
+            {CERTIFICATES.length} {t("cert.label")} · {t("cert.growing")}
+          </span>
+        </div>
       </div>
 
       {/* ── Pure Text List Container (No static thumbnails) ── */}
@@ -276,7 +284,10 @@ export function HomeCertificates() {
                       <span className="opacity-40">•</span>
                       <span>{cert.year}</span>
                       <span className="opacity-40">•</span>
-                      <span className="text-accent-500 font-medium">{t("cert.verified")}</span>
+                      <span className="text-accent-500 font-medium inline-flex items-center gap-1">
+                        <span className="text-[9px]">✦</span>
+                        {t("cert.verified")}
+                      </span>
                     </p>
                   </div>
                 </div>
