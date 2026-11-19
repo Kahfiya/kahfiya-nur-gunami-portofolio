@@ -188,8 +188,9 @@ export function HomeProjects() {
 export function HomeCertificates() {
   const { t } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
-  const [hoveredIndex, setHoveredIndex] = useState<number>(0);
+  const [hoveredCert, setHoveredCert] = useState<typeof CERTIFICATES[number] | null>(null);
   const [selectedCert, setSelectedCert] = useState<typeof CERTIFICATES[number] | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -218,7 +219,9 @@ export function HomeCertificates() {
     return () => ctx.revert();
   }, []);
 
-  const activeCert = CERTIFICATES[hoveredIndex] ?? CERTIFICATES[0];
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePos({ x: e.clientX, y: e.clientY });
+  };
 
   return (
     <section ref={sectionRef} className="px-md tablet:px-2xl py-3xl max-w-7xl mx-auto w-full">
@@ -236,139 +239,117 @@ export function HomeCertificates() {
         </p>
       </div>
 
-      {/* ── Main Layout: Certificate List + Floating/Sticky Image Preview Card ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start cert-list-container">
-        
-        {/* Left Column: Certificate List */}
-        <div className="lg:col-span-7 xl:col-span-8 flex flex-col">
-          {CERTIFICATES.map((cert, i) => {
-            const indexStr = String(i + 1).padStart(2, "0") + ".";
+      {/* ── Pure Text List Container (No static thumbnails) ── */}
+      <div
+        className="flex flex-col cert-list-container relative"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setHoveredCert(null)}
+      >
+        {CERTIFICATES.map((cert, i) => {
+          const indexStr = String(i + 1).padStart(2, "0") + ".";
 
-            return (
-              <div
-                key={cert.titleKey}
-                onMouseEnter={() => setHoveredIndex(i)}
-                onClick={() => setSelectedCert(cert)}
-                className="cert-item-row group relative py-6 tablet:py-7 border-b border-[var(--color-border)] cursor-pointer transition-all duration-200 hover:pl-2"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-4 tablet:gap-6 flex-1 min-w-0">
-                    {/* Index Number */}
-                    <span className="font-sans font-bold text-lg tablet:text-2xl text-[var(--color-text-secondary)]/50 group-hover:text-accent-500 transition-colors select-none shrink-0 pt-0.5">
-                      {indexStr}
-                    </span>
+          return (
+            <div
+              key={cert.titleKey}
+              onMouseEnter={() => setHoveredCert(cert)}
+              onClick={() => setSelectedCert(cert)}
+              className="cert-item-row group relative py-6 tablet:py-7 border-b border-[var(--color-border)] cursor-pointer transition-colors duration-200"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-start gap-4 tablet:gap-6 flex-1 min-w-0">
+                  {/* Index Number */}
+                  <span className="font-sans font-bold text-lg tablet:text-2xl text-[var(--color-text-secondary)]/50 group-hover:text-accent-500 transition-colors select-none shrink-0 pt-0.5">
+                    {indexStr}
+                  </span>
 
-                    {/* Title + Subtitle */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2.5">
-                        <h3 className="font-sans font-bold text-lg tablet:text-2xl desktop:text-[1.75rem] text-[var(--color-text-primary)] group-hover:text-accent-500 transition-colors duration-200 leading-snug">
-                          {t(cert.titleKey)}
-                        </h3>
-                        {/* Hover External Arrow Icon */}
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="w-4 h-4 tablet:w-5 tablet:h-5 text-accent-500 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-200 shrink-0"
-                        >
-                          <line x1="7" y1="17" x2="17" y2="7" />
-                          <polyline points="7 7 17 7 17 17" />
-                        </svg>
-                      </div>
+                  {/* Title + Subtitle (Pure Clean Text) */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-sans font-bold text-xl tablet:text-2xl desktop:text-3xl text-[var(--color-text-primary)] group-hover:text-accent-500 transition-colors duration-200 leading-snug">
+                      {t(cert.titleKey)}
+                    </h3>
 
-                      {/* Meta Stack / Issuer / Category */}
-                      <p className="font-sans text-xs tablet:text-sm text-[var(--color-text-secondary)] mt-1.5 flex flex-wrap items-center gap-2">
-                        <span>{cert.issuer}</span>
-                        <span className="opacity-40">•</span>
-                        <span>{cert.category}</span>
-                        <span className="opacity-40">•</span>
-                        <span>{cert.year}</span>
-                        <span className="opacity-40">•</span>
-                        <span className="text-accent-500 font-medium">{t("cert.verified")}</span>
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Mobile Thumbnail Button */}
-                  <div className="lg:hidden shrink-0 mt-1">
-                    <div className="relative w-14 h-10 rounded-lg overflow-hidden border border-[var(--color-border)] shadow-sm">
-                      <Image
-                        src={cert.imageUrl}
-                        alt={t(cert.titleKey)}
-                        fill
-                        sizes="60px"
-                        className="object-cover"
-                      />
-                    </div>
+                    {/* Meta Stack / Issuer / Category */}
+                    <p className="font-sans text-xs tablet:text-sm text-[var(--color-text-secondary)] mt-1.5 flex flex-wrap items-center gap-2">
+                      <span>{cert.issuer}</span>
+                      <span className="opacity-40">•</span>
+                      <span>{cert.category}</span>
+                      <span className="opacity-40">•</span>
+                      <span>{cert.year}</span>
+                      <span className="opacity-40">•</span>
+                      <span className="text-accent-500 font-medium">{t("cert.verified")}</span>
+                    </p>
                   </div>
                 </div>
+
+                {/* Right Arrow Icon */}
+                <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full border border-transparent group-hover:border-[var(--color-border)] group-hover:bg-[var(--color-bg-secondary)] transition-all duration-200">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-4 h-4 text-accent-500 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
+                </div>
               </div>
-            );
-          })}
-        </div>
-
-        {/* Right Column: Floating/Sticky Image Preview Card on Desktop */}
-        <div className="hidden lg:block lg:col-span-5 xl:col-span-4 sticky top-28">
-          <div className="rounded-3xl p-4 border border-[var(--color-border)] bg-[var(--color-bg-primary)] shadow-2xl backdrop-blur-sm">
-            <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[var(--color-bg-secondary)] border border-[var(--color-border)]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeCert.imageUrl}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative w-full h-full cursor-pointer group/preview"
-                  onClick={() => setSelectedCert(activeCert)}
-                >
-                  <Image
-                    src={activeCert.imageUrl}
-                    alt={t(activeCert.titleKey)}
-                    fill
-                    sizes="(max-width: 1280px) 40vw, 450px"
-                    className="object-cover group-hover/preview:scale-105 transition-transform duration-500"
-                    priority
-                  />
-                  {/* Hover Prompt */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-semibold uppercase tracking-wider backdrop-blur-[2px]">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-                      <circle cx="11" cy="11" r="8" />
-                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                      <line x1="11" y1="8" x2="11" y2="14" />
-                      <line x1="8" y1="11" x2="14" y2="11" />
-                    </svg>
-                    {t("cert.verified")} Detail
-                  </div>
-                </motion.div>
-              </AnimatePresence>
             </div>
-
-            {/* Active Card Info */}
-            <div className="mt-4 px-2 flex items-center justify-between">
-              <div className="min-w-0 pr-2">
-                <p className="font-sans font-bold text-sm text-[var(--color-text-primary)] truncate">
-                  {t(activeCert.titleKey)}
-                </p>
-                <p className="font-sans text-xs text-[var(--color-text-secondary)]">
-                  {activeCert.issuer} · {activeCert.year}
-                </p>
-              </div>
-              <button
-                onClick={() => setSelectedCert(activeCert)}
-                className="shrink-0 px-3 py-1.5 rounded-full text-xs font-sans font-semibold bg-accent-500 text-white hover:bg-accent-600 transition-colors shadow-sm"
-              >
-                Detail ↗
-              </button>
-            </div>
-          </div>
-        </div>
-
+          );
+        })}
       </div>
 
-      {/* ── Modal Lightbox for Full Credential Inspection ── */}
+      {/* ── Floating Big Preview Image (Appears and follows cursor ONLY when hovering) ── */}
+      <AnimatePresence>
+        {hoveredCert && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.75 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x:
+                typeof window !== "undefined" && mousePos.x > window.innerWidth - 480
+                  ? mousePos.x - 460
+                  : mousePos.x + 30,
+              y:
+                typeof window !== "undefined"
+                  ? Math.min(Math.max(mousePos.y - 140, 20), window.innerHeight - 320)
+                  : mousePos.y - 140,
+            }}
+            exit={{ opacity: 0, scale: 0.75 }}
+            transition={{
+              type: "spring",
+              damping: 24,
+              stiffness: 280,
+              mass: 0.5,
+            }}
+            className="pointer-events-none fixed top-0 left-0 z-50 hidden md:block"
+            style={{ willChange: "transform" }}
+          >
+            <div className="w-[380px] desktop:w-[440px] aspect-[16/11] rounded-2xl overflow-hidden shadow-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-1.5 backdrop-blur-md">
+              <div className="relative w-full h-full rounded-xl overflow-hidden bg-neutral-900">
+                <Image
+                  src={hoveredCert.imageUrl}
+                  alt={t(hoveredCert.titleKey)}
+                  fill
+                  sizes="440px"
+                  className="object-cover"
+                  priority
+                />
+                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/85 via-black/40 to-transparent text-white">
+                  <p className="font-sans font-bold text-xs truncate">{t(hoveredCert.titleKey)}</p>
+                  <p className="font-sans text-[10px] text-white/70">{hoveredCert.issuer} · {hoveredCert.year}</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Modal Lightbox for Full Credential Inspection (on click) ── */}
       <AnimatePresence>
         {selectedCert && (
           <motion.div
