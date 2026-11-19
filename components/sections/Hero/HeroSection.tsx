@@ -91,7 +91,7 @@ const MOBILE_SKILLS = [
   { name: "TypeScript",    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
   { name: "Tailwind CSS",  icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
   { name: "Figma",         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" },
-  { name: "Framer Motion", icon: "https://cdn.simpleicons.org/framer/ffffff" },
+  { name: "Framer Motion", icon: "/icons/framer.svg" },
   { name: "Python",        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" },
   { name: "Blender",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/blender/blender-original.svg" },
   { name: "Node.js",       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" },

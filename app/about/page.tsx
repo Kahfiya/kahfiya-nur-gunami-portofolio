@@ -29,10 +29,62 @@ interface StackCategory {
   label: string;
   badge?: string;
   description: string;
-  iconSymbol: string;
   featured?: boolean;
   colSpan: string;
   items: StackItem[];
+}
+
+function CategoryIcon({ id, className = "w-4 h-4 shrink-0" }: { id: string; className?: string }) {
+  switch (id) {
+    case "ai-dev":
+      return (
+        <svg className={`${className} text-accent-500`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+        </svg>
+      );
+    case "frontend":
+      return (
+        <svg className={`${className} text-[var(--color-text-secondary)]`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      );
+    case "backend":
+      return (
+        <svg className={`${className} text-[var(--color-text-secondary)]`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+          <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+          <line x1="6" x2="6.01" y1="6" y2="6" />
+          <line x1="6" x2="6.01" y1="18" y2="18" />
+        </svg>
+      );
+    case "design":
+      return (
+        <svg className={`${className} text-[var(--color-text-secondary)]`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+          <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+          <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+          <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2Z" />
+        </svg>
+      );
+    case "programming":
+      return (
+        <svg className={`${className} text-[var(--color-text-secondary)]`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m7 8-4 4 4 4" />
+          <path d="m17 8 4 4-4 4" />
+          <path d="m14 4-4 16" />
+        </svg>
+      );
+    case "tools":
+      return (
+        <svg className={`${className} text-[var(--color-text-secondary)]`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+        </svg>
+      );
+    default:
+      return null;
+  }
 }
 
 const STACK_CATEGORIES: StackCategory[] = [
@@ -41,7 +93,6 @@ const STACK_CATEGORIES: StackCategory[] = [
     label: "AI & AGENTIC DEVELOPMENT",
     badge: "Vibe Coder Core",
     description: "Agent orchestration, AI coding environments, and prompt-to-production workflows",
-    iconSymbol: "✦",
     featured: true,
     colSpan: "col-span-12 lg:col-span-7",
     items: [
@@ -58,25 +109,11 @@ const STACK_CATEGORIES: StackCategory[] = [
     ],
   },
   {
-    id: "design",
-    label: "UI/UX & 3D DESIGN",
-    badge: "Visuals & Spatial",
-    description: "Design systems, rapid prototyping, and 3D modeling",
-    iconSymbol: "🎨",
-    colSpan: "col-span-12 md:col-span-6 lg:col-span-5",
-    items: [
-      { name: "Figma",         icon: `${CDN}/figma/figma-original.svg` },
-      { name: "Blender",       icon: `${CDN}/blender/blender-original.svg` },
-      { name: "Google Stitch", icon: "/icons/google-stitch.png" },
-    ],
-  },
-  {
     id: "frontend",
     label: "FRONTEND & MOTION",
     badge: "Web Engineering",
     description: "Modern component architecture, type safety, and fluid physics-based motion",
-    iconSymbol: "⚡",
-    colSpan: "col-span-12 md:col-span-12 lg:col-span-6",
+    colSpan: "col-span-12 lg:col-span-5",
     items: [
       { name: "HTML / CSS",    icon: `${CDN}/html5/html5-original.svg` },
       { name: "JavaScript",    icon: `${CDN}/javascript/javascript-original.svg` },
@@ -89,12 +126,38 @@ const STACK_CATEGORIES: StackCategory[] = [
     ],
   },
   {
+    id: "backend",
+    label: "BACKEND & DATABASE",
+    badge: "Server & Data",
+    description: "Scalable server architectures, relational databases, ORMs, and cloud backends",
+    colSpan: "col-span-12 lg:col-span-7",
+    items: [
+      { name: "Node.js",    icon: `${CDN}/nodejs/nodejs-original.svg` },
+      { name: "Express",    icon: `${CDN}/express/express-original.svg` },
+      { name: "PostgreSQL", icon: `${CDN}/postgresql/postgresql-original.svg` },
+      { name: "MySQL",      icon: `${CDN}/mysql/mysql-original.svg` },
+      { name: "Prisma",     icon: `${CDN}/prisma/prisma-original.svg` },
+      { name: "Supabase",   icon: `${CDN}/supabase/supabase-original.svg` },
+    ],
+  },
+  {
+    id: "design",
+    label: "UI/UX & 3D DESIGN",
+    badge: "Visuals & Spatial",
+    description: "Design systems, rapid prototyping, and 3D modeling",
+    colSpan: "col-span-12 lg:col-span-5",
+    items: [
+      { name: "Figma",         icon: `${CDN}/figma/figma-original.svg` },
+      { name: "Blender",       icon: `${CDN}/blender/blender-original.svg` },
+      { name: "Google Stitch", icon: "/icons/google-stitch.png" },
+    ],
+  },
+  {
     id: "programming",
     label: "CORE LANGUAGES",
     badge: "Foundations",
     description: "Algorithms, scripting, and system logic",
-    iconSymbol: "⚙️",
-    colSpan: "col-span-12 md:col-span-6 lg:col-span-3",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-6",
     items: [
       { name: "Python", icon: `${CDN}/python/python-original.svg` },
       { name: "C++",    icon: `${CDN}/cplusplus/cplusplus-original.svg` },
@@ -104,10 +167,9 @@ const STACK_CATEGORIES: StackCategory[] = [
   {
     id: "tools",
     label: "DEVOPS & TOOLS",
-    badge: "Workflow",
-    description: "Version control and containerized deployment",
-    iconSymbol: "🛠️",
-    colSpan: "col-span-12 md:col-span-6 lg:col-span-3",
+    badge: "Workflow & CI",
+    description: "Version control, containerization, and modern developer environments",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-6",
     items: [
       { name: "Git",        icon: `${CDN}/git/git-original.svg` },
       { name: "GitHub",     icon: "/icons/github.svg" },
@@ -227,7 +289,7 @@ function MyStack() {
               <div className="relative mb-5 z-10">
                 <div className="flex items-center justify-between mb-1.5 gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm shrink-0">{cat.iconSymbol}</span>
+                    <CategoryIcon id={cat.id} />
                     <h3 className="font-sans font-bold tracking-wider text-xs uppercase text-[var(--color-text-secondary)]">
                       {cat.label}
                     </h3>
