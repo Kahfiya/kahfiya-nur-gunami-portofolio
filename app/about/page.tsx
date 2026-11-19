@@ -34,6 +34,21 @@ const STACK_CATEGORIES = [
     ],
   },
   {
+    label: "AI & DEVELOPMENT",
+    items: [
+      { name: "Antigravity",        icon: "/icons/antigravity.svg" },
+      { name: "Cursor",             icon: "/icons/cursor.svg" },
+      { name: "Claude",             icon: "/icons/claude.svg" },
+      { name: "Codex",              icon: "/icons/codex.svg" },
+      { name: "Kiro",               icon: "/icons/kiro.svg" },
+      { name: "Blackbox",           icon: "/icons/blackbox.svg" },
+      { name: "AI Coding",          icon: "/icons/ai-coding.svg" },
+      { name: "Debugging",          icon: "/icons/debugging.svg" },
+      { name: "Refactoring",        icon: "/icons/refactoring.svg" },
+      { name: "Technical Research", icon: "/icons/technical-research.svg" },
+    ],
+  },
+  {
     label: "DESIGN",
     items: [
       { name: "Figma",   icon: `${CDN}/figma/figma-original.svg` },
