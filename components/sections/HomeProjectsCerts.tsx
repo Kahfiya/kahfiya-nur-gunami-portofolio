@@ -10,7 +10,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -53,6 +53,7 @@ const CERTIFICATES = [
     category: "AI & Machine Learning",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Dasar AI.jpg",
+    thumbUrl: "/Images/Sertifikat/thumb-Sertif Dasar AI.webp",
   },
   {
     titleKey: "cert.frontend.title",
@@ -60,6 +61,7 @@ const CERTIFICATES = [
     category: "Financial Literacy",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif financial.jpg",
+    thumbUrl: "/Images/Sertifikat/thumb-Sertif financial.webp",
   },
   {
     titleKey: "cert.python.title",
@@ -67,6 +69,7 @@ const CERTIFICATES = [
     category: "Python Programming",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Memulai Pemrograman dengan Python.jpg",
+    thumbUrl: "/Images/Sertifikat/thumb-Sertif Memulai Pemrograman dengan Python.webp",
   },
   {
     titleKey: "cert.ai.title",
@@ -74,6 +77,7 @@ const CERTIFICATES = [
     category: "Artificial Intelligence",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Introduction to Artificial Intelligence.jpg",
+    thumbUrl: "/Images/Sertifikat/thumb-Sertif Introduction to Artificial Intelligence.webp",
   },
   {
     titleKey: "cert.claude.title",
@@ -81,6 +85,7 @@ const CERTIFICATES = [
     category: "Prompt & LLM Engineering",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Claude 101.jpg",
+    thumbUrl: "/Images/Sertifikat/thumb-Sertif Claude 101.webp",
   },
   {
     titleKey: "cert.aifund.title",
@@ -88,6 +93,7 @@ const CERTIFICATES = [
     category: "AI Fundamentals",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif AI Fundamentals for Non-Data Scientists.jpg",
+    thumbUrl: "/Images/Sertifikat/thumb-Sertif AI Fundamentals for Non-Data Scientists.webp",
   },
 ];
 
@@ -190,7 +196,27 @@ export function HomeCertificates() {
   const sectionRef = useRef<HTMLElement>(null);
   const [hoveredCert, setHoveredCert] = useState<typeof CERTIFICATES[number] | null>(null);
   const [selectedCert, setSelectedCert] = useState<typeof CERTIFICATES[number] | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Smooth GPU cursor tracking via MotionValues (zero React re-renders)
+  const cursorX = useMotionValue(-1000);
+  const cursorY = useMotionValue(-1000);
+  const smoothX = useSpring(cursorX, { damping: 25, stiffness: 350, mass: 0.15 });
+  const smoothY = useSpring(cursorY, { damping: 25, stiffness: 350, mass: 0.15 });
+
+  const updatePosition = (clientX: number, clientY: number) => {
+    if (typeof window === "undefined") return;
+    const cardWidth = window.innerWidth >= 1280 ? 420 : 360;
+    const isRightOverflow = clientX + cardWidth + 35 > window.innerWidth;
+    const targetX = isRightOverflow ? clientX - cardWidth - 25 : clientX + 25;
+    const targetY = Math.min(Math.max(clientY - 120, 20), window.innerHeight - 300);
+
+    cursorX.set(targetX);
+    cursorY.set(targetY);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    updatePosition(e.clientX, e.clientY);
+  };
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -219,12 +245,16 @@ export function HomeCertificates() {
     return () => ctx.revert();
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    setMousePos({ x: e.clientX, y: e.clientY });
-  };
-
   return (
     <section ref={sectionRef} className="px-md tablet:px-2xl py-3xl max-w-7xl mx-auto w-full">
+      {/* ── Preload Thumbnails in Memory ── */}
+      <div className="hidden" aria-hidden="true">
+        {CERTIFICATES.map((c) => (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img key={c.titleKey} src={c.thumbUrl || c.imageUrl} alt="" loading="eager" />
+        ))}
+      </div>
+
       {/* ── Section Header matching Ahmed Ragab style ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 tablet:mb-12 border-b border-[var(--color-border)] pb-6">
         <div className="flex items-center gap-3">
@@ -247,7 +277,7 @@ export function HomeCertificates() {
         </div>
       </div>
 
-      {/* ── Pure Text List Container (No static thumbnails) ── */}
+      {/* ── Pure Text List Container ── */}
       <div
         className="flex flex-col cert-list-container relative"
         onMouseMove={handleMouseMove}
@@ -259,7 +289,13 @@ export function HomeCertificates() {
           return (
             <div
               key={cert.titleKey}
-              onMouseEnter={() => setHoveredCert(cert)}
+              onMouseEnter={(e) => {
+                updatePosition(e.clientX, e.clientY);
+                setHoveredCert(cert);
+              }}
+              onMouseMove={(e) => {
+                updatePosition(e.clientX, e.clientY);
+              }}
               onClick={() => setSelectedCert(cert)}
               className="cert-item-row group relative py-6 tablet:py-7 border-b border-[var(--color-border)] cursor-pointer transition-colors duration-200"
             >
@@ -270,7 +306,7 @@ export function HomeCertificates() {
                     {indexStr}
                   </span>
 
-                  {/* Title + Subtitle (Pure Clean Text) */}
+                  {/* Title + Subtitle */}
                   <div className="flex-1 min-w-0">
                     <h3 className="font-sans font-bold text-xl tablet:text-2xl desktop:text-3xl text-[var(--color-text-primary)] group-hover:text-accent-500 transition-colors duration-200 leading-snug">
                       {t(cert.titleKey)}
@@ -313,46 +349,37 @@ export function HomeCertificates() {
         })}
       </div>
 
-      {/* ── Floating Big Preview Image (Appears and follows cursor ONLY when hovering) ── */}
+      {/* ── Floating Preview Image (Instant WebP + GPU Spring Tracking) ── */}
       <AnimatePresence>
         {hoveredCert && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.75 }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              x:
-                typeof window !== "undefined" && mousePos.x > window.innerWidth - 480
-                  ? mousePos.x - 460
-                  : mousePos.x + 30,
-              y:
-                typeof window !== "undefined"
-                  ? Math.min(Math.max(mousePos.y - 140, 20), window.innerHeight - 320)
-                  : mousePos.y - 140,
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            style={{
+              x: smoothX,
+              y: smoothY,
             }}
-            exit={{ opacity: 0, scale: 0.75 }}
-            transition={{
-              type: "spring",
-              damping: 24,
-              stiffness: 280,
-              mass: 0.5,
-            }}
-            className="pointer-events-none fixed top-0 left-0 z-50 hidden md:block"
-            style={{ willChange: "transform" }}
+            className="pointer-events-none fixed top-0 left-0 z-[9990] hidden md:block"
           >
-            <div className="w-[380px] desktop:w-[440px] aspect-[16/11] rounded-2xl overflow-hidden shadow-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-1.5 backdrop-blur-md">
+            <div className="w-[360px] desktop:w-[420px] aspect-[16/11] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.1)] border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-1.5 backdrop-blur-xl">
               <div className="relative w-full h-full rounded-xl overflow-hidden bg-neutral-900">
-                <Image
-                  src={hoveredCert.imageUrl}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={hoveredCert.thumbUrl || hoveredCert.imageUrl}
                   alt={t(hoveredCert.titleKey)}
-                  fill
-                  sizes="440px"
-                  className="object-cover"
-                  priority
+                  className="w-full h-full object-cover"
+                  loading="eager"
+                  decoding="sync"
                 />
-                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/85 via-black/40 to-transparent text-white">
-                  <p className="font-sans font-bold text-xs truncate">{t(hoveredCert.titleKey)}</p>
-                  <p className="font-sans text-[10px] text-white/70">{hoveredCert.issuer} · {hoveredCert.year}</p>
+                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 via-black/50 to-transparent text-white">
+                  <p className="font-sans font-bold text-xs truncate">
+                    {t(hoveredCert.titleKey)}
+                  </p>
+                  <p className="font-sans text-[10px] text-accent-400 font-medium mt-0.5">
+                    {hoveredCert.issuer} · {hoveredCert.year}
+                  </p>
                 </div>
               </div>
             </div>
