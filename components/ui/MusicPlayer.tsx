@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMusicPlayer, TRACKS } from "@/lib/MusicContext";
 
-// ─── Equalizer Visualizer ─────────────────────────────────────────────────────
+// ─── Equalizer Soundwave Visualizer ──────────────────────────────────────────
 
 function Equalizer({ playing }: { playing: boolean }) {
   const bars = [14, 18, 10, 16, 12];
@@ -32,7 +32,7 @@ function Equalizer({ playing }: { playing: boolean }) {
   );
 }
 
-// ─── MusicPlayer Component ───────────────────────────────────────────────────
+// ─── Apple Music / Spotify Style High-End Player ─────────────────────────────
 
 export default function MusicPlayer() {
   const {
@@ -78,7 +78,7 @@ export default function MusicPlayer() {
     seek(ratio);
   };
 
-  // Auto-scroll active lyric line smoothly
+  // Smooth scroll for active karaoke lyric line
   useEffect(() => {
     if (!lyricsRef.current || activeLine < 0) return;
     const container = lyricsRef.current;
@@ -114,158 +114,156 @@ export default function MusicPlayer() {
       role="region"
       aria-label="Music Player"
     >
-      {/* ── Main Audio Deck ── */}
-      <div className="relative rounded-3xl border border-[var(--color-border)] bg-[var(--color-bg-primary)]/90 backdrop-blur-xl shadow-[0_12px_36px_rgba(249,115,22,0.08),0_2px_8px_rgba(0,0,0,0.04)] p-5 space-y-4 overflow-hidden transition-all duration-300">
+      {/* ── Main Player Deck (Apple Music & Spotify Inspired) ── */}
+      <div className="relative rounded-3xl border border-[var(--color-border)] bg-[var(--color-bg-primary)]/90 backdrop-blur-2xl shadow-[0_16px_40px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-4 overflow-hidden transition-all duration-300">
         
-        {/* Subtle orange ambient glow in top-right corner */}
+        {/* Ambient Backlight (Derived from Orange Theme) */}
         <div
-          className="absolute -top-12 -right-12 w-48 h-48 pointer-events-none rounded-full"
+          className="absolute -top-16 -right-16 w-56 h-56 rounded-full pointer-events-none"
           style={{
             background: "radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%)",
           }}
         />
+        <div
+          className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full pointer-events-none"
+          style={{
+            background: "radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 70%)",
+          }}
+        />
 
-        {/* ── Top Row: Vinyl Disc + Track Info + Auto Badge ── */}
+        {/* ── Top Row: Large Square Album Artwork + Track Info ── */}
         <div className="relative z-10 flex items-center gap-4">
           
-          {/* Realistic Vinyl Record */}
-          <div className="relative shrink-0 w-[68px] h-[68px]">
-            {/* Vinyl Body */}
-            <motion.div
-              className="w-full h-full rounded-full overflow-hidden relative shadow-[0_8px_20px_rgba(0,0,0,0.22)] border-2 border-neutral-900 bg-neutral-950 flex items-center justify-center cursor-pointer"
-              onClick={togglePlay}
-              animate={playing ? { rotate: 360 } : { rotate: 0 }}
-              transition={
-                playing
-                  ? { duration: 5, repeat: Infinity, ease: "linear" }
-                  : { duration: 0.6, ease: "easeOut" }
-              }
-              title={playing ? "Click to pause" : "Click to play"}
-            >
-              {/* Concentric Vinyl Grooves texture */}
-              <div
-                className="absolute inset-0 rounded-full pointer-events-none"
-                style={{
-                  background:
-                    "repeating-radial-gradient(circle, transparent 0, transparent 2px, rgba(255,255,255,0.04) 3px, transparent 4px)",
-                }}
-              />
-              
-              {/* Metallic Sheen Angle reflection */}
-              <div
-                className="absolute inset-0 rounded-full pointer-events-none"
-                style={{
-                  background:
-                    "conic-gradient(from 45deg, transparent 0deg, rgba(255,255,255,0.08) 60deg, transparent 120deg, rgba(255,255,255,0.08) 240deg, transparent 300deg)",
-                }}
-              />
+          {/* Prominent Square Album Artwork (Apple Music / Spotify Style) */}
+          <motion.div
+            className="relative shrink-0 w-20 h-20 sm:w-22 sm:h-22 rounded-2xl overflow-hidden cursor-pointer group/cover border border-black/5"
+            style={{
+              boxShadow: playing
+                ? "0 12px 28px rgba(249,115,22,0.28), 0 2px 6px rgba(0,0,0,0.08)"
+                : "0 8px 18px rgba(0,0,0,0.1)",
+            }}
+            animate={{ scale: playing ? 1.02 : 1 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            onClick={togglePlay}
+            title={playing ? "Click to pause" : "Click to play"}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={track.cover}
+              alt={track.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover/cover:scale-105"
+              loading="lazy"
+            />
 
-              {/* Center Album Artwork Label */}
-              <div className="relative w-7 h-7 rounded-full overflow-hidden shadow-inner border border-neutral-800">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={track.cover}
-                  alt={track.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
+            {/* Subtle gloss overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/10 pointer-events-none" />
 
-              {/* Spindle hole */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-2 h-2 rounded-full bg-[var(--color-bg-primary)] ring-1 ring-neutral-700 shadow-inner" />
-              </div>
-            </motion.div>
-          </div>
+            {/* Hover quick play/pause indicator */}
+            <div className="absolute inset-0 bg-black/35 opacity-0 group-hover/cover:opacity-100 transition-opacity duration-200 flex items-center justify-center text-white backdrop-blur-[2px]">
+              {playing ? (
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 drop-shadow-md">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 drop-shadow-md translate-x-0.5">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              )}
+            </div>
+          </motion.div>
 
-          {/* Track Details */}
+          {/* Track Metadata */}
           <div className="flex-1 min-w-0">
-            {/* Header pill: Clean SVG wave + text + equalizer */}
-            <div className="flex items-center gap-2 mb-1">
-              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-accent-500/25 bg-accent-500/10">
+            {/* Status indicator row */}
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest font-bold text-accent-500">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-500 animate-pulse" />
+                  Now Playing
+                </span>
+                {playing && <Equalizer playing={playing} />}
+                {loading && (
+                  <span className="text-[10px] text-[var(--color-text-secondary)] opacity-70 animate-pulse">
+                    loading…
+                  </span>
+                )}
+              </div>
+
+              {/* Discreet Apple-style Autoplay Toggle */}
+              <button
+                onClick={() => setAutoPlay(!autoPlay)}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-sans font-semibold border transition-all duration-200 shrink-0 ${
+                  autoPlay
+                    ? "border-accent-500/40 bg-accent-500/10 text-accent-500 shadow-sm shadow-accent-500/15"
+                    : "border-[var(--color-border)] bg-[var(--color-bg-secondary)]/60 text-[var(--color-text-secondary)] hover:border-accent-500/30 hover:text-accent-500"
+                }`}
+                aria-label={`Autoplay ${autoPlay ? "on" : "off"}`}
+                title="Autoplay next track"
+              >
                 <svg
-                  className="w-3 h-3 text-accent-500 shrink-0"
+                  className="w-3 h-3"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2.5"
+                  strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M12 2v20M17 5v14M7 9v6M22 10v4M2 11v2" />
+                  <path d="M17 2l4 4-4 4" />
+                  <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+                  <path d="M7 22l-4-4 4-4" />
+                  <path d="M21 13v1a4 4 0 0 1-4 4H3" />
                 </svg>
-                <span className="text-[10px] uppercase tracking-wider text-accent-500 font-bold font-sans">
-                  Now Playing
-                </span>
-              </div>
-              {playing && <Equalizer playing={playing} />}
-              {loading && (
-                <span className="text-[10px] text-[var(--color-text-secondary)] opacity-70 animate-pulse">
-                  loading…
-                </span>
-              )}
+                <span>Auto</span>
+              </button>
             </div>
 
             {/* Song Title & Artist */}
-            <h3 className="font-serif text-lg font-bold text-[var(--color-text-primary)] truncate leading-tight tracking-tight">
+            <h3 className="font-serif text-xl font-bold text-[var(--color-text-primary)] truncate leading-tight tracking-tight">
               {track.title}
             </h3>
-            <p className="font-sans text-xs text-[var(--color-text-secondary)] font-medium truncate mt-0.5">
+            <p className="font-sans text-xs sm:text-sm text-[var(--color-text-secondary)] font-medium truncate mt-0.5">
               {track.artist}
             </p>
           </div>
-
-          {/* Auto-play toggle button */}
-          <button
-            onClick={() => setAutoPlay(!autoPlay)}
-            className={`text-[10px] font-sans font-bold tracking-wider px-2.5 py-1 rounded-full border transition-all duration-200 shrink-0 ${
-              autoPlay
-                ? "bg-accent-500 text-white border-accent-500 shadow-sm shadow-accent-500/25"
-                : "border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:border-accent-500/40"
-            }`}
-            aria-label={`Auto-play ${autoPlay ? "on" : "off"}`}
-            title="Auto-play next track"
-          >
-            AUTO
-          </button>
         </div>
 
-        {/* ── Progress Bar & Timestamp ── */}
+        {/* ── Apple Music Style Progress Scrubber ── */}
         <div className="space-y-1.5 relative z-10 pt-1">
           <div
             ref={progressRef}
-            className="h-2 bg-[var(--color-bg-secondary)] rounded-full cursor-pointer group relative overflow-hidden transition-all duration-200 hover:h-2.5 border border-[var(--color-border)]/40"
+            className="h-1.5 bg-[var(--color-bg-secondary)] hover:h-2 rounded-full cursor-pointer relative overflow-hidden transition-all duration-150 border border-[var(--color-border)]/50 group"
             onClick={handleProgressClick}
             role="slider"
-            aria-label="Seek track position"
+            aria-label="Seek track"
             aria-valuenow={Math.round(progress)}
             aria-valuemin={0}
             aria-valuemax={100}
           >
-            {/* Active filled track */}
+            {/* Active Progress Fill */}
             <div
-              className="relative h-full rounded-full bg-gradient-to-r from-orange-500 via-accent-500 to-amber-400 transition-all duration-100 shadow-[0_0_10px_rgba(249,115,22,0.35)]"
+              className="relative h-full rounded-full bg-gradient-to-r from-orange-500 via-accent-500 to-amber-500 transition-all duration-100 shadow-[0_0_12px_rgba(249,115,22,0.4)]"
               style={{ width: `${progress}%` }}
             >
-              {/* Subtle light shimmer */}
-              <div className="absolute inset-0 bg-white/20 rounded-full" />
+              {/* Scrub knob */}
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white shadow-md border-2 border-accent-500 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           </div>
 
-          {/* Time indicators */}
-          <div className="flex justify-between font-mono text-[10px] text-[var(--color-text-secondary)] opacity-80 select-none px-0.5">
+          {/* Timestamps */}
+          <div className="flex justify-between font-mono text-[10px] text-[var(--color-text-secondary)] opacity-75 select-none px-0.5 font-medium tracking-wider">
             <span>{fmt(currentTime)}</span>
             <span>{fmt(duration)}</span>
           </div>
         </div>
 
-        {/* ── Control Deck ── */}
+        {/* ── Controller Deck (Spotify / Apple Music Symmetrical Alignment) ── */}
         <div className="relative z-10 flex items-center justify-between pt-1">
           
           {/* Previous Track */}
           <button
             onClick={prev}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-transparent hover:border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-accent-500 transition-all duration-200 active:scale-90"
+            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-accent-500 transition-all duration-200 active:scale-90"
             aria-label="Previous track"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -273,10 +271,10 @@ export default function MusicPlayer() {
             </svg>
           </button>
 
-          {/* Play/Pause Button (Tactile Orange Centerpiece) */}
+          {/* Centerpiece Play / Pause Button (Spotify Accent Style) */}
           <button
             onClick={togglePlay}
-            className="w-12 h-12 rounded-full bg-gradient-to-tr from-accent-600 via-accent-500 to-amber-400 text-white flex items-center justify-center shadow-[0_6px_20px_rgba(249,115,22,0.4)] hover:shadow-[0_8px_26px_rgba(249,115,22,0.55)] hover:scale-105 active:scale-95 transition-all duration-200"
+            className="w-12 h-12 rounded-full bg-accent-500 hover:bg-accent-600 text-white flex items-center justify-center shadow-[0_6px_22px_rgba(249,115,22,0.45)] hover:shadow-[0_8px_28px_rgba(249,115,22,0.6)] hover:scale-105 active:scale-95 transition-all duration-200"
             aria-label={playing ? "Pause" : "Play"}
           >
             {playing ? (
@@ -293,7 +291,7 @@ export default function MusicPlayer() {
           {/* Next Track */}
           <button
             onClick={next}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-transparent hover:border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-accent-500 transition-all duration-200 active:scale-90"
+            className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-accent-500 transition-all duration-200 active:scale-90"
             aria-label="Next track"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -353,7 +351,7 @@ export default function MusicPlayer() {
             />
           </div>
 
-          {/* Lyrics Drawer Toggle Button (Clean Vector Mic/Music Sheet) */}
+          {/* Lyrics Drawer Toggle */}
           <button
             onClick={() => {
               setShowLyrics((v) => !v);
@@ -361,12 +359,12 @@ export default function MusicPlayer() {
             }}
             className={`w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200 ${
               showLyrics
-                ? "bg-accent-500 text-white border-accent-500 shadow-sm"
+                ? "bg-accent-500 text-white border-accent-500 shadow-md shadow-accent-500/25"
                 : "border-transparent hover:border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-accent-500"
             }`}
             aria-label="Toggle Lyrics"
             aria-expanded={showLyrics}
-            title="Synchronized Lyrics"
+            title="Lyrics"
           >
             <svg
               className="w-4 h-4"
@@ -383,7 +381,7 @@ export default function MusicPlayer() {
             </svg>
           </button>
 
-          {/* Playlist Drawer Toggle Button (Clean Vector Playlist) */}
+          {/* Playlist / Queue Toggle */}
           <button
             onClick={() => {
               setShowPlaylist((v) => !v);
@@ -391,12 +389,12 @@ export default function MusicPlayer() {
             }}
             className={`w-9 h-9 flex items-center justify-center rounded-full border transition-all duration-200 ${
               showPlaylist
-                ? "bg-accent-500 text-white border-accent-500 shadow-sm"
+                ? "bg-accent-500 text-white border-accent-500 shadow-md shadow-accent-500/25"
                 : "border-transparent hover:border-[var(--color-border)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] hover:text-accent-500"
             }`}
-            aria-label="Toggle Playlist"
+            aria-label="Toggle Queue"
             aria-expanded={showPlaylist}
-            title="Queue / Playlist"
+            title="Queue"
           >
             <svg
               className="w-4 h-4"
@@ -418,7 +416,7 @@ export default function MusicPlayer() {
         </div>
       </div>
 
-      {/* ── Playlist Drawer ── */}
+      {/* ── Apple Music Style Queue Drawer ── */}
       <AnimatePresence>
         {showPlaylist && (
           <motion.div
@@ -426,7 +424,7 @@ export default function MusicPlayer() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            className="mt-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)]/95 backdrop-blur-xl shadow-xl overflow-hidden divide-y divide-[var(--color-border)]/40"
+            className="mt-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)]/95 backdrop-blur-2xl shadow-xl overflow-hidden divide-y divide-[var(--color-border)]/40"
           >
             <div className="px-4 py-2.5 bg-[var(--color-bg-secondary)]/50 flex items-center justify-between">
               <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
@@ -461,7 +459,7 @@ export default function MusicPlayer() {
                 <img
                   src={t.cover}
                   alt={t.title}
-                  className="w-10 h-10 rounded-xl object-cover shadow-sm shrink-0"
+                  className="w-11 h-11 rounded-xl object-cover shadow-sm shrink-0 border border-black/5"
                 />
                 <div className="flex-1 min-w-0">
                   <p
@@ -484,7 +482,7 @@ export default function MusicPlayer() {
         )}
       </AnimatePresence>
 
-      {/* ── Synchronized Karaoke Lyrics Drawer ── */}
+      {/* ── Apple Music Style Realtime Karaoke Lyrics Drawer ── */}
       <AnimatePresence>
         {showLyrics && (
           <motion.div
@@ -492,7 +490,7 @@ export default function MusicPlayer() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            className="mt-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)]/95 backdrop-blur-xl shadow-xl p-4.5"
+            className="mt-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-primary)]/95 backdrop-blur-2xl shadow-xl p-4.5"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--color-border)]">
@@ -527,7 +525,7 @@ export default function MusicPlayer() {
                 lyrics.synced.map((line, i) => (
                   <p
                     key={i}
-                    className={`font-sans text-xs leading-relaxed transition-all duration-300 px-2 py-1 rounded-lg ${
+                    className={`font-sans text-xs sm:text-sm leading-relaxed transition-all duration-300 px-2.5 py-1.5 rounded-xl ${
                       i === activeLine
                         ? "text-accent-500 font-bold scale-[1.02] origin-left bg-accent-500/10 shadow-sm"
                         : "text-[var(--color-text-secondary)] opacity-60 hover:opacity-100"
@@ -540,7 +538,7 @@ export default function MusicPlayer() {
                 lyrics.plain.split("\n").map((line, i) => (
                   <p
                     key={i}
-                    className={`font-sans text-xs leading-relaxed px-2 py-0.5 ${
+                    className={`font-sans text-xs sm:text-sm leading-relaxed px-2.5 py-1 ${
                       line === ""
                         ? "mb-2"
                         : "text-[var(--color-text-secondary)]"
