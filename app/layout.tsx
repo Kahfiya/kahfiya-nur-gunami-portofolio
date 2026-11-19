@@ -99,6 +99,9 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
   },
   manifest: "/site.webmanifest",
+  verification: {
+    google: "google7aeeab656fa62d2a",
+  },
   other: {
     "thumbnail": "https://kahfiya-nur-gunami-portofolio.vercel.app/og-image.png",
   },
