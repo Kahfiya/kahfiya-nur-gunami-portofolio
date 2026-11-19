@@ -145,7 +145,7 @@ export default function PageTransitionWrapper({
             color: "#525252",
             marginTop: "1rem",
           }}>
-            Student &nbsp;·&nbsp; Vibe Developer
+            Student &nbsp;·&nbsp; Vibe Coder
           </p>
         </div>
       </div>
