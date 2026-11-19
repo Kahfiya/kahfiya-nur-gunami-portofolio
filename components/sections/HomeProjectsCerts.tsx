@@ -6,10 +6,11 @@
  * Certs: staggered with alternating x direction
  */
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -46,12 +47,48 @@ const PROJECTS = [
 ];
 
 const CERTIFICATES = [
-  { titleKey: "cert.web.title",      issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif Dasar AI.jpg" },
-  { titleKey: "cert.frontend.title", issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif financial.jpg" },
-  { titleKey: "cert.python.title",   issuer: "Dicoding Indonesia", year: "2026", imageUrl: "/Images/Sertifikat/Sertif Memulai Pemrograman dengan Python.jpg" },
-  { titleKey: "cert.ai.title",       issuer: "IBM SkillsBuild",    year: "2026", imageUrl: "/Images/Sertifikat/Sertif Introduction to Artificial Intelligence.jpg" },
-  { titleKey: "cert.claude.title",   issuer: "Anthropic",          year: "2026", imageUrl: "/Images/Sertifikat/Sertif Claude 101.jpg" },
-  { titleKey: "cert.aifund.title",   issuer: "Coursera",           year: "2026", imageUrl: "/Images/Sertifikat/Sertif AI Fundamentals for Non-Data Scientists.jpg" },
+  {
+    titleKey: "cert.web.title",
+    issuer: "Dicoding Indonesia",
+    category: "AI & Machine Learning",
+    year: "2025",
+    imageUrl: "/Images/Sertifikat/Sertif Dasar AI.jpg",
+  },
+  {
+    titleKey: "cert.frontend.title",
+    issuer: "Dicoding Indonesia",
+    category: "Financial Literacy",
+    year: "2025",
+    imageUrl: "/Images/Sertifikat/Sertif financial.jpg",
+  },
+  {
+    titleKey: "cert.python.title",
+    issuer: "Dicoding Indonesia",
+    category: "Python Programming",
+    year: "2025",
+    imageUrl: "/Images/Sertifikat/Sertif Memulai Pemrograman dengan Python.jpg",
+  },
+  {
+    titleKey: "cert.ai.title",
+    issuer: "IBM SkillsBuild",
+    category: "Artificial Intelligence",
+    year: "2025",
+    imageUrl: "/Images/Sertifikat/Sertif Introduction to Artificial Intelligence.jpg",
+  },
+  {
+    titleKey: "cert.claude.title",
+    issuer: "Anthropic",
+    category: "Prompt & LLM Engineering",
+    year: "2025",
+    imageUrl: "/Images/Sertifikat/Sertif Claude 101.jpg",
+  },
+  {
+    titleKey: "cert.aifund.title",
+    issuer: "Coursera",
+    category: "AI Fundamentals",
+    year: "2025",
+    imageUrl: "/Images/Sertifikat/Sertif AI Fundamentals for Non-Data Scientists.jpg",
+  },
 ];
 
 // ─── Projects ─────────────────────────────────────────────────────────────────
@@ -151,224 +188,235 @@ export function HomeProjects() {
 export function HomeCertificates() {
   const { t } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number>(0);
+  const [selectedCert, setSelectedCert] = useState<typeof CERTIFICATES[number] | null>(null);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const ctx = gsap.context(() => {
-
-      // ── Heading clip wipe ────────────────────────────────────────────────
-      const words = section.querySelectorAll<HTMLElement>(".cert-word");
-      gsap.fromTo(words,
-        { clipPath: "inset(0 100% 0 0)", opacity: 0 },
+      // Staggered reveal for rows
+      const rows = section.querySelectorAll<HTMLElement>(".cert-item-row");
+      gsap.fromTo(
+        rows,
+        { opacity: 0, y: 24 },
         {
-          clipPath: "inset(0 0% 0 0)", opacity: 1,
-          ease: "expo.out", stagger: 0.06,
+          opacity: 1,
+          y: 0,
+          stagger: 0.08,
+          ease: "expo.out",
           scrollTrigger: {
-            trigger: section.querySelector(".cert-heading"),
-            start: "top 88%", end: "top 50%",
-            scrub: 1.2, invalidateOnRefresh: true,
+            trigger: section.querySelector(".cert-list-container"),
+            start: "top 85%",
+            toggleActions: "play none none none",
           },
         }
       );
-
-      // ── Counter line — draws across the full width ───────────────────────
-      const counterLine = section.querySelector<HTMLElement>(".cert-counter-line");
-      if (counterLine) {
-        gsap.fromTo(counterLine,
-          { scaleX: 0 },
-          {
-            scaleX: 1, ease: "expo.out",
-            scrollTrigger: {
-              trigger: section.querySelector(".cert-heading"),
-              start: "top 80%", end: "top 40%",
-              scrub: 1.5, invalidateOnRefresh: true,
-            },
-          }
-        );
-      }
-
-      // ── Each row reveals with a staggered clip from bottom ───────────────
-      const rows = section.querySelectorAll<HTMLElement>(".cert-row");
-      const isMobile = window.innerWidth < 768;
-
-      rows.forEach((row) => {
-        if (isMobile) {
-          // Mobile: simple fade-up, no clipPath — clipPath scrub needs
-          // enough scroll distance which mobile screens don't have
-          gsap.fromTo(row,
-            { opacity: 0, y: 24 },
-            {
-              opacity: 1, y: 0,
-              ease: "expo.out",
-              scrollTrigger: {
-                trigger: row,
-                start: "top 95%",
-                toggleActions: "play none none none",
-                invalidateOnRefresh: true,
-              },
-            }
-          );
-        } else {
-          gsap.fromTo(row,
-            { opacity: 0, y: 32, clipPath: "inset(100% 0 0 0)" },
-            {
-              opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)",
-              ease: "expo.out",
-              scrollTrigger: {
-                trigger: row,
-                start: "top 92%", end: "top 62%",
-                scrub: 1, invalidateOnRefresh: true,
-              },
-            }
-          );
-
-          const img = row.querySelector<HTMLElement>(".cert-img-wrap");
-          if (img) {
-            gsap.fromTo(img,
-              { scale: 1.15, opacity: 0 },
-              {
-                scale: 1, opacity: 1, ease: "expo.out",
-                scrollTrigger: {
-                  trigger: row,
-                  start: "top 90%", end: "top 55%",
-                  scrub: 1.2, invalidateOnRefresh: true,
-                },
-              }
-            );
-          }
-        }
-      });
-
     }, section);
 
     return () => ctx.revert();
   }, []);
 
+  const activeCert = CERTIFICATES[hoveredIndex] ?? CERTIFICATES[0];
+
   return (
     <section ref={sectionRef} className="px-md tablet:px-2xl py-3xl max-w-7xl mx-auto w-full">
-
-      {/* ── Heading ── */}
-      <div className="cert-heading mb-3xl">
-        <p className="cert-word font-sans text-xs tracking-[0.2em] uppercase text-accent-500 mb-3 inline-block">
-          — {t("cert.label")}
-        </p>
-        <h2
-          className="font-serif font-bold text-[var(--color-text-primary)] flex flex-wrap gap-x-[0.25em]"
-          style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}
-        >
-          {t("certificates.title").split(" ").map((w, i) => (
-            <span key={i} className="cert-word inline-block">{w}</span>
-          ))}
-        </h2>
-        <p
-          className="cert-word font-sans text-[var(--color-text-secondary)] mt-3 max-w-xl inline-block"
-          style={{ fontSize: "clamp(0.875rem, 1.5vw, 1rem)" }}
-        >
-          {t("certificates.subtitle")}
-        </p>
-
-        {/* Animated counter line */}
-        <div className="cert-counter-line mt-2xl h-px bg-[var(--color-border)] origin-left" />
-      </div>
-
-      {/* ── Certificate rows — editorial list layout ── */}
-      <div className="flex flex-col">
-        {CERTIFICATES.map((cert, i) => (
-          <div
-            key={cert.titleKey}
-            className="cert-row group relative flex items-center gap-6 tablet:gap-10 py-6 border-b border-[var(--color-border)] cursor-default overflow-hidden"
-          >
-            {/* Hover fill */}
-            <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-              style={{ background: "linear-gradient(90deg, rgba(249,115,22,0.03) 0%, transparent 60%)" }}
-            />
-
-            {/* Index number */}
-            <span
-              className="cert-num font-serif font-black tabular-nums shrink-0 select-none"
-              style={{
-                fontSize: "clamp(1.8rem, 3vw, 2.5rem)",
-                color: "#f97316",
-                minWidth: "3rem",
-                lineHeight: 1,
-              }}
-            >
-              {String(i + 1).padStart(2, "0")}
-            </span>
-
-            {/* Thumbnail */}
-            <div
-              className="cert-img-wrap relative shrink-0 rounded-xl overflow-hidden"
-              style={{ width: "clamp(64px, 8vw, 96px)", aspectRatio: "4/3" }}
-            >
-              <Image
-                src={cert.imageUrl}
-                alt={t(cert.titleKey)}
-                fill
-                sizes="96px"
-                className="object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-              {/* Shimmer overlay */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: "linear-gradient(135deg, rgba(249,115,22,0.15) 0%, transparent 60%)" }}
-              />
-            </div>
-
-            {/* Text */}
-            <div className="flex-1 min-w-0">
-              <h3
-                className="font-serif font-bold text-[var(--color-text-primary)] group-hover:text-accent-500 transition-colors duration-300 truncate"
-                style={{ fontSize: "clamp(0.95rem, 1.8vw, 1.15rem)" }}
-              >
-                {t(cert.titleKey)}
-              </h3>
-              <p className="font-sans text-xs text-[var(--color-text-secondary)] mt-1 tracking-wide">
-                {cert.issuer}
-              </p>
-            </div>
-
-            {/* Year + badge */}
-            <div className="hidden tablet:flex flex-col items-end gap-1 shrink-0">
-              <span className="font-sans text-xs text-[var(--color-text-secondary)] tabular-nums">
-                {cert.year}
-              </span>
-              <div
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0"
-                style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.2)" }}
-              >
-                <svg viewBox="0 0 12 12" className="w-3 h-3 text-accent-500" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2 6 L5 9 L10 3" />
-                </svg>
-                <span className="font-sans text-[10px] tracking-widest uppercase text-accent-500">{t("cert.verified")}</span>
-              </div>
-            </div>
-
-            {/* Arrow */}
-            <span
-              className="font-sans text-sm text-[var(--color-text-secondary)] group-hover:text-accent-500 group-hover:translate-x-1 transition-all duration-300 shrink-0"
-            >
-              →
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Bottom count ── */}
-      <div className="mt-xl flex items-center justify-between">
-        <p className="font-sans text-xs text-[var(--color-text-secondary)]">
+      {/* ── Section Header matching Ahmed Ragab style ── */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 tablet:mb-12 border-b border-[var(--color-border)] pb-6">
+        <div className="flex items-center gap-2.5">
+          <span className="text-accent-500 text-2xl font-black select-none">✱</span>
+          <h2 className="text-2xl tablet:text-3xl desktop:text-4xl font-sans font-black tracking-wide uppercase">
+            <span className="text-accent-500">{t("certificates.title")}</span>{" "}
+            <span className="text-[var(--color-text-primary)]">LIST</span>
+          </h2>
+        </div>
+        <p className="font-sans text-xs tablet:text-sm text-[var(--color-text-secondary)]">
           {CERTIFICATES.length} {t("cert.label")} · {t("cert.growing")}
         </p>
-        <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          <span className="font-sans text-[10px] tracking-widest uppercase text-[var(--color-text-secondary)]">
-            {t("cert.verified")}
-          </span>
-        </div>
       </div>
+
+      {/* ── Main Layout: Certificate List + Floating/Sticky Image Preview Card ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start cert-list-container">
+        
+        {/* Left Column: Certificate List */}
+        <div className="lg:col-span-7 xl:col-span-8 flex flex-col">
+          {CERTIFICATES.map((cert, i) => {
+            const indexStr = String(i + 1).padStart(2, "0") + ".";
+
+            return (
+              <div
+                key={cert.titleKey}
+                onMouseEnter={() => setHoveredIndex(i)}
+                onClick={() => setSelectedCert(cert)}
+                className="cert-item-row group relative py-6 tablet:py-7 border-b border-[var(--color-border)] cursor-pointer transition-all duration-200 hover:pl-2"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-4 tablet:gap-6 flex-1 min-w-0">
+                    {/* Index Number */}
+                    <span className="font-sans font-bold text-lg tablet:text-2xl text-[var(--color-text-secondary)]/50 group-hover:text-accent-500 transition-colors select-none shrink-0 pt-0.5">
+                      {indexStr}
+                    </span>
+
+                    {/* Title + Subtitle */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2.5">
+                        <h3 className="font-sans font-bold text-lg tablet:text-2xl desktop:text-[1.75rem] text-[var(--color-text-primary)] group-hover:text-accent-500 transition-colors duration-200 leading-snug">
+                          {t(cert.titleKey)}
+                        </h3>
+                        {/* Hover External Arrow Icon */}
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="w-4 h-4 tablet:w-5 tablet:h-5 text-accent-500 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-200 shrink-0"
+                        >
+                          <line x1="7" y1="17" x2="17" y2="7" />
+                          <polyline points="7 7 17 7 17 17" />
+                        </svg>
+                      </div>
+
+                      {/* Meta Stack / Issuer / Category */}
+                      <p className="font-sans text-xs tablet:text-sm text-[var(--color-text-secondary)] mt-1.5 flex flex-wrap items-center gap-2">
+                        <span>{cert.issuer}</span>
+                        <span className="opacity-40">•</span>
+                        <span>{cert.category}</span>
+                        <span className="opacity-40">•</span>
+                        <span>{cert.year}</span>
+                        <span className="opacity-40">•</span>
+                        <span className="text-accent-500 font-medium">{t("cert.verified")}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Mobile Thumbnail Button */}
+                  <div className="lg:hidden shrink-0 mt-1">
+                    <div className="relative w-14 h-10 rounded-lg overflow-hidden border border-[var(--color-border)] shadow-sm">
+                      <Image
+                        src={cert.imageUrl}
+                        alt={t(cert.titleKey)}
+                        fill
+                        sizes="60px"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Right Column: Floating/Sticky Image Preview Card on Desktop */}
+        <div className="hidden lg:block lg:col-span-5 xl:col-span-4 sticky top-28">
+          <div className="rounded-3xl p-4 border border-[var(--color-border)] bg-[var(--color-bg-primary)] shadow-2xl backdrop-blur-sm">
+            <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-[var(--color-bg-secondary)] border border-[var(--color-border)]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeCert.imageUrl}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative w-full h-full cursor-pointer group/preview"
+                  onClick={() => setSelectedCert(activeCert)}
+                >
+                  <Image
+                    src={activeCert.imageUrl}
+                    alt={t(activeCert.titleKey)}
+                    fill
+                    sizes="(max-width: 1280px) 40vw, 450px"
+                    className="object-cover group-hover/preview:scale-105 transition-transform duration-500"
+                    priority
+                  />
+                  {/* Hover Prompt */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-semibold uppercase tracking-wider backdrop-blur-[2px]">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      <line x1="11" y1="8" x2="11" y2="14" />
+                      <line x1="8" y1="11" x2="14" y2="11" />
+                    </svg>
+                    {t("cert.verified")} Detail
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Active Card Info */}
+            <div className="mt-4 px-2 flex items-center justify-between">
+              <div className="min-w-0 pr-2">
+                <p className="font-sans font-bold text-sm text-[var(--color-text-primary)] truncate">
+                  {t(activeCert.titleKey)}
+                </p>
+                <p className="font-sans text-xs text-[var(--color-text-secondary)]">
+                  {activeCert.issuer} · {activeCert.year}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedCert(activeCert)}
+                className="shrink-0 px-3 py-1.5 rounded-full text-xs font-sans font-semibold bg-accent-500 text-white hover:bg-accent-600 transition-colors shadow-sm"
+              >
+                Detail ↗
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── Modal Lightbox for Full Credential Inspection ── */}
+      <AnimatePresence>
+        {selectedCert && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[99999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+            onClick={() => setSelectedCert(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative max-w-4xl w-full bg-[var(--color-bg-primary)] rounded-3xl overflow-hidden border border-[var(--color-border)] shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)]">
+                <div>
+                  <h4 className="font-sans font-bold text-lg text-[var(--color-text-primary)]">
+                    {t(selectedCert.titleKey)}
+                  </h4>
+                  <p className="font-sans text-xs text-[var(--color-text-secondary)]">
+                    {selectedCert.issuer} · {selectedCert.category} · {selectedCert.year} · {t("cert.verified")}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelectedCert(null)}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-colors text-base font-bold"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Modal Image */}
+              <div className="relative w-full aspect-[16/11] bg-neutral-900">
+                <Image
+                  src={selectedCert.imageUrl}
+                  alt={t(selectedCert.titleKey)}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
