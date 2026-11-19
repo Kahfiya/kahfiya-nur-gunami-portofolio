@@ -15,26 +15,35 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── My Stack ────────────────────────────────────────────────────────────────
+// ─── My Stack Bento Grid ──────────────────────────────────────────────────────
 
 const CDN = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
 
-const STACK_CATEGORIES = [
+interface StackItem {
+  name: string;
+  icon: string;
+}
+
+interface StackCategory {
+  id: string;
+  label: string;
+  badge?: string;
+  description: string;
+  iconSymbol: string;
+  featured?: boolean;
+  colSpan: string;
+  items: StackItem[];
+}
+
+const STACK_CATEGORIES: StackCategory[] = [
   {
-    label: "FRONTEND",
-    items: [
-      { name: "HTML / CSS",    icon: `${CDN}/html5/html5-original.svg` },
-      { name: "JavaScript",    icon: `${CDN}/javascript/javascript-original.svg` },
-      { name: "TypeScript",    icon: `${CDN}/typescript/typescript-original.svg` },
-      { name: "React",         icon: `${CDN}/react/react-original.svg` },
-      { name: "Next.js",       icon: `${CDN}/nextjs/nextjs-original.svg` },
-      { name: "Tailwind CSS",  icon: `${CDN}/tailwindcss/tailwindcss-original.svg` },
-      { name: "Framer Motion", icon: "https://cdn.simpleicons.org/framer/ffffff" },
-      { name: "GSAP",          icon: "https://cdn.simpleicons.org/greensock/88CE02" },
-    ],
-  },
-  {
-    label: "AI & DEVELOPMENT",
+    id: "ai-dev",
+    label: "AI & AGENTIC DEVELOPMENT",
+    badge: "Vibe Coder Core",
+    description: "Agent orchestration, AI coding environments, and prompt-to-production workflows",
+    iconSymbol: "✦",
+    featured: true,
+    colSpan: "col-span-12 lg:col-span-7",
     items: [
       { name: "Antigravity",        icon: "/icons/antigravity.svg" },
       { name: "Cursor",             icon: "/icons/cursor.svg" },
@@ -49,15 +58,43 @@ const STACK_CATEGORIES = [
     ],
   },
   {
-    label: "DESIGN",
+    id: "design",
+    label: "UI/UX & 3D DESIGN",
+    badge: "Visuals & Spatial",
+    description: "Design systems, rapid prototyping, and 3D modeling",
+    iconSymbol: "🎨",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-5",
     items: [
-      { name: "Figma",   icon: `${CDN}/figma/figma-original.svg` },
-      { name: "Blender", icon: `${CDN}/blender/blender-original.svg` },
+      { name: "Figma",         icon: `${CDN}/figma/figma-original.svg` },
+      { name: "Blender",       icon: `${CDN}/blender/blender-original.svg` },
       { name: "Google Stitch", icon: "/icons/google-stitch.png" },
     ],
   },
   {
-    label: "PROGRAMMING",
+    id: "frontend",
+    label: "FRONTEND & MOTION",
+    badge: "Web Engineering",
+    description: "Modern component architecture, type safety, and fluid physics-based motion",
+    iconSymbol: "⚡",
+    colSpan: "col-span-12 md:col-span-12 lg:col-span-6",
+    items: [
+      { name: "HTML / CSS",    icon: `${CDN}/html5/html5-original.svg` },
+      { name: "JavaScript",    icon: `${CDN}/javascript/javascript-original.svg` },
+      { name: "TypeScript",    icon: `${CDN}/typescript/typescript-original.svg` },
+      { name: "React",         icon: `${CDN}/react/react-original.svg` },
+      { name: "Next.js",       icon: `${CDN}/nextjs/nextjs-original.svg` },
+      { name: "Tailwind CSS",  icon: `${CDN}/tailwindcss/tailwindcss-original.svg` },
+      { name: "Framer Motion", icon: "/icons/framer.svg" },
+      { name: "GSAP",          icon: "https://cdn.simpleicons.org/greensock/88CE02" },
+    ],
+  },
+  {
+    id: "programming",
+    label: "CORE LANGUAGES",
+    badge: "Foundations",
+    description: "Algorithms, scripting, and system logic",
+    iconSymbol: "⚙️",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-3",
     items: [
       { name: "Python", icon: `${CDN}/python/python-original.svg` },
       { name: "C++",    icon: `${CDN}/cplusplus/cplusplus-original.svg` },
@@ -65,11 +102,16 @@ const STACK_CATEGORIES = [
     ],
   },
   {
-    label: "TOOLS",
+    id: "tools",
+    label: "DEVOPS & TOOLS",
+    badge: "Workflow",
+    description: "Version control and containerized deployment",
+    iconSymbol: "🛠️",
+    colSpan: "col-span-12 md:col-span-6 lg:col-span-3",
     items: [
-      { name: "Git",    icon: `${CDN}/git/git-original.svg` },
-      { name: "GitHub", icon: "/icons/github.svg" },
-      { name: "Docker", icon: `${CDN}/docker/docker-original.svg` },
+      { name: "Git",        icon: `${CDN}/git/git-original.svg` },
+      { name: "GitHub",     icon: "/icons/github.svg" },
+      { name: "Docker",     icon: `${CDN}/docker/docker-original.svg` },
       { name: "Windows 11", icon: `${CDN}/windows11/windows11-original.svg` },
     ],
   },
@@ -84,37 +126,37 @@ function MyStack() {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Each category row: slide up + fade, scrub-synced
-      const rows = section.querySelectorAll<HTMLElement>(".stack-row");
-      rows.forEach((row, ri) => {
-        gsap.fromTo(row,
-          { opacity: 0, y: 28 },
+      // Animate each bento card on scroll
+      const cards = section.querySelectorAll<HTMLElement>(".bento-card");
+      cards.forEach((card) => {
+        gsap.fromTo(card,
+          { opacity: 0, y: 30, scale: 0.98 },
           {
-            opacity: 1, y: 0,
+            opacity: 1, y: 0, scale: 1,
             ease: "power3.out",
             scrollTrigger: {
-              trigger: row,
+              trigger: card,
               start: "top 92%",
-              end: "top 65%",
-              scrub: 1.5,
+              end: "top 70%",
+              scrub: 1.2,
               invalidateOnRefresh: true,
             },
           }
         );
 
-        // Each tech pill inside the row — staggered scrub
-        const pills = row.querySelectorAll<HTMLElement>(".stack-pill");
+        // Tech pills inside card with staggered entrance
+        const pills = card.querySelectorAll<HTMLElement>(".stack-pill");
         gsap.fromTo(pills,
-          { opacity: 0, y: 16, scale: 0.92 },
+          { opacity: 0, scale: 0.92, y: 10 },
           {
-            opacity: 1, y: 0, scale: 1,
+            opacity: 1, scale: 1, y: 0,
             ease: "power2.out",
-            stagger: 0.06,
+            stagger: 0.03,
             scrollTrigger: {
-              trigger: row,
+              trigger: card,
               start: "top 88%",
-              end: "top 50%",
-              scrub: 1.2,
+              end: "top 62%",
+              scrub: 1,
               invalidateOnRefresh: true,
             },
           }
@@ -133,11 +175,11 @@ function MyStack() {
                  bg-[var(--color-bg-primary)] shadow-sm"
     >
       {/* Subtle orange glow top-right */}
-      <div className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
+      <div className="absolute top-0 right-0 w-96 h-96 pointer-events-none"
         style={{ background: "radial-gradient(circle at top right, rgba(249,115,22,0.06) 0%, transparent 65%)" }} />
 
       {/* Header */}
-      <div className="relative px-xl pt-2xl pb-xl border-b border-[var(--color-border)]">
+      <div className="relative px-6 tablet:px-8 desktop:px-10 pt-2xl pb-xl border-b border-[var(--color-border)]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-accent-500 font-sans font-black text-xl"
@@ -147,53 +189,95 @@ function MyStack() {
               MY <span className="text-accent-500">STACK</span>
             </h2>
           </div>
-          <div className="hidden tablet:flex items-center gap-2 px-3 py-1.5 rounded-full
+          <div className="hidden tablet:flex items-center gap-2 px-3.5 py-1.5 rounded-full
                           border border-accent-500/20 bg-accent-500/5">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-            <span className="font-sans text-[10px] tracking-widest uppercase text-[var(--color-text-secondary)]">
+            <span className="font-sans text-[10px] tracking-widest uppercase font-bold text-[var(--color-text-secondary)]">
               Always Learning
             </span>
           </div>
         </div>
       </div>
 
-      {/* Categories */}
-      <div className="relative divide-y divide-[var(--color-border)]">
-        {STACK_CATEGORIES.map((cat, ci) => (
-          <div key={cat.label} className="stack-row flex flex-col tablet:flex-row">
-            {/* Category label */}
-            <div className="flex items-center tablet:items-start pt-xl px-xl pb-3 tablet:pb-xl tablet:w-44 shrink-0">
-              <span className="font-sans font-bold tracking-[0.2em] text-[var(--color-text-secondary)] opacity-50"
-                style={{ fontSize: "0.6rem" }}>
-                {cat.label}
-              </span>
-            </div>
+      {/* Bento Grid */}
+      <div className="p-6 tablet:p-8 desktop:p-10 relative">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 tablet:gap-6">
+          {STACK_CATEGORIES.map((cat) => (
+            <div
+              key={cat.id}
+              className={`bento-card ${cat.colSpan} flex flex-col justify-between p-6 tablet:p-7 rounded-2xl
+                          border transition-all duration-300 relative overflow-hidden group
+                          ${cat.featured
+                            ? "border-accent-500/35 bg-gradient-to-br from-accent-500/[0.04] via-[var(--color-bg-secondary)] to-[var(--color-bg-secondary)] shadow-sm hover:border-accent-500/60 hover:shadow-xl"
+                            : "border-[var(--color-border)] bg-[var(--color-bg-secondary)] hover:border-accent-500/30 hover:shadow-lg"
+                          }`}
+            >
+              {/* Featured glow ornament */}
+              {cat.featured && (
+                <div
+                  className="absolute top-0 right-0 w-64 h-64 pointer-events-none rounded-full"
+                  style={{
+                    background: "radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%)",
+                    transform: "translate(30%, -30%)",
+                  }}
+                />
+              )}
 
-            {/* Tech items */}
-            <div className="tablet:border-l tablet:border-[var(--color-border)] px-xl pb-xl tablet:pt-xl">
-              <div className="flex flex-wrap gap-2.5">
+              {/* Card Top / Header */}
+              <div className="relative mb-5 z-10">
+                <div className="flex items-center justify-between mb-1.5 gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm shrink-0">{cat.iconSymbol}</span>
+                    <h3 className="font-sans font-bold tracking-wider text-xs uppercase text-[var(--color-text-secondary)]">
+                      {cat.label}
+                    </h3>
+                  </div>
+                  {cat.badge && (
+                    <span className={`text-[10px] font-sans font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full border shrink-0 ${
+                      cat.featured
+                        ? "border-accent-500/30 bg-accent-500/10 text-accent-500"
+                        : "border-[var(--color-border)] bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)] opacity-80"
+                    }`}>
+                      {cat.badge}
+                    </span>
+                  )}
+                </div>
+                {cat.description && (
+                  <p className="font-sans text-xs text-[var(--color-text-secondary)] opacity-70 leading-relaxed">
+                    {cat.description}
+                  </p>
+                )}
+              </div>
+
+              {/* Pills Grid */}
+              <div className="flex flex-wrap gap-2 tablet:gap-2.5 relative z-10">
                 {cat.items.map((tech) => (
                   <div
                     key={tech.name}
-                    className="stack-pill flex items-center gap-2.5 px-4 py-2.5 rounded-xl cursor-default group
-                               border border-[var(--color-border)] bg-[var(--color-bg-secondary)]
-                               hover:border-accent-500/40 hover:bg-accent-500/5
-                               hover:scale-105 hover:-translate-y-0.5
-                               transition-all duration-200"
+                    className="stack-pill flex items-center gap-2 px-3 py-2 rounded-xl cursor-default group/pill
+                               border border-[var(--color-border)] bg-[var(--color-bg-primary)]
+                               hover:border-accent-500/50 hover:bg-accent-500/5
+                               hover:scale-[1.03] hover:-translate-y-0.5
+                               transition-all duration-200 shadow-sm"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={tech.icon} alt={tech.name} width={20} height={20}
-                      style={{ width: 20, height: 20, objectFit: "contain", flexShrink: 0 }} />
-                    <span className="font-sans text-sm font-medium text-[var(--color-text-secondary)]
-                                     group-hover:text-accent-500 whitespace-nowrap transition-colors duration-200">
+                    <img
+                      src={tech.icon}
+                      alt={tech.name}
+                      width={18}
+                      height={18}
+                      style={{ width: 18, height: 18, objectFit: "contain", flexShrink: 0 }}
+                    />
+                    <span className="font-sans text-xs tablet:text-sm font-medium text-[var(--color-text-primary)]
+                                     group-hover/pill:text-accent-500 whitespace-nowrap transition-colors duration-200">
                       {tech.name}
                     </span>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Bottom accent line */}
