@@ -53,6 +53,7 @@ const STACK_CATEGORIES = [
     items: [
       { name: "Figma",   icon: `${CDN}/figma/figma-original.svg` },
       { name: "Blender", icon: `${CDN}/blender/blender-original.svg` },
+      { name: "Google Stitch", icon: "/icons/google-stitch.png" },
     ],
   },
   {
