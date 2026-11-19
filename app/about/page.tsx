@@ -67,6 +67,7 @@ const STACK_CATEGORIES = [
     label: "TOOLS",
     items: [
       { name: "Git",    icon: `${CDN}/git/git-original.svg` },
+      { name: "GitHub", icon: "/icons/github.svg" },
       { name: "Docker", icon: `${CDN}/docker/docker-original.svg` },
       { name: "Windows 11", icon: `${CDN}/windows11/windows11-original.svg` },
     ],
