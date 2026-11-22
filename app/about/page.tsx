@@ -474,7 +474,7 @@ export default function AboutPage() {
       subtitle: t("edu.smk.subtitle"),
       period: t("edu.smk.period"),
       description: t("edu.smk.description"),
-      tags: ["Web Development", "UI/UX Design", "C++", "Pyhton", "3D Artist", "Figma"],
+      tags: ["Web Development", "UI/UX Design", "C++", "Python", "3D Artist", "Figma"],
       achievements: [
         t("edu.smk.achievement1"),
         t("edu.smk.achievement2"),
