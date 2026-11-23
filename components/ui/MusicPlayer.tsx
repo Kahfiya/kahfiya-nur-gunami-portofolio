@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMusicPlayer, TRACKS } from "@/lib/MusicContext";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 // ─── Equalizer Soundwave Visualizer ──────────────────────────────────────────
 
@@ -56,6 +57,7 @@ export default function MusicPlayer() {
     setMuted,
     setAutoPlay,
   } = useMusicPlayer();
+  const { t } = useLanguage();
 
   const progressRef = useRef<HTMLDivElement>(null);
   const lyricsRef = useRef<HTMLDivElement>(null);
@@ -214,7 +216,7 @@ export default function MusicPlayer() {
                   <path d="M7 22l-4-4 4-4" />
                   <path d="M21 13v1a4 4 0 0 1-4 4H3" />
                 </svg>
-                <span>Auto</span>
+                <span>{t("music.auto")}</span>
               </button>
             </div>
 
@@ -428,7 +430,7 @@ export default function MusicPlayer() {
           >
             <div className="px-4 py-2.5 bg-[var(--color-bg-secondary)]/50 flex items-center justify-between">
               <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[var(--color-text-secondary)]">
-                Up Next ({TRACKS.length} Tracks)
+                {t("music.up_next")} ({TRACKS.length} {t("music.tracks")})
               </span>
               <button
                 onClick={() => setShowPlaylist(false)}
@@ -497,7 +499,7 @@ export default function MusicPlayer() {
               <div className="flex items-center gap-2">
                 <span className="text-accent-500 text-xs">✦</span>
                 <p className="font-sans text-xs font-bold text-[var(--color-text-primary)] uppercase tracking-wider">
-                  Lyrics · <span className="text-accent-500">{track.title}</span>
+                  {t("music.lyrics")} · <span className="text-accent-500">{track.title}</span>
                 </p>
               </div>
               <button
@@ -519,7 +521,7 @@ export default function MusicPlayer() {
             >
               {lyricsLoading ? (
                 <p className="font-sans text-xs text-[var(--color-text-secondary)] animate-pulse text-center py-6">
-                  Loading lyrics…
+                  {t("music.loading_lyrics")}
                 </p>
               ) : lyrics?.synced && lyrics.synced.length > 0 ? (
                 lyrics.synced.map((line, i) => (
@@ -549,7 +551,7 @@ export default function MusicPlayer() {
                 ))
               ) : (
                 <p className="font-sans text-xs text-[var(--color-text-secondary)] italic text-center py-6 opacity-70">
-                  No lyrics available for this track.
+                  {t("music.no_lyrics")}
                 </p>
               )}
             </div>

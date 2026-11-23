@@ -38,7 +38,7 @@ const SOCIALS = [
 ];
 
 const NAV_LINKS_STATIC = [
-  { href: "/",        key: null,          fallback: "Home" },
+  { href: "/",        key: "nav.home",    fallback: "Home" },
   { href: "/about",   key: "nav.about",   fallback: "About" },
   { href: "/work",    key: "nav.project", fallback: "Project" },
   { href: "/contact", key: "nav.contact", fallback: "Contact" },
@@ -186,7 +186,7 @@ export default function Footer() {
             {/* Contact email */}
             <div>
               <p className="font-sans text-[10px] tracking-[0.25em] uppercase text-[var(--color-text-secondary)] mb-sm">
-                CONTACT
+                {t("nav.contact")}
               </p>
               <a
                 href="mailto:kahfiyanurgunami@gmail.com"

@@ -64,7 +64,7 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
       dispatch({ type: "SUCCESS" });
       onSuccess?.();
     } catch {
-      dispatch({ type: "ERROR", message: "Terjadi kesalahan. Coba lagi." });
+      dispatch({ type: "ERROR", message: t("form.error.general") });
     }
   }
 

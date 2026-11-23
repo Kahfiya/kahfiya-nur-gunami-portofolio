@@ -26,9 +26,7 @@ interface StackItem {
 
 interface StackCategory {
   id: string;
-  label: string;
-  badge?: string;
-  description: string;
+  key: string;
   featured?: boolean;
   colSpan: string;
   items: StackItem[];
@@ -90,9 +88,7 @@ function CategoryIcon({ id, className = "w-4 h-4 shrink-0" }: { id: string; clas
 const STACK_CATEGORIES: StackCategory[] = [
   {
     id: "ai-dev",
-    label: "AI & AGENTIC DEVELOPMENT",
-    badge: "Vibe Coder Core",
-    description: "Agent orchestration, AI coding environments, and prompt-to-production workflows",
+    key: "stack.aidev",
     featured: true,
     colSpan: "col-span-12 lg:col-span-7",
     items: [
@@ -110,9 +106,7 @@ const STACK_CATEGORIES: StackCategory[] = [
   },
   {
     id: "frontend",
-    label: "FRONTEND & MOTION",
-    badge: "Web Engineering",
-    description: "Modern component architecture, type safety, and fluid physics-based motion",
+    key: "stack.frontend",
     colSpan: "col-span-12 lg:col-span-5",
     items: [
       { name: "HTML / CSS",    icon: `${CDN}/html5/html5-original.svg` },
@@ -127,9 +121,7 @@ const STACK_CATEGORIES: StackCategory[] = [
   },
   {
     id: "backend",
-    label: "BACKEND & DATABASE",
-    badge: "Server & Data",
-    description: "Scalable server architectures, relational databases, ORMs, and cloud backends",
+    key: "stack.backend",
     colSpan: "col-span-12 lg:col-span-7",
     items: [
       { name: "Node.js",    icon: `${CDN}/nodejs/nodejs-original.svg` },
@@ -142,9 +134,7 @@ const STACK_CATEGORIES: StackCategory[] = [
   },
   {
     id: "design",
-    label: "UI/UX & 3D DESIGN",
-    badge: "Visuals & Spatial",
-    description: "Design systems, rapid prototyping, and 3D modeling",
+    key: "stack.design",
     colSpan: "col-span-12 lg:col-span-5",
     items: [
       { name: "Figma",         icon: `${CDN}/figma/figma-original.svg` },
@@ -154,9 +144,7 @@ const STACK_CATEGORIES: StackCategory[] = [
   },
   {
     id: "programming",
-    label: "CORE LANGUAGES",
-    badge: "Foundations",
-    description: "Algorithms, scripting, and system logic",
+    key: "stack.core",
     colSpan: "col-span-12 md:col-span-6 lg:col-span-6",
     items: [
       { name: "Python", icon: `${CDN}/python/python-original.svg` },
@@ -166,9 +154,7 @@ const STACK_CATEGORIES: StackCategory[] = [
   },
   {
     id: "tools",
-    label: "DEVOPS & TOOLS",
-    badge: "Workflow & CI",
-    description: "Version control, containerization, and modern developer environments",
+    key: "stack.tools",
     colSpan: "col-span-12 md:col-span-6 lg:col-span-6",
     items: [
       { name: "Git",        icon: `${CDN}/git/git-original.svg` },
@@ -248,14 +234,14 @@ function MyStack() {
               style={{ display: "inline-block", animation: "spin 6s linear infinite" }}>✦</span>
             <h2 id="stack-heading" className="font-sans font-black tracking-tight text-[var(--color-text-primary)]"
               style={{ fontSize: "clamp(1.4rem, 4vw, 2rem)" }}>
-              MY <span className="text-accent-500">STACK</span>
+              {t("about.stack.title1")}{" "}<span className="text-accent-500">{t("about.stack.title2")}</span>
             </h2>
           </div>
           <div className="hidden tablet:flex items-center gap-2 px-3.5 py-1.5 rounded-full
                           border border-accent-500/20 bg-accent-500/5">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
             <span className="font-sans text-[10px] tracking-widest uppercase font-bold text-[var(--color-text-secondary)]">
-              Always Learning
+              {t("about.stack.badge")}
             </span>
           </div>
         </div>
@@ -291,24 +277,20 @@ function MyStack() {
                   <div className="flex items-center gap-2">
                     <CategoryIcon id={cat.id} />
                     <h3 className="font-sans font-bold tracking-wider text-xs uppercase text-[var(--color-text-secondary)]">
-                      {cat.label}
+                      {t(`${cat.key}.label`)}
                     </h3>
                   </div>
-                  {cat.badge && (
-                    <span className={`text-[10px] font-sans font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full border shrink-0 ${
-                      cat.featured
-                        ? "border-accent-500/30 bg-accent-500/10 text-accent-500"
-                        : "border-[var(--color-border)] bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)] opacity-80"
-                    }`}>
-                      {cat.badge}
-                    </span>
-                  )}
+                  <span className={`text-[10px] font-sans font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full border shrink-0 ${
+                    cat.featured
+                      ? "border-accent-500/30 bg-accent-500/10 text-accent-500"
+                      : "border-[var(--color-border)] bg-[var(--color-bg-primary)] text-[var(--color-text-secondary)] opacity-80"
+                  }`}>
+                    {t(`${cat.key}.badge`)}
+                  </span>
                 </div>
-                {cat.description && (
-                  <p className="font-sans text-xs text-[var(--color-text-secondary)] opacity-70 leading-relaxed">
-                    {cat.description}
-                  </p>
-                )}
+                <p className="font-sans text-xs text-[var(--color-text-secondary)] opacity-70 leading-relaxed">
+                  {t(`${cat.key}.desc`)}
+                </p>
               </div>
 
               {/* Pills Grid */}
@@ -445,7 +427,7 @@ function PplgGrid() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
                   </svg>
-                  Lihat Prototype →
+                  {t("common.view_proto")}
                 </a>
               </div>
             </motion.div>
@@ -499,7 +481,7 @@ export default function AboutPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-lg">
                   <p className="font-serif text-white text-lg font-bold">Kahfiya Nur Gunami</p>
-                  <p className="font-sans text-white/60 text-sm mt-0.5">Prompt Engineering & Designer</p>
+                  <p className="font-sans text-white/60 text-sm mt-0.5">{t("about.hero.role")}</p>
                 </div>
               </div>
             </SpotlightCard>

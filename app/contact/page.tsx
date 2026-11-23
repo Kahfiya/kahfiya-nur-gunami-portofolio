@@ -26,13 +26,14 @@ export default function ContactPage() {
       const words = el.querySelectorAll<HTMLElement>(".contact-word");
       gsap.fromTo(
         words,
-        { clipPath: "inset(0 100% 0 0)", opacity: 0 },
+        { clipPath: "inset(0 100% -25% 0)", opacity: 0 },
         {
-          clipPath: "inset(0 0% 0 0)",
+          clipPath: "inset(0 0% -25% 0)",
           opacity: 1,
           ease: "expo.out",
           stagger: 0.05,
           duration: 1,
+          clearProps: "clipPath",
         }
       );
 
@@ -93,7 +94,7 @@ export default function ContactPage() {
 
         <div className="overflow-hidden pb-4">
           <h1
-            className="contact-word font-serif leading-none text-[var(--color-text-primary)] inline-block"
+            className="contact-word font-serif leading-[1.08] pb-2 text-[var(--color-text-primary)] inline-block"
             style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}
           >
             {t("contact.heading1")}
@@ -101,7 +102,7 @@ export default function ContactPage() {
         </div>
         <div className="overflow-hidden pb-6">
           <h1
-            className="contact-word font-serif leading-none text-accent-500 inline-block"
+            className="contact-word font-serif leading-[1.08] pb-4 text-accent-500 inline-block"
             style={{ fontSize: "clamp(3rem, 10vw, 8rem)" }}
           >
             {t("contact.heading2")}

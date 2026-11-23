@@ -51,6 +51,7 @@ const CERTIFICATES = [
     titleKey: "cert.web.title",
     issuer: "Dicoding Indonesia",
     category: "AI & Machine Learning",
+    categoryKey: "cert.cat.aiml",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Dasar AI.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif Dasar AI.webp",
@@ -59,6 +60,7 @@ const CERTIFICATES = [
     titleKey: "cert.frontend.title",
     issuer: "Dicoding Indonesia",
     category: "Financial Literacy",
+    categoryKey: "cert.cat.finance",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif financial.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif financial.webp",
@@ -67,6 +69,7 @@ const CERTIFICATES = [
     titleKey: "cert.python.title",
     issuer: "Dicoding Indonesia",
     category: "Python Programming",
+    categoryKey: "cert.cat.python",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Memulai Pemrograman dengan Python.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif Memulai Pemrograman dengan Python.webp",
@@ -75,6 +78,7 @@ const CERTIFICATES = [
     titleKey: "cert.ai.title",
     issuer: "IBM SkillsBuild",
     category: "Artificial Intelligence",
+    categoryKey: "cert.cat.ai",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Introduction to Artificial Intelligence.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif Introduction to Artificial Intelligence.webp",
@@ -83,6 +87,7 @@ const CERTIFICATES = [
     titleKey: "cert.claude.title",
     issuer: "Anthropic",
     category: "Prompt & LLM Engineering",
+    categoryKey: "cert.cat.prompt",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Claude 101.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif Claude 101.webp",
@@ -91,6 +96,7 @@ const CERTIFICATES = [
     titleKey: "cert.aifund.title",
     issuer: "Coursera",
     category: "AI Fundamentals",
+    categoryKey: "cert.cat.aifund",
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif AI Fundamentals for Non-Data Scientists.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif AI Fundamentals for Non-Data Scientists.webp",
@@ -146,7 +152,7 @@ export function HomeProjects() {
     <section ref={sectionRef} className="px-md tablet:px-2xl py-3xl max-w-7xl mx-auto w-full" style={{ perspective: "1200px" }}>
 
       <div className="proj-heading mb-2xl">
-        <p className="proj-word font-sans text-xs tracking-[0.2em] uppercase text-accent-500 mb-3 inline-block">— Work</p>
+        <p className="proj-word font-sans text-xs tracking-[0.2em] uppercase text-accent-500 mb-3 inline-block">— {t("projects.badge")}</p>
         <h2 className="font-serif font-bold text-[var(--color-text-primary)] flex flex-wrap gap-x-[0.25em]"
           style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}>
           {t("projects.title").split(" ").map((w, i) => (
@@ -178,7 +184,7 @@ export function HomeProjects() {
                       <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] border border-[var(--color-border)] font-sans">{tag}</span>
                     ))}
                   </div>
-                  <span className="text-xs text-accent-500 font-sans font-semibold group-hover/card:translate-x-1 transition-transform duration-200">Visit →</span>
+                  <span className="text-xs text-accent-500 font-sans font-semibold group-hover/card:translate-x-1 transition-transform duration-200">{t("common.visit")}</span>
                 </div>
               </CardBody>
             </CardContainer>
@@ -267,7 +273,7 @@ export function HomeCertificates() {
           </span>
           <h2 className="text-2xl tablet:text-3xl desktop:text-4xl font-sans font-black tracking-wide uppercase">
             <span className="text-accent-500">{t("certificates.title")}</span>{" "}
-            <span className="text-[var(--color-text-primary)]">LIST</span>
+            <span className="text-[var(--color-text-primary)]">{t("certificates.list_badge")}</span>
           </h2>
         </div>
         <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-accent-500/20 bg-accent-500/5 self-start sm:self-auto">
@@ -340,7 +346,7 @@ export function HomeCertificates() {
                     <p className="font-sans text-xs tablet:text-sm text-[var(--color-text-secondary)] mt-1.5 flex flex-wrap items-center gap-2">
                       <span>{cert.issuer}</span>
                       <span className="opacity-40">•</span>
-                      <span>{cert.category}</span>
+                      <span>{cert.categoryKey ? t(cert.categoryKey) : cert.category}</span>
                       <span className="opacity-40">•</span>
                       <span>{cert.year}</span>
                       <span className="opacity-40">•</span>
@@ -457,7 +463,7 @@ export function HomeCertificates() {
                     {t(selectedCert.titleKey)}
                   </h4>
                   <p className="font-sans text-xs text-[var(--color-text-secondary)]">
-                    {selectedCert.issuer} · {selectedCert.category} · {selectedCert.year} · {t("cert.verified")}
+                    {selectedCert.issuer} · {selectedCert.categoryKey ? t(selectedCert.categoryKey) : selectedCert.category} · {selectedCert.year} · {t("cert.verified")}
                   </p>
                 </div>
                 <button

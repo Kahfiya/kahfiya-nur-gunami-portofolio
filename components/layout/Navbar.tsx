@@ -131,7 +131,7 @@ function MobileMenu({
             >
               <div className="border-t border-white/[0.08] pt-5">
                 <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-white/30 mb-4">
-                  Language
+                  {t("nav.language")}
                 </p>
 
                 {/* 2-column grid of language buttons */}

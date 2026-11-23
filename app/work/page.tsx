@@ -30,6 +30,7 @@ const FILTERS: FilterCategory[] = ["All", "Web", "Design", "School"];
 
 // ── Modal ──────────────────────────────────────────────────────────────────
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  const { t } = useLanguage();
   return (
     <AnimatePresence>
       {/* Backdrop */}
@@ -90,7 +91,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                 className="inline-flex items-center gap-1.5 text-sm text-accent-500 font-sans font-medium hover:underline"
               >
                 <ExternalLink size={14} />
-                {project.href.includes("drive.google.com") ? "Lihat di Google Drive →" : "Visit →"}
+                {project.href.includes("drive.google.com") ? t("common.view_gdrive") : t("common.visit")}
               </a>
             )}
           </div>
@@ -102,6 +103,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 
 // ── Card ───────────────────────────────────────────────────────────────────
 function ProjectCard3D({ project, onClick }: { project: Project; onClick?: () => void }) {
+  const { t } = useLanguage();
   const isClickable = !!project.href || !!onClick;
 
   const inner = (
@@ -133,7 +135,7 @@ function ProjectCard3D({ project, onClick }: { project: Project; onClick?: () =>
             ))}
           </CardItem>
           {isClickable && (
-            <span className="text-xs text-accent-500 font-sans font-medium shrink-0 ml-2">Visit →</span>
+            <span className="text-xs text-accent-500 font-sans font-medium shrink-0 ml-2">{t("common.visit")}</span>
           )}
         </div>
       </CardBody>
@@ -246,6 +248,7 @@ export default function WorkPage() {
 
   const filterLabel = (f: FilterCategory): string => {
     if (f === "All") return t("work.filter.all");
+    if (f === "Web") return t("work.filter.web");
     if (f === "Design") return t("work.filter.design");
     if (f === "School") return t("work.filter.school");
     return f;
