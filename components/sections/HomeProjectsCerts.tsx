@@ -10,7 +10,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CardContainer, CardBody, CardItem } from "@/components/ui/3d-card";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
@@ -196,22 +196,23 @@ export function HomeCertificates() {
   const sectionRef = useRef<HTMLElement>(null);
   const [hoveredCert, setHoveredCert] = useState<typeof CERTIFICATES[number] | null>(null);
   const [selectedCert, setSelectedCert] = useState<typeof CERTIFICATES[number] | null>(null);
-
-  // Smooth GPU cursor tracking via MotionValues (zero React re-renders)
-  const cursorX = useMotionValue(-1000);
-  const cursorY = useMotionValue(-1000);
-  const smoothX = useSpring(cursorX, { damping: 25, stiffness: 350, mass: 0.15 });
-  const smoothY = useSpring(cursorY, { damping: 25, stiffness: 350, mass: 0.15 });
+  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const updatePosition = (clientX: number, clientY: number) => {
     if (typeof window === "undefined") return;
-    const cardWidth = window.innerWidth >= 1280 ? 420 : 360;
-    const isRightOverflow = clientX + cardWidth + 35 > window.innerWidth;
-    const targetX = isRightOverflow ? clientX - cardWidth - 25 : clientX + 25;
-    const targetY = Math.min(Math.max(clientY - 120, 20), window.innerHeight - 300);
+    const cardWidth = window.innerWidth >= 1280 ? 400 : 340;
+    const cardHeight = Math.round((cardWidth * 11) / 16);
 
-    cursorX.set(targetX);
-    cursorY.set(targetY);
+    let x = clientX + 24;
+    if (x + cardWidth > window.innerWidth - 16) {
+      x = clientX - cardWidth - 24;
+    }
+    x = Math.max(16, Math.min(x, window.innerWidth - cardWidth - 16));
+
+    let y = clientY - Math.round(cardHeight / 2);
+    y = Math.max(16, Math.min(y, window.innerHeight - cardHeight - 16));
+
+    setMousePos({ x, y });
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -295,11 +296,34 @@ export function HomeCertificates() {
               }}
               onMouseMove={(e) => {
                 updatePosition(e.clientX, e.clientY);
+                if (hoveredCert?.titleKey !== cert.titleKey) {
+                  setHoveredCert(cert);
+                }
               }}
+              onMouseLeave={() => setHoveredCert(null)}
               onClick={() => setSelectedCert(cert)}
-              className="cert-item-row group relative py-6 tablet:py-7 border-b border-[var(--color-border)] cursor-pointer transition-colors duration-200"
+              className="cert-item-row group relative py-6 tablet:py-7 border-b border-[var(--color-border)] cursor-pointer transition-all duration-200 px-4 -mx-4 rounded-2xl hover:bg-accent-500/[0.04] overflow-hidden"
             >
-              <div className="flex items-center justify-between gap-4">
+              {/* ── Ambient Row Watermark Background (Shows across the cert's div on hover) ── */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl overflow-hidden z-0"
+                aria-hidden="true"
+              >
+                <div className="absolute right-0 top-0 bottom-0 w-2/3 max-w-[460px] overflow-hidden opacity-10 dark:opacity-20 pointer-events-none">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={cert.thumbUrl || cert.imageUrl}
+                    alt=""
+                    className="w-full h-full object-cover blur-[1px]"
+                    style={{
+                      maskImage: "linear-gradient(to right, transparent 0%, black 70%)",
+                      WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 70%)",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="relative z-10 flex items-center justify-between gap-4">
                 <div className="flex items-start gap-4 tablet:gap-6 flex-1 min-w-0">
                   {/* Index Number */}
                   <span className="font-sans font-bold text-lg tablet:text-2xl text-[var(--color-text-secondary)]/50 group-hover:text-accent-500 transition-colors select-none shrink-0 pt-0.5">
@@ -328,20 +352,34 @@ export function HomeCertificates() {
                   </div>
                 </div>
 
-                {/* Right Arrow Icon */}
-                <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full border border-transparent group-hover:border-[var(--color-border)] group-hover:bg-[var(--color-bg-secondary)] transition-all duration-200">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-4 h-4 text-accent-500 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200"
-                  >
-                    <line x1="7" y1="17" x2="17" y2="7" />
-                    <polyline points="7 7 17 7 17 17" />
-                  </svg>
+                {/* Right Side: Small preview badge on mobile/touch + Arrow */}
+                <div className="flex items-center gap-3 shrink-0">
+                  {/* Compact thumbnail for touch / small screens */}
+                  <div className="md:hidden w-14 h-10 rounded-lg overflow-hidden border border-[var(--color-border)] bg-neutral-900 shadow-sm shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={cert.thumbUrl || cert.imageUrl}
+                      alt={t(cert.titleKey)}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {/* Right Arrow Icon */}
+                  <div className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full border border-transparent group-hover:border-[var(--color-border)] group-hover:bg-[var(--color-bg-secondary)] transition-all duration-200">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-4 h-4 text-accent-500 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200"
+                    >
+                      <line x1="7" y1="17" x2="17" y2="7" />
+                      <polyline points="7 7 17 7 17 17" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -349,19 +387,26 @@ export function HomeCertificates() {
         })}
       </div>
 
-      {/* ── Floating Preview Image (Instant WebP + GPU Spring Tracking) ── */}
+      {/* ── Floating Preview Image (Instant WebP + Smooth Viewport Tracking) ── */}
       <AnimatePresence>
         {hoveredCert && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            style={{
-              x: smoothX,
-              y: smoothY,
+            key={hoveredCert.titleKey}
+            initial={{ opacity: 0, scale: 0.85, x: mousePos.x, y: mousePos.y }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x: mousePos.x,
+              y: mousePos.y,
             }}
-            className="pointer-events-none fixed top-0 left-0 z-[9990] hidden md:block"
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{
+              opacity: { duration: 0.15 },
+              scale: { duration: 0.15 },
+              x: { type: "spring", damping: 28, stiffness: 350, mass: 0.1 },
+              y: { type: "spring", damping: 28, stiffness: 350, mass: 0.1 },
+            }}
+            className="pointer-events-none fixed top-0 left-0 z-[9999]"
           >
             <div className="w-[360px] desktop:w-[420px] aspect-[16/11] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.1)] border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-1.5 backdrop-blur-xl">
               <div className="relative w-full h-full rounded-xl overflow-hidden bg-neutral-900">
