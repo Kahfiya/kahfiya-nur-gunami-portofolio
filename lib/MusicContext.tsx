@@ -72,6 +72,13 @@ export const TRACKS: Track[] = [
     cover: "/Audio/Cover/Best Friend.jpg",
     src: "/Audio/Best Friend - Rex Orange County.mp3",
   },
+  {
+    id: 4,
+    title: "Bergema Sampai Selamanya",
+    artist: "Nadhif Basalamah",
+    cover: "/Audio/Cover/bergema sampai selamanya.jpg",
+    src: "/Audio/Nadhif Basalamah - bergema sampai selamanya.mp3",
+  },
 ];
 
 // ─── LRC parser ───────────────────────────────────────────────────────────────
@@ -174,6 +181,37 @@ const FALLBACK_LYRICS: Record<string, { synced: LrcLine[]; plain: string }> = {
       { time: 68.0,  text: "I wanna kiss your neck" },
       { time: 72.0,  text: "I don't wanna be your friend" },
       { time: 76.0,  text: "I wanna kiss your neck" },
+    ],
+  },
+  "Bergema Sampai Selamanya_Nadhif Basalamah": {
+    plain:
+      "Aku ingin jadi teman nyamanmu\nTempat kauhilangkan keluh kesahmu\nKita berbincang tak karuan tanpa beban\nDan juga khayalan tentang masa depan\n\nKu tak ingin cepat berlalu (berlalu)\nWaktu yang kupunya denganmu\nKita berdansa dan tertawa, gandeng tangan\nSemoga bergema sampai selamanya\n\nDunia pasti ada akhirnya\nBintang-bintang pun ada umurnya\nMaka tenang saja, kita di sini berdua, ha-ah\nNikmati sementara yang ada\n\nBersandar padaku, taruh di bahuku\nRelakan semua bebas semaumu (bebas semaumu)\nPercayalah, ini sayang terlewatkan (terlewatkan)\nKusampaikan dalam nyanyian, bergema sampai s'lamanya\n\nDunia pasti ada akhirnya\nBintang-bintang pun ada umurnya\nMaka tenang saja, kita di sini berdua\nNikmati sementara yang ada\n\nDunia pasti ada akhirnya\nBintang-bintang pun ada umurnya\nMaka tenang saja, kita di sini berdua\nNikmati sementara yang ada\n\nSemoga bergema selamanya",
+    synced: [
+      { time: 3.05,  text: "Aku ingin jadi teman nyamanmu" },
+      { time: 9.03,  text: "Tempat kauhilangkan keluh kesahmu" },
+      { time: 14.27, text: "Kita berbincang tak karuan tanpa beban" },
+      { time: 20.27, text: "Dan juga khayalan tentang masa depan" },
+      { time: 27.75, text: "Ku tak ingin cepat berlalu (berlalu)" },
+      { time: 33.77, text: "Waktu yang kupunya denganmu" },
+      { time: 38.26, text: "Kita berdansa dan tertawa, gandeng tangan" },
+      { time: 44.15, text: "Semoga bergema sampai selamanya" },
+      { time: 50.96, text: "Dunia pasti ada akhirnya" },
+      { time: 56.92, text: "Bintang-bintang pun ada umurnya" },
+      { time: 62.99, text: "Maka tenang saja, kita di sini berdua, ha-ah" },
+      { time: 72.03, text: "Nikmati sementara yang ada" },
+      { time: 86.75, text: "Bersandar padaku, taruh di bahuku" },
+      { time: 92.74, text: "Relakan semua bebas semaumu (bebas semaumu)" },
+      { time: 98.48, text: "Percayalah, ini sayang terlewatkan (terlewatkan)" },
+      { time: 104.33, text: "Kusampaikan dalam nyanyian, bergema sampai s'lamanya" },
+      { time: 135.02, text: "Dunia pasti ada akhirnya" },
+      { time: 140.94, text: "Bintang-bintang pun ada umurnya" },
+      { time: 146.91, text: "Maka tenang saja, kita di sini berdua" },
+      { time: 156.08, text: "Nikmati sementara yang ada" },
+      { time: 158.97, text: "Dunia pasti ada akhirnya" },
+      { time: 164.92, text: "Bintang-bintang pun ada umurnya" },
+      { time: 170.93, text: "Maka tenang saja, kita di sini berdua" },
+      { time: 180.02, text: "Nikmati sementara yang ada" },
+      { time: 185.91, text: "Semoga bergema selamanya" },
     ],
   },
 };
