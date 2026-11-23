@@ -55,6 +55,7 @@ const CERTIFICATES = [
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Dasar AI.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif Dasar AI.webp",
+    verifyUrl: "https://www.dicoding.com/certificates/2VX30V6JVXYQ",
   },
   {
     titleKey: "cert.frontend.title",
@@ -73,6 +74,7 @@ const CERTIFICATES = [
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Memulai Pemrograman dengan Python.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif Memulai Pemrograman dengan Python.webp",
+    verifyUrl: "https://www.dicoding.com/certificates/ERZRLD4NOZYV",
   },
   {
     titleKey: "cert.ai.title",
@@ -91,6 +93,7 @@ const CERTIFICATES = [
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif Claude 101.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif Claude 101.webp",
+    verifyUrl: "https://verify.skilljar.com/c/k9rt2wdx5caz",
   },
   {
     titleKey: "cert.aifund.title",
@@ -100,6 +103,7 @@ const CERTIFICATES = [
     year: "2025",
     imageUrl: "/Images/Sertifikat/Sertif AI Fundamentals for Non-Data Scientists.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif AI Fundamentals for Non-Data Scientists.webp",
+    verifyUrl: "https://coursera.org/share/25ec9a3c0e247a6c1869cb46c398aa4c",
   },
 ];
 
@@ -457,7 +461,7 @@ export function HomeCertificates() {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-[var(--color-border)]">
                 <div>
                   <h4 className="font-sans font-bold text-lg text-[var(--color-text-primary)]">
                     {t(selectedCert.titleKey)}
@@ -466,12 +470,30 @@ export function HomeCertificates() {
                     {selectedCert.issuer} · {selectedCert.categoryKey ? t(selectedCert.categoryKey) : selectedCert.category} · {selectedCert.year} · {t("cert.verified")}
                   </p>
                 </div>
-                <button
-                  onClick={() => setSelectedCert(null)}
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-colors text-base font-bold"
-                >
-                  ✕
-                </button>
+                <div className="flex items-center gap-3 self-end sm:self-auto">
+                  {"verifyUrl" in selectedCert && selectedCert.verifyUrl && (
+                    <a
+                      href={selectedCert.verifyUrl as string}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-accent-500 hover:bg-accent-600 text-white font-sans text-xs font-semibold shadow-sm transition-all duration-200 active:scale-95 shrink-0"
+                    >
+                      <span>{t("cert.verify_btn")}</span>
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </a>
+                  )}
+                  <button
+                    onClick={() => setSelectedCert(null)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] transition-colors text-base font-bold shrink-0"
+                    aria-label="Close"
+                  >
+                    ✕
+                  </button>
+                </div>
               </div>
 
               {/* Modal Image */}

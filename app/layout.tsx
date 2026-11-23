@@ -152,7 +152,99 @@ export default function RootLayout({
     url: "https://kahfiya-nur-gunami-portofolio.vercel.app",
     image: "https://kahfiya-nur-gunami-portofolio.vercel.app/Images/Kahfiya%20Nur%20Gunami.jpg",
     jobTitle: "Vibe Coder & Fullstack Developer",
-    sameAs: ["https://github.com/kahfiya"],
+    sameAs: [
+      "https://github.com/kahfiya",
+      "https://www.linkedin.com/in/kahfiya-nur-gunami/",
+      "https://www.dicoding.com/users/kahfiya_nur_gunami",
+    ],
+    hasCredential: [
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "Belajar Dasar AI",
+        credentialCategory: "Certificate",
+        url: "https://www.dicoding.com/certificates/2VX30V6JVXYQ",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Dicoding Indonesia",
+          url: "https://www.dicoding.com",
+        },
+      },
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "Memulai Pemrograman dengan Python",
+        credentialCategory: "Certificate",
+        url: "https://www.dicoding.com/certificates/ERZRLD4NOZYV",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Dicoding Indonesia",
+          url: "https://www.dicoding.com",
+        },
+      },
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "Literasi Keuangan",
+        credentialCategory: "Certificate",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Dicoding Indonesia",
+          url: "https://www.dicoding.com",
+        },
+      },
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "Introduction to Artificial Intelligence",
+        credentialCategory: "Certificate",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "IBM SkillsBuild",
+          url: "https://skillsbuild.org",
+        },
+      },
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "Claude 101",
+        credentialCategory: "Certificate",
+        url: "https://verify.skilljar.com/c/k9rt2wdx5caz",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Anthropic",
+          url: "https://www.anthropic.com",
+        },
+      },
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "Claude Code 101",
+        credentialCategory: "Certificate",
+        url: "https://verify.skilljar.com/c/omhyjxbvinx3",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Anthropic",
+          url: "https://www.anthropic.com",
+        },
+      },
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "AI Fluency for Small Businesses",
+        credentialCategory: "Certificate",
+        url: "https://verify.skilljar.com/c/srppnu9uysds",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Anthropic",
+          url: "https://www.anthropic.com",
+        },
+      },
+      {
+        "@type": "EducationalOccupationalCredential",
+        name: "AI Fundamentals for Non-Data Scientists",
+        credentialCategory: "Certificate",
+        url: "https://coursera.org/share/25ec9a3c0e247a6c1869cb46c398aa4c",
+        recognizedBy: {
+          "@type": "Organization",
+          name: "Coursera",
+          url: "https://www.coursera.org",
+        },
+      },
+    ],
   };
 
   return (
