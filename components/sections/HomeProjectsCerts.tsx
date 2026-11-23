@@ -58,15 +58,6 @@ const CERTIFICATES = [
     verifyUrl: "https://www.dicoding.com/certificates/2VX30V6JVXYQ",
   },
   {
-    titleKey: "cert.frontend.title",
-    issuer: "Dicoding Indonesia",
-    category: "Financial Literacy",
-    categoryKey: "cert.cat.finance",
-    year: "2025",
-    imageUrl: "/Images/Sertifikat/Sertif financial.jpg",
-    thumbUrl: "/Images/Sertifikat/thumb-Sertif financial.webp",
-  },
-  {
     titleKey: "cert.python.title",
     issuer: "Dicoding Indonesia",
     category: "Python Programming",
@@ -75,15 +66,6 @@ const CERTIFICATES = [
     imageUrl: "/Images/Sertifikat/Sertif Memulai Pemrograman dengan Python.jpg",
     thumbUrl: "/Images/Sertifikat/thumb-Sertif Memulai Pemrograman dengan Python.webp",
     verifyUrl: "https://www.dicoding.com/certificates/ERZRLD4NOZYV",
-  },
-  {
-    titleKey: "cert.ai.title",
-    issuer: "IBM SkillsBuild",
-    category: "Artificial Intelligence",
-    categoryKey: "cert.cat.ai",
-    year: "2025",
-    imageUrl: "/Images/Sertifikat/Sertif Introduction to Artificial Intelligence.jpg",
-    thumbUrl: "/Images/Sertifikat/thumb-Sertif Introduction to Artificial Intelligence.webp",
   },
   {
     titleKey: "cert.claude.title",

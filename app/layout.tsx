@@ -182,26 +182,6 @@ export default function RootLayout({
       },
       {
         "@type": "EducationalOccupationalCredential",
-        name: "Literasi Keuangan",
-        credentialCategory: "Certificate",
-        recognizedBy: {
-          "@type": "Organization",
-          name: "Dicoding Indonesia",
-          url: "https://www.dicoding.com",
-        },
-      },
-      {
-        "@type": "EducationalOccupationalCredential",
-        name: "Introduction to Artificial Intelligence",
-        credentialCategory: "Certificate",
-        recognizedBy: {
-          "@type": "Organization",
-          name: "IBM SkillsBuild",
-          url: "https://skillsbuild.org",
-        },
-      },
-      {
-        "@type": "EducationalOccupationalCredential",
         name: "Claude 101",
         credentialCategory: "Certificate",
         url: "https://verify.skilljar.com/c/k9rt2wdx5caz",
